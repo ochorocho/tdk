@@ -10,6 +10,7 @@
         }
     ],
     "scripts": {
+        "post-root-package-install": "@tdk:setup",
         "tdk:setup": [
             "@tdk:clone",
             "@composer config repositories.typo3-core-packages path 'typo3-core/typo3/sysext/*'",
