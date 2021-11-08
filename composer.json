@@ -12,18 +12,14 @@
     "scripts": {
         "post-root-package-install": "@tdk:setup",
         "tdk:setup": [
-            "@tdk:clone",
+            "Ochorocho\\Tdk\\Scripts\\InitializeScript::cloneRepo",
             "@tdk:initialize"
-        ],
-        "tdk:clone": [
-            "Ochorocho\\Tdk\\Scripts\\InitializeScript::cloneRepo"
         ],
         "tdk:initialize": [
             "Ochorocho\\Tdk\\Scripts\\InitializeScript::question"
         ],
         "tdk:clear": [
-            "Ochorocho\\Tdk\\Scripts\\InitializeScript::clearFilesAndFolders",
-            "@composer config --unset repositories.typo3-core-packages"
+            "Ochorocho\\Tdk\\Scripts\\InitializeScript::clearFilesAndFolders"
         ],
         "tdk:help": [
             "Ochorocho\\Tdk\\Scripts\\InitializeScript::showSummary"
