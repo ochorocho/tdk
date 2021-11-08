@@ -11,13 +11,12 @@
     ],
     "scripts": {
         "post-root-package-install": "@tdk:setup",
+        "post-create-project-cmd": "@tdk:help",
         "tdk:setup": [
             "Ochorocho\\Tdk\\Scripts\\InitializeScript::cloneRepo",
-            "@composer install",
             "@tdk:set-push-url",
             "@tdk:enable-hooks",
-            "@tdk:ddev-config",
-            "@tdk:help"
+            "@tdk:ddev-config"
         ],
         "tdk:clear": "Ochorocho\\Tdk\\Scripts\\InitializeScript::removeFilesAndFolders",
         "tdk:remove-hooks": "Ochorocho\\Tdk\\Scripts\\InitializeScript::removeHooks",
