@@ -23,7 +23,11 @@
             "Ochorocho\\Tdk\\Scripts\\InitializeScript::question"
         ],
         "tdk:clear": [
-            "Ochorocho\\Tdk\\Scripts\\InitializeScript::clearFilesAndFolders"
+            "Ochorocho\\Tdk\\Scripts\\InitializeScript::clearFilesAndFolders",
+            "@composer config --unset repositories.typo3-core-packages"
+        ],
+        "tdk:help": [
+            "Ochorocho\\Tdk\\Scripts\\InitializeScript::showSummary"
         ],
         "typo3": "./vendor/bin/typo3 --"
     },
