@@ -13,9 +13,10 @@
         "post-root-package-install": "@tdk:setup",
         "tdk:setup": [
             "Ochorocho\\Tdk\\Scripts\\InitializeScript::cloneRepo",
+            "@composer install",
             "@tdk:set-push-url",
             "@tdk:enable-hooks",
-            "@composer install",
+            "@tdk:ddev-config",
             "@tdk:help"
         ],
         "tdk:clear": "Ochorocho\\Tdk\\Scripts\\InitializeScript::removeFilesAndFolders",

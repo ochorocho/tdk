@@ -17,16 +17,15 @@ class InitializeScript
 
     public static function enableHooks(Event $event)
     {
-        // Ask a few questions ...
         $questions = [
             [
                 'method' => 'enableCommitMessageHook',
-                'message' => 'Setup Commit Message Hook? <fg=cyan;options=bold>[y/n]</> ',
+                'message' => 'Setup Commit Message Hook? [<fg=cyan;options=bold>y</>/n] ',
                 'default' => true
             ],
             [
                 'method' => 'enablePreCommitHook',
-                'message' => 'Setup Pre Commit Hook? <fg=cyan;options=bold>[y/n]</> ',
+                'message' => 'Setup Pre Commit Hook? [<fg=cyan;options=bold>y</>/n] ',
                 'default' => true
             ],
         ];
@@ -41,7 +40,16 @@ class InitializeScript
         }
     }
 
-    public static function enableCommitMessageHook(Event $event)
+    public static function removeHooks(Event $event)
+    {
+        $filesystem = new Filesystem();
+        $filesystem->remove([
+            static::$coreDevFolder . '/.git/hooks/pre-commit',
+            static::$coreDevFolder . '/.git/hooks/commit-msg',
+        ]);
+    }
+
+    private static function enableCommitMessageHook(Event $event)
     {
         $filesystem = new Filesystem();
 
@@ -59,7 +67,7 @@ class InitializeScript
         }
     }
 
-    public static function enablePreCommitHook(Event $event)
+    private static function enablePreCommitHook(Event $event)
     {
         if (DIRECTORY_SEPARATOR === '\\') {
             return;
@@ -81,7 +89,7 @@ class InitializeScript
 
     public static function setGerritPushUrl(Event $event)
     {
-        $typo3AccountUsername = $event->getIO()->askAndValidate('What is your TYPO3 Account Username? ', '', 2);
+        $typo3AccountUsername = $event->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', '', 2);
         if(!empty($typo3AccountUsername)) {
             $pushUrl = '"ssh://' . $typo3AccountUsername . '@review.typo3.org:29418/Packages/TYPO3.CMS.git"';
             $process = new ProcessExecutor();
@@ -116,7 +124,7 @@ class InitializeScript
         $test = $windows ? 'where' : 'command -v';
 
         if(is_executable(trim(shell_exec($test . ' ddev') ?? ''))) {
-            $answer = $event->getIO()->askConfirmation('Create a basic ddev config? <fg=cyan;options=bold>[y/n]</> ', false);
+            $answer = $event->getIO()->askConfirmation('Create a basic ddev config? [y/<fg=cyan;options=bold>n</>] ', false);
 
             if($answer) {
                 $ddevProjectName = $event->getIO()->askAndValidate('What should be the ddev projects name? ', '', 2);
@@ -183,21 +191,12 @@ EOF;
             '.ddev',
         ];
 
-        $answer = $event->getIO()->askConfirmation('Really want to delete ' . implode(', ', $filesToDelete) . '? <fg=cyan;options=bold>[y/n]</> ', false);
+        $answer = $event->getIO()->askConfirmation('Really want to delete ' . implode(', ', $filesToDelete) . '? [y/<fg=cyan;options=bold>n</>] ', false);
 
         if($answer) {
             $filesystem = new Filesystem();
             $filesystem->remove($filesToDelete);
         }
-    }
-
-    public static function removeHooks(Event $event)
-    {
-        $filesystem = new Filesystem();
-        $filesystem->remove([
-            static::$coreDevFolder . '/.git/hooks/pre-commit',
-            static::$coreDevFolder . '/.git/hooks/commit-msg',
-        ]);
     }
 
     public static function showSummary(Event $event)
