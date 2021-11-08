@@ -15,12 +15,6 @@ class InitializeScript
 
     public static function question(Event $event)
     {
-        // Ask for TYPO3 Account Username
-        $typo3AccountUsername = $event->getIO()->askAndValidate('What is your TYPO3 Account Username? ', '', 2);
-        if(!empty($typo3AccountUsername)) {
-            static::setGerritPushUrl($event, $typo3AccountUsername);
-        }
-
         // Ask a few questions ...
         $questions = [
             [
@@ -55,8 +49,6 @@ class InitializeScript
                 static::$method($event);
             }
         }
-
-        static::showSummary($event);
     }
 
     public static function enableCommitMessageHook(Event $event)
@@ -91,22 +83,41 @@ class InitializeScript
         }
     }
 
-    public static function setGerritPushUrl(Event $event, string $typo3AccountUsername)
+    public static function setGerritPushUrl(Event $event)
     {
-        $process = new ProcessExecutor();
-        $composerFilesystem = new ComposerFilesystem();
+        $typo3AccountUsername = $event->getIO()->askAndValidate('What is your TYPO3 Account Username? ', '', 2);
+        if(!empty($typo3AccountUsername)) {
+            $pushUrl = '"ssh://' . $typo3AccountUsername . '@review.typo3.org:29418/Packages/TYPO3.CMS.git"';
+            $process = new ProcessExecutor();
+            $command = 'git config remote.origin.pushurl ' . $pushUrl;
+            $status = $process->execute($command, $output, self::$coreDevFolder);
 
-        $pushUrl = '"ssh://' . $typo3AccountUsername . '@review.typo3.org:29418/Packages/TYPO3.CMS.git"';
-
-        $git = new Git($event->getIO(), $event->getComposer()->getConfig(), $process, $composerFilesystem);
-        $commandCallable = function ($pushUrl) {
-            return sprintf('git config remote.origin.pushurl %s', ProcessExecutor::escape($pushUrl));
-        };
-
-        $git->runCommand($commandCallable, $pushUrl, static::$coreDevFolder);
-        $event->getIO()->write('<info>Set remote.origin.pushurl to ' . $pushUrl . ' </info>');
+            if($status) {
+                $event->getIO()->writeError('<error>Could not enable Git Commit Template!</error>');
+            } else {
+                $event->getIO()->write('<info>Set "remote.origin.pushurl" to ' . $pushUrl . ' </info>');
+            }
+        }
     }
 
+    public static function setCommitTemplate(Event $event)
+    {
+        $process = new ProcessExecutor();
+        $template = realpath('./.gitmessage.txt');
+        $status = $process->execute('git config commit.template ' . $template, $output, self::$coreDevFolder);
+
+        if($status) {
+            $event->getIO()->writeError('<error>Could not enable Git Commit Template!</error>');
+        } else {
+            $event->getIO()->write('<info>Set "commit.template" to ' . $template . ' </info>');
+        }
+    }
+
+    /**
+     * @todo: disable all hooks?
+     *
+     * @param Event $event
+     */
     public static function disablePreCommitHook(Event $event)
     {
         $filesystem = new Filesystem();
@@ -165,19 +176,21 @@ EOF;
 
     public static function clearFilesAndFolders(Event $event)
     {
-        $answer = $event->getIO()->askConfirmation('Really want to cleanup/delete files and Folders? <fg=cyan;options=bold>[y/n]</> ', false);
+        $filesToDelete = [
+            'composer.lock',
+            'public/index.php',
+            'public/typo3',
+            'typo3-core',
+            'vendor',
+            'var',
+            '.ddev',
+        ];
+
+        $answer = $event->getIO()->askConfirmation('Really want to delete ' . implode(', ', $filesToDelete) . '? <fg=cyan;options=bold>[y/n]</> ', false);
 
         if($answer) {
             $filesystem = new Filesystem();
-            $filesystem->remove([
-                'composer.lock',
-                'public/index.php',
-                'public/typo3',
-                'typo3-core',
-                'vendor',
-                'var',
-                '.ddev',
-            ]);
+            $filesystem->remove($filesToDelete);
         }
     }
 

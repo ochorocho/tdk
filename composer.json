@@ -13,13 +13,19 @@
         "post-root-package-install": "@tdk:setup",
         "tdk:setup": [
             "Ochorocho\\Tdk\\Scripts\\InitializeScript::cloneRepo",
-            "@tdk:initialize"
-        ],
-        "tdk:initialize": [
-            "Ochorocho\\Tdk\\Scripts\\InitializeScript::question"
+            "@tdk:set-push-url",
+            "Ochorocho\\Tdk\\Scripts\\InitializeScript::question",
+            "@composer install",
+            "@tdk:help"
         ],
         "tdk:clear": [
             "Ochorocho\\Tdk\\Scripts\\InitializeScript::clearFilesAndFolders"
+        ],
+        "tdk:set-commit-template": [
+            "Ochorocho\\Tdk\\Scripts\\InitializeScript::setCommitTemplate"
+        ],
+        "tdk:set-push-url": [
+            "Ochorocho\\Tdk\\Scripts\\InitializeScript::setGerritPushUrl"
         ],
         "tdk:help": [
             "Ochorocho\\Tdk\\Scripts\\InitializeScript::showSummary"
