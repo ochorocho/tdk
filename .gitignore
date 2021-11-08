@@ -6,3 +6,4 @@ composer.lock
 typo3-core
 packages/*
 !packages/.gitkeep
+.ddev

@@ -10,9 +10,10 @@
         }
     ],
     "scripts": {
-        "pre-install-cmd": [
+        "tdk:setup": [
             "@tdk:clone",
             "@composer config repositories.typo3-core-packages path 'typo3-core/typo3/sysext/*'",
+            "@composer install",
             "@tdk:initialize"
         ],
         "tdk:clone": [
