@@ -10,15 +10,26 @@
         }
     ],
     "scripts": {
-        "pre-command-run": "[ -d \"./typo3cms/\" ] || git clone git@github.com:TYPO3/typo3.git typo3cms",
-        "tdk:clear": "rm -Rf composer.lock typo3cms vendor var public/typo3 public/index.php",
-        "typo3": "./vendor/bin/typo3 --",
-        "tdk:runTest": "./typo3cms/Build/Scripts/runTests.sh --"
+        "pre-install-cmd": [
+            "@tdk:clone",
+            "@composer config repositories.typo3-core-packages path 'typo3-core/typo3/sysext/*'",
+            "@tdk:initialize"
+        ],
+        "tdk:clone": [
+            "Ochorocho\\Tdk\\Scripts\\InitializeScript::cloneRepo"
+        ],
+        "tdk:initialize": [
+            "Ochorocho\\Tdk\\Scripts\\InitializeScript::question"
+        ],
+        "tdk:clear": [
+            "Ochorocho\\Tdk\\Scripts\\InitializeScript::clearFilesAndFolders"
+        ],
+        "typo3": "./vendor/bin/typo3 --"
     },
     "repositories": {
         "typo3-core-packages": {
             "type": "path",
-            "url": "typo3cms/typo3/sysext/*"
+            "url": "typo3-core/typo3/sysext/*"
         },
         "local-packages": {
             "type": "path",
@@ -26,7 +37,13 @@
         }
     },
     "minimum-stability": "dev",
+    "autoload-dev": {
+        "psr-4": {
+            "Ochorocho\\Tdk\\Scripts\\": "Scripts/"
+        }
+    },
     "require": {
+        "ext-json": "*",
         "typo3/cms-backend": "@dev",
         "typo3/cms-belog": "@dev",
         "typo3/cms-beuser": "@dev",

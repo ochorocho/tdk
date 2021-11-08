@@ -3,6 +3,6 @@ var/
 public/
 composer.lock
 .idea
-typo3cms
+typo3-core
 packages/*
 !packages/.gitkeep
