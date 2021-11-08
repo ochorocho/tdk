@@ -32,10 +32,6 @@
         "typo3": "./vendor/bin/typo3 --"
     },
     "repositories": {
-        "typo3-core-packages": {
-            "type": "path",
-            "url": "typo3-core/typo3/sysext/*"
-        },
         "local-packages": {
             "type": "path",
             "url": "packages/*"
