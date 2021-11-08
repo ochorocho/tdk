@@ -1,19 +1,21 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Ochorocho\Tdk\Scripts;
 
 use Composer\Util\Git;
 use Composer\Script\Event;
 use Composer\Util\Filesystem as ComposerFilesystem;
 use Composer\Util\ProcessExecutor;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
 class InitializeScript
 {
     private static string $coreDevFolder = 'typo3-core';
 
-    public static function question(Event $event)
+    public static function enableHooks(Event $event)
     {
         // Ask a few questions ...
         $questions = [
@@ -28,18 +30,6 @@ class InitializeScript
                 'default' => true
             ],
         ];
-
-        // Only ask for ddev config if ddev command is available
-        $windows = strpos(PHP_OS, 'WIN') === 0;
-        $test = $windows ? 'where' : 'command -v';
-
-        if(is_executable(trim(shell_exec($test . ' ddev') ?? ''))) {
-            $questions[] = [
-                'method' => 'createDdevConfig',
-                'message' => 'Create a basic ddev config? <fg=cyan;options=bold>[y/n]</> ',
-                'default' => false
-            ];
-        }
 
         foreach ($questions as $question) {
             $answer = $event->getIO()->askConfirmation($question['message'], $question['default']);
@@ -56,12 +46,15 @@ class InitializeScript
         $filesystem = new Filesystem();
 
         try {
-            $filesystem->copy(static::$coreDevFolder . '/Build/git-hooks/commit-msg', static::$coreDevFolder . '/.git/hooks/commit-msg');
-            if (!is_executable(static::$coreDevFolder . '/.git/hooks/commit-msg')) {
-                $filesystem->chmod(static::$coreDevFolder . '/.git/hooks/commit-msg', 0755);
+            $targetCommitMsg = static::$coreDevFolder . '/.git/hooks/commit-msg';
+            $filesystem->copy(static::$coreDevFolder . '/Build/git-hooks/commit-msg', $targetCommitMsg);
+
+            if (!is_executable($targetCommitMsg)) {
+                $filesystem->chmod($targetCommitMsg, 0755);
             }
+
             $event->getIO()->write('<info>Created Commit Message Hook</info>');
-        } catch (\Symfony\Component\Filesystem\Exception\IOException $e) {
+        } catch (IOException $e) {
             $event->getIO()->writeError('<warning>Exception:enableCommitMessageHook:' . $e->getMessage() . '</warning>');
         }
     }
@@ -73,12 +66,15 @@ class InitializeScript
         }
         $filesystem = new Filesystem();
         try {
-            $filesystem->copy(static::$coreDevFolder . '/Build/git-hooks/unix+mac/pre-commit', static::$coreDevFolder . '/.git/hooks/pre-commit');
-            if (!is_executable(static::$coreDevFolder . '/.git/hooks/pre-commit')) {
-                $filesystem->chmod(static::$coreDevFolder . '/.git/hooks/pre-commit', 0755);
+            $targetPreCommit = static::$coreDevFolder . '/.git/hooks/pre-commit';
+            $filesystem->copy(static::$coreDevFolder . '/Build/git-hooks/unix+mac/pre-commit', $targetPreCommit);
+
+            if (!is_executable($targetPreCommit)) {
+                $filesystem->chmod($targetPreCommit, 0755);
             }
+
             $event->getIO()->write('<info>Created Pre Commit Hook</info>');
-        } catch (\Symfony\Component\Filesystem\Exception\IOException $e) {
+        } catch (IOException $e) {
             $event->getIO()->writeError('<warning>Exception:enablePreCommitHook:' . $e->getMessage() . '</warning>');
         }
     }
@@ -113,22 +109,20 @@ class InitializeScript
         }
     }
 
-    /**
-     * @todo: disable all hooks?
-     *
-     * @param Event $event
-     */
-    public static function disablePreCommitHook(Event $event)
-    {
-        $filesystem = new Filesystem();
-        $filesystem->remove(static::$coreDevFolder . '/.git/hooks/pre-commit');
-    }
-
     public static function createDdevConfig(Event $event)
     {
-        $ddevProjectName = $event->getIO()->askAndValidate('What should be the ddev projects name? ', '', 2);
-        if(!empty($ddevProjectName)) {
-            $configYaml = <<<EOF
+        // Only ask for ddev config if ddev command is available
+        $windows = strpos(PHP_OS, 'WIN') === 0;
+        $test = $windows ? 'where' : 'command -v';
+
+        if(is_executable(trim(shell_exec($test . ' ddev') ?? ''))) {
+            $answer = $event->getIO()->askConfirmation('Create a basic ddev config? <fg=cyan;options=bold>[y/n]</> ', false);
+
+            if($answer) {
+                $ddevProjectName = $event->getIO()->askAndValidate('What should be the ddev projects name? ', '', 2);
+
+                if(!empty($ddevProjectName)) {
+                    $configYaml = <<<EOF
 name: $ddevProjectName
 type: typo3
 docroot: public
@@ -148,8 +142,11 @@ composer_version: ""
 web_environment: []
 EOF;
 
-            $filesystem = new Filesystem();
-            $filesystem->dumpFile('.ddev/config.yaml', $configYaml);
+                    $filesystem = new Filesystem();
+                    $filesystem->dumpFile('.ddev/config.yaml', $configYaml);
+                }
+            }
+
         }
     }
 
@@ -174,7 +171,7 @@ EOF;
         }
     }
 
-    public static function clearFilesAndFolders(Event $event)
+    public static function removeFilesAndFolders(Event $event)
     {
         $filesToDelete = [
             'composer.lock',
@@ -192,6 +189,15 @@ EOF;
             $filesystem = new Filesystem();
             $filesystem->remove($filesToDelete);
         }
+    }
+
+    public static function removeHooks(Event $event)
+    {
+        $filesystem = new Filesystem();
+        $filesystem->remove([
+            static::$coreDevFolder . '/.git/hooks/pre-commit',
+            static::$coreDevFolder . '/.git/hooks/commit-msg',
+        ]);
     }
 
     public static function showSummary(Event $event)

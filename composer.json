@@ -14,22 +14,17 @@
         "tdk:setup": [
             "Ochorocho\\Tdk\\Scripts\\InitializeScript::cloneRepo",
             "@tdk:set-push-url",
-            "Ochorocho\\Tdk\\Scripts\\InitializeScript::question",
+            "@tdk:enable-hooks",
             "@composer install",
             "@tdk:help"
         ],
-        "tdk:clear": [
-            "Ochorocho\\Tdk\\Scripts\\InitializeScript::clearFilesAndFolders"
-        ],
-        "tdk:set-commit-template": [
-            "Ochorocho\\Tdk\\Scripts\\InitializeScript::setCommitTemplate"
-        ],
-        "tdk:set-push-url": [
-            "Ochorocho\\Tdk\\Scripts\\InitializeScript::setGerritPushUrl"
-        ],
-        "tdk:help": [
-            "Ochorocho\\Tdk\\Scripts\\InitializeScript::showSummary"
-        ],
+        "tdk:clear": "Ochorocho\\Tdk\\Scripts\\InitializeScript::removeFilesAndFolders",
+        "tdk:remove-hooks": "Ochorocho\\Tdk\\Scripts\\InitializeScript::removeHooks",
+        "tdk:enable-hooks": "Ochorocho\\Tdk\\Scripts\\InitializeScript::enableHooks",
+        "tdk:set-commit-template": "Ochorocho\\Tdk\\Scripts\\InitializeScript::setCommitTemplate",
+        "tdk:set-push-url": "Ochorocho\\Tdk\\Scripts\\InitializeScript::setGerritPushUrl",
+        "tdk:ddev-config": "Ochorocho\\Tdk\\Scripts\\InitializeScript::createDdevConfig",
+        "tdk:help": "Ochorocho\\Tdk\\Scripts\\InitializeScript::showSummary",
         "typo3": "./vendor/bin/typo3 --"
     },
     "repositories": {
