@@ -161,19 +161,16 @@ EOF;
     public static function cloneRepo(Event $event)
     {
         $filesystem = new Filesystem();
-
         if(!$filesystem->exists(static::$coreDevFolder)) {
             $process = new ProcessExecutor();
-            $composerFilesystem = new ComposerFilesystem();
             $gitRemoteUrl = 'git@github.com:TYPO3/typo3.git';
+            $command = sprintf('git clone %s %s', ProcessExecutor::escape($gitRemoteUrl), ProcessExecutor::escape(static::$coreDevFolder));
+            $event->getIO()->write('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
+            $status = $process->executeTty($command);
 
-            $git = new Git($event->getIO(), $event->getComposer()->getConfig(), $process, $composerFilesystem);
-            $commandCallable = function ($gitRemoteUrl) {
-                return sprintf('git clone %s %s', ProcessExecutor::escape($gitRemoteUrl), ProcessExecutor::escape(static::$coreDevFolder));
-            };
-
-            $event->getIO()->write('Cloning TYPO3 repository. This may take a while depending on your internet connection!');
-            $git->runCommand($commandCallable, $gitRemoteUrl, static::$coreDevFolder, true);
+            if($status) {
+                $event->getIO()->write('<warning>Could not download git repository ' . $gitRemoteUrl . ' </warning>');
+            }
         } else {
             $event->getIO()->write('Repository exists! Therefore no download required.');
         }
