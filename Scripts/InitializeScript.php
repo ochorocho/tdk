@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Ochorocho\Tdk\Scripts;
 
-use Composer\Util\Git;
 use Composer\Script\Event;
-use Composer\Util\Filesystem as ComposerFilesystem;
-use Composer\Util\ProcessExecutor;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -87,36 +84,6 @@ class InitializeScript
         }
     }
 
-    public static function setGerritPushUrl(Event $event)
-    {
-        $typo3AccountUsername = $event->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', '', 2);
-        if(!empty($typo3AccountUsername)) {
-            $pushUrl = '"ssh://' . $typo3AccountUsername . '@review.typo3.org:29418/Packages/TYPO3.CMS.git"';
-            $process = new ProcessExecutor();
-            $command = 'git config remote.origin.pushurl ' . $pushUrl;
-            $status = $process->execute($command, $output, self::$coreDevFolder);
-
-            if($status) {
-                $event->getIO()->writeError('<error>Could not enable Git Commit Template!</error>');
-            } else {
-                $event->getIO()->write('<info>Set "remote.origin.pushurl" to ' . $pushUrl . ' </info>');
-            }
-        }
-    }
-
-    public static function setCommitTemplate(Event $event)
-    {
-        $process = new ProcessExecutor();
-        $template = realpath('./.gitmessage.txt');
-        $status = $process->execute('git config commit.template ' . $template, $output, self::$coreDevFolder);
-
-        if($status) {
-            $event->getIO()->writeError('<error>Could not enable Git Commit Template!</error>');
-        } else {
-            $event->getIO()->write('<info>Set "commit.template" to ' . $template . ' </info>');
-        }
-    }
-
     public static function createDdevConfig(Event $event)
     {
         // Only ask for ddev config if ddev command is available
@@ -155,24 +122,6 @@ EOF;
                 }
             }
 
-        }
-    }
-
-    public static function cloneRepo(Event $event)
-    {
-        $filesystem = new Filesystem();
-        if(!$filesystem->exists(static::$coreDevFolder)) {
-            $process = new ProcessExecutor();
-            $gitRemoteUrl = 'git@github.com:TYPO3/typo3.git';
-            $command = sprintf('git clone %s %s', ProcessExecutor::escape($gitRemoteUrl), ProcessExecutor::escape(static::$coreDevFolder));
-            $event->getIO()->write('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
-            $status = $process->executeTty($command);
-
-            if($status) {
-                $event->getIO()->write('<warning>Could not download git repository ' . $gitRemoteUrl . ' </warning>');
-            }
-        } else {
-            $event->getIO()->write('Repository exists! Therefore no download required.');
         }
     }
 

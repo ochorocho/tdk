@@ -13,7 +13,7 @@
         "post-root-package-install": "@tdk:setup",
         "post-create-project-cmd": "@tdk:help",
         "tdk:setup": [
-            "Ochorocho\\Tdk\\Scripts\\InitializeScript::cloneRepo",
+            "Ochorocho\\Tdk\\Scripts\\GitScript::cloneRepository",
             "@tdk:set-push-url",
             "@tdk:enable-hooks",
             "@tdk:ddev-config"
@@ -21,10 +21,10 @@
         "tdk:clear": "Ochorocho\\Tdk\\Scripts\\InitializeScript::removeFilesAndFolders",
         "tdk:remove-hooks": "Ochorocho\\Tdk\\Scripts\\InitializeScript::removeHooks",
         "tdk:enable-hooks": "Ochorocho\\Tdk\\Scripts\\InitializeScript::enableHooks",
-        "tdk:set-commit-template": "Ochorocho\\Tdk\\Scripts\\InitializeScript::setCommitTemplate",
-        "tdk:set-push-url": "Ochorocho\\Tdk\\Scripts\\InitializeScript::setGerritPushUrl",
         "tdk:ddev-config": "Ochorocho\\Tdk\\Scripts\\InitializeScript::createDdevConfig",
         "tdk:help": "Ochorocho\\Tdk\\Scripts\\InitializeScript::showSummary",
+        "tdk:set-commit-template": "Ochorocho\\Tdk\\Scripts\\GitScript::setCommitTemplate",
+        "tdk:set-push-url": "Ochorocho\\Tdk\\Scripts\\GitScript::setGerritPushUrl",
         "typo3": "./vendor/bin/typo3 --"
     },
     "repositories": {
