@@ -5,7 +5,7 @@ Run `composer create-project ochorocho/tdk <target-folder-name>` and answer
 the command prompts as needed.
 
 This command guides you through the process of setting up a
-composer based TYPO3 CoreDev environment. 
+composer based TYPO3 CoreDev environment.
 
 ## Command prompts
 
@@ -38,3 +38,6 @@ composer based TYPO3 CoreDev environment.
 * `tdk:help`: Show summary with links to the TYPO3 Contribution Guide
 * `typo3`: Shortcut to run TYPO3 Commands 
 
+## Demo run
+
+[![asciicast](https://asciinema.org/a/xuY3Zx6k7I7OdLLRkLJBiUDnT.svg)](https://asciinema.org/a/xuY3Zx6k7I7OdLLRkLJBiUDnT)
