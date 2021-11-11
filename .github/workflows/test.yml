@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Validate composer.json and composer.lock
-        run: composer validate --strict
+        run: composer validate --no-check-all --no-check-lock
 
       - name: Cache Composer packages
         id: composer-cache
@@ -25,8 +25,11 @@ jobs:
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-php-
+
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+        # Do a clone here to make sure the repository exists on install
+        # to avoid missing repository error in composer
+        run: composer tdk:clone && composer install --no-progress
 
       - name: phpstan
         run:  ./vendor/bin/phpstan analyse -c .phpstan.neon --no-progress

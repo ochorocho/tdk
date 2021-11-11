@@ -18,7 +18,6 @@ class TdkCest
         $I->seeResultCodeIs(0);
         $I->seeInShellOutput('Cloning TYPO3 repository. This may take a while depending on your internet connection!');
         $I->seeInShellOutput('Cloning into');
-        $I->seeInShellOutput('Updating files:');
 
         $I->runShellCommand('composer tdk:clone');
         $I->seeResultCodeIs(0);
