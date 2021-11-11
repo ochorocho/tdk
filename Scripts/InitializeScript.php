@@ -48,8 +48,8 @@ class InitializeScript
     {
         $filesystem = new Filesystem();
         $filesystem->remove([
-            static::$coreDevFolder . '/.git/hooks/pre-commit',
-            static::$coreDevFolder . '/.git/hooks/commit-msg',
+            self::$coreDevFolder . '/.git/hooks/pre-commit',
+            self::$coreDevFolder . '/.git/hooks/commit-msg',
         ]);
     }
 
@@ -58,8 +58,8 @@ class InitializeScript
         $filesystem = new Filesystem();
 
         try {
-            $targetCommitMsg = static::$coreDevFolder . '/.git/hooks/commit-msg';
-            $filesystem->copy(static::$coreDevFolder . '/Build/git-hooks/commit-msg', $targetCommitMsg);
+            $targetCommitMsg = self::$coreDevFolder . '/.git/hooks/commit-msg';
+            $filesystem->copy(self::$coreDevFolder . '/Build/git-hooks/commit-msg', $targetCommitMsg);
 
             if (!is_executable($targetCommitMsg)) {
                 $filesystem->chmod($targetCommitMsg, 0755);
@@ -78,8 +78,8 @@ class InitializeScript
         }
         $filesystem = new Filesystem();
         try {
-            $targetPreCommit = static::$coreDevFolder . '/.git/hooks/pre-commit';
-            $filesystem->copy(static::$coreDevFolder . '/Build/git-hooks/unix+mac/pre-commit', $targetPreCommit);
+            $targetPreCommit = self::$coreDevFolder . '/.git/hooks/pre-commit';
+            $filesystem->copy(self::$coreDevFolder . '/Build/git-hooks/unix+mac/pre-commit', $targetPreCommit);
 
             if (!is_executable($targetPreCommit)) {
                 $filesystem->chmod($targetPreCommit, 0755);
@@ -188,7 +188,7 @@ EOF;
         $filesystem = new Filesystem();
 
         // Test for existing repository
-        if($filesystem->exists(static::$coreDevFolder . '/.git'))  {
+        if($filesystem->exists(self::$coreDevFolder . '/.git'))  {
             $event->getIO()->write('<fg=green;options=bold>✔</> Repository exists.');
         } else {
             $event->getIO()->write('<fg=red;options=bold>✘</> TYPO3 Repository not in place, please run "composer tdk:clone"');
@@ -196,8 +196,8 @@ EOF;
 
         // Test if hooks are set up
         if($filesystem->exists([
-            static::$coreDevFolder . '/.git/hooks/pre-commit',
-            static::$coreDevFolder . '/.git/hooks/commit-msg',
+            self::$coreDevFolder . '/.git/hooks/pre-commit',
+            self::$coreDevFolder . '/.git/hooks/commit-msg',
         ])) {
             $event->getIO()->write('<fg=green;options=bold>✔</> All hooks are in place.');
         } else {

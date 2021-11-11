@@ -52,10 +52,10 @@ class GitScript
     public static function cloneRepository(Event $event)
     {
         $filesystem = new Filesystem();
-        if(!$filesystem->exists(static::$coreDevFolder)) {
+        if(!$filesystem->exists(self::$coreDevFolder)) {
             $process = new ProcessExecutor();
             $gitRemoteUrl = 'git@github.com:TYPO3/typo3.git';
-            $command = sprintf('git clone %s %s', ProcessExecutor::escape($gitRemoteUrl), ProcessExecutor::escape(static::$coreDevFolder));
+            $command = sprintf('git clone %s %s', ProcessExecutor::escape($gitRemoteUrl), ProcessExecutor::escape(self::$coreDevFolder));
             $event->getIO()->write('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
             $status = $process->executeTty($command);
 
