@@ -225,5 +225,12 @@ EOF;
         } else {
             $event->getIO()->write('<fg=red;options=bold>✘</> Git "commit.template" not set or file does not exist, please run "composer tdk:set-commit-template"');
         }
+
+        // Test vendor folder
+        if($filesystem->exists('vendor')) {
+            $event->getIO()->write('<fg=green;options=bold>✔</> Vendor folder exists.');
+        } else {
+            $event->getIO()->write('<fg=red;options=bold>✘</> Vendor folder is missing, please run "composer install"');
+        }
     }
 }
