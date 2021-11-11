@@ -1,0 +1,8 @@
+# Files that should not appear in the project folder
+# after running "composer create-project ochorocho/tdk folder-name"
+/.gitattributes     export-ignore
+/.gitignore         export-ignore
+/.github            export-ignore
+/tests              export-ignore
+/.php.cs            export-ignore
+/.codeception.yml   export-ignore

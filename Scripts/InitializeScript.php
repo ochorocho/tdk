@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ochorocho\Tdk\Scripts;
 
 use Composer\Script\Event;
+use Composer\Util\ProcessExecutor;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -28,7 +29,13 @@ class InitializeScript
         ];
 
         foreach ($questions as $question) {
-            $answer = $event->getIO()->askConfirmation($question['message'], $question['default']);
+            $force = GitScript::getArguments($event->getArguments())['force'] ?? false;
+
+            if($force) {
+                $answer = true;
+            } else {
+                $answer = $event->getIO()->askConfirmation($question['message'], $question['default']);
+            }
 
             if($answer) {
                 $method = $question['method'];
@@ -125,27 +132,33 @@ EOF;
         }
     }
 
-    public static function removeFilesAndFolders(Event $event)
+    public static function removeFilesAndFolders(Event $event): void
     {
         $filesToDelete = [
             'composer.lock',
             'public/index.php',
             'public/typo3',
             'typo3-core',
-            'vendor',
             'var',
-            '.ddev',
         ];
 
-        $answer = $event->getIO()->askConfirmation('Really want to delete ' . implode(', ', $filesToDelete) . '? [y/<fg=cyan;options=bold>n</>] ', false);
+        $force = GitScript::getArguments($event->getArguments())['force'] ?? false;
+
+        if($force) {
+            $answer = true;
+        } else {
+            $answer = $event->getIO()->askConfirmation('Really want to delete ' . implode(', ', $filesToDelete) . '? [y/<fg=cyan;options=bold>n</>] ', false);
+        }
+
 
         if($answer) {
             $filesystem = new Filesystem();
             $filesystem->remove($filesToDelete);
+            $event->getIO()->write('<info>Done deleting files.</info>');
         }
     }
 
-    public static function showSummary(Event $event)
+    public static function showSummary(Event $event): void
     {
         $summary = <<<EOF
 
@@ -160,9 +173,57 @@ EOF;
   https://docs.typo3.org/m/typo3/guide-contributionworkflow/master/en-us/Testing/Index.html
 
 <fg=yellow;options=bold>To be able to push to Gerrit, you need to add your public key, see https://review.typo3.org/settings/#SSHKeys</>
-<info>🎉 Happy days ... TYPO3 Composer CoreDev Setup done! </info>
 EOF;
 
         $event->getIO()->write($summary);
+    }
+
+    public static function done(Event $event): void
+    {
+        $event->getIO()->write('<info>🎉 Happy days ... TYPO3 Composer CoreDev Setup done!</info>');
+    }
+
+    public static function doctor(Event $event): void
+    {
+        $filesystem = new Filesystem();
+
+        // Test for existing repository
+        if($filesystem->exists(static::$coreDevFolder . '/.git'))  {
+            $event->getIO()->write('<fg=green;options=bold>✔</> Repository exists.');
+        } else {
+            $event->getIO()->write('<fg=red;options=bold>✘</> TYPO3 Repository not in place, please run "composer tdk:clone"');
+        }
+
+        // Test if hooks are set up
+        if($filesystem->exists([
+            static::$coreDevFolder . '/.git/hooks/pre-commit',
+            static::$coreDevFolder . '/.git/hooks/commit-msg',
+        ])) {
+            $event->getIO()->write('<fg=green;options=bold>✔</> All hooks are in place.');
+        } else {
+            $event->getIO()->write('<fg=red;options=bold>✘</> Hooks are missing please run "composer tdk:enable-hooks".');
+        }
+
+        // Test git push url
+        $process = new ProcessExecutor();
+        $command = 'git config --get remote.origin.pushurl';
+        $process->execute($command, $output, self::$coreDevFolder);
+
+        preg_match('/^ssh:\/\/(.*)@review\.typo3\.org/', $output, $matches);
+        if(!empty($matches)) {
+            $event->getIO()->write('<fg=green;options=bold>✔</> Git "remote.origin.pushurl" seems correct.');
+        } else {
+            $event->getIO()->write('<fg=red;options=bold>✘</> Git "remote.origin.pushurl" not set correctly, please run "composer tdk:set-push-url".');
+        }
+
+        // Test commit template
+        $commandTemplate = 'git config --get commit.template';
+        $process->execute($commandTemplate, $outputTemplate, self::$coreDevFolder);
+
+        if(!empty($outputTemplate) && $filesystem->exists(trim($outputTemplate))) {
+            $event->getIO()->write('<fg=green;options=bold>✔</> Git "commit.template" is set to ' . trim($outputTemplate) . '.');
+        } else {
+            $event->getIO()->write('<fg=red;options=bold>✘</> Git "commit.template" not set or file does not exist, please run "composer tdk:set-commit-template"');
+        }
     }
 }

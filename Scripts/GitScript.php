@@ -14,7 +14,14 @@ class GitScript
 
     public static function setGerritPushUrl(Event $event)
     {
-        $typo3AccountUsername = $event->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', '', 2);
+        $arguments = self::getArguments($event->getArguments());
+
+        if($arguments['username'] ?? false) {
+            $typo3AccountUsername = $arguments['username'];
+        } else {
+            $typo3AccountUsername = $event->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', '', 2);
+        }
+
         if(!empty($typo3AccountUsername)) {
             $pushUrl = '"ssh://' . $typo3AccountUsername . '@review.typo3.org:29418/Packages/TYPO3.CMS.git"';
             $process = new ProcessExecutor();
@@ -58,5 +65,18 @@ class GitScript
         } else {
             $event->getIO()->write('Repository exists! Therefore no download required.');
         }
+    }
+
+    public static function getArguments($array): array
+    {
+        $items = [];
+        foreach ($array as $argument) {
+            preg_match('/^--(.*)/', $argument, $parsed);
+
+            $key = explode('=', $parsed[1]);
+            $items[$key[0]] = $key[1] ?? true;
+        }
+
+        return $items;
     }
 }

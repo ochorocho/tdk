@@ -11,14 +11,20 @@
     ],
     "scripts": {
         "post-root-package-install": "@tdk:setup",
-        "post-create-project-cmd": "@tdk:help",
+        "pre-install-cmd": "@tdk:clone",
+        "post-create-project-cmd": [
+            "@tdk:help",
+            "Ochorocho\\Tdk\\Scripts\\InitializeScript::done"
+        ],
         "tdk:setup": [
-            "Ochorocho\\Tdk\\Scripts\\GitScript::cloneRepository",
+            "@tdk:clone",
             "@tdk:set-push-url",
             "@tdk:enable-hooks",
             "@tdk:ddev-config"
         ],
+        "tdk:clone": "Ochorocho\\Tdk\\Scripts\\GitScript::cloneRepository",
         "tdk:clear": "Ochorocho\\Tdk\\Scripts\\InitializeScript::removeFilesAndFolders",
+        "tdk:doctor": "Ochorocho\\Tdk\\Scripts\\InitializeScript::doctor",
         "tdk:remove-hooks": "Ochorocho\\Tdk\\Scripts\\InitializeScript::removeHooks",
         "tdk:enable-hooks": "Ochorocho\\Tdk\\Scripts\\InitializeScript::enableHooks",
         "tdk:ddev-config": "Ochorocho\\Tdk\\Scripts\\InitializeScript::createDdevConfig",
@@ -71,5 +77,11 @@
         "typo3/cms-viewpage": "@dev",
         "typo3/cms-workspaces": "@dev",
         "typo3/cms-reports": "@dev"
+    },
+    "require-dev": {
+        "codeception/codeception": "^4.1.22",
+        "codeception/module-cli": "^1.1.1",
+        "codeception/module-webdriver": "dev-master",
+        "codeception/module-filesystem": "dev-master"
     }
 }

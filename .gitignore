@@ -8,3 +8,4 @@ packages/*
 !packages/.gitkeep
 .ddev/
 config/
+test-acceptance-tdk/

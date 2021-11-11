@@ -1,6 +1,4 @@
 [BUGFIX|TASK|FEATURE]
 
-Ahhh!!!....
-
 Resolves: #
 Releases: master, 10.4
