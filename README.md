@@ -2,7 +2,8 @@
 
 Ease the TYPO3 Composer based Contribution Setup.
 Run `composer create-project ochorocho/tdk <target-folder-name>` and answer
-the command prompts as needed.
+the command prompts as needed. If you want the current dev version add `--stability=dev`
+to the command.
 
 This command guides you through the process of setting up a
 composer based TYPO3 CoreDev environment.
