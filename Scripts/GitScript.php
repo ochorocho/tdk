@@ -16,14 +16,24 @@ class GitScript
     {
         $arguments = self::getArguments($event->getArguments());
 
+        // Validate username
+        $validator = function ($value) {
+            if (!preg_match('/^[a-zA-Z0-9_-]*$/', trim($value))) {
+                throw new \UnexpectedValueException('Invalid username "' . $value . '"');
+            }
+
+            return trim($value)."\n";
+        };
+
         if ($arguments['username'] ?? false) {
             $typo3AccountUsername = $arguments['username'];
+            $validator($typo3AccountUsername);
         } else {
-            $typo3AccountUsername = $event->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', '', 2);
+            $typo3AccountUsername = $event->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', $validator, 2);
         }
 
         if (!empty($typo3AccountUsername)) {
-            $pushUrl = '"ssh://' . $typo3AccountUsername . '@review.typo3.org:29418/Packages/TYPO3.CMS.git"';
+            $pushUrl = '"ssh://' . trim($typo3AccountUsername) . '@review.typo3.org:29418/Packages/TYPO3.CMS.git"';
             $process = new ProcessExecutor();
             $command = 'git config remote.origin.pushurl ' . $pushUrl;
             $status = $process->execute($command, $output, self::$coreDevFolder);

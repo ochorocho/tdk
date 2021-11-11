@@ -101,7 +101,16 @@ class InitializeScript
             $answer = $event->getIO()->askConfirmation('Create a basic ddev config? [y/<fg=cyan;options=bold>n</>] ', false);
 
             if ($answer) {
-                $ddevProjectName = $event->getIO()->askAndValidate('What should be the ddev projects name? ', '', 2);
+                // Validate ddev project name
+                $validator = function ($value) {
+                    if (!preg_match('/^[a-zA-Z0-9_-]*$/', trim($value))) {
+                        throw new \UnexpectedValueException('Invalid ddev project name "' . $value . '"');
+                    }
+
+                    return trim($value)."\n";
+                };
+
+                $ddevProjectName = $event->getIO()->askAndValidate('What should be the ddev projects name? ', $validator, 2);
 
                 if (!empty($ddevProjectName)) {
                     $configYaml = <<<EOF
