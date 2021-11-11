@@ -5,7 +5,7 @@ on:
   pull_request:
 jobs:
   testsuite:
-    name: all tests
+    name: Tests
     runs-on: ubuntu-20.04
     strategy:
       matrix:

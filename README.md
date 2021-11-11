@@ -36,6 +36,7 @@ composer based TYPO3 CoreDev environment.
 * `tdk:set-push-url`: Set Gerrit as remote to push patches to
 * `tdk:ddev-config`: Create a basic ddev configuration
 * `tdk:help`: Show summary with links to the TYPO3 Contribution Guide
+* `tdk:doctor`: Show potential issues
 * `typo3`: Shortcut to run TYPO3 Commands 
 
 ## Demo run
