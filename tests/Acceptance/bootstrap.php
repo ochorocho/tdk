@@ -7,7 +7,7 @@
  * folder (./test-acceptance-tdk) and run tests in there
  */
 
-if(is_dir('test-acceptance-tdk')) {
+if (is_dir('test-acceptance-tdk')) {
     shell_exec('rm -Rf test-acceptance-tdk/');
 }
 

@@ -31,13 +31,13 @@ class InitializeScript
         foreach ($questions as $question) {
             $force = GitScript::getArguments($event->getArguments())['force'] ?? false;
 
-            if($force) {
+            if ($force) {
                 $answer = true;
             } else {
                 $answer = $event->getIO()->askConfirmation($question['message'], $question['default']);
             }
 
-            if($answer) {
+            if ($answer) {
                 $method = $question['method'];
                 static::$method($event);
             }
@@ -97,13 +97,13 @@ class InitializeScript
         $windows = strpos(PHP_OS, 'WIN') === 0;
         $test = $windows ? 'where' : 'command -v';
 
-        if(is_executable(trim(shell_exec($test . ' ddev') ?? ''))) {
+        if (is_executable(trim(shell_exec($test . ' ddev') ?? ''))) {
             $answer = $event->getIO()->askConfirmation('Create a basic ddev config? [y/<fg=cyan;options=bold>n</>] ', false);
 
-            if($answer) {
+            if ($answer) {
                 $ddevProjectName = $event->getIO()->askAndValidate('What should be the ddev projects name? ', '', 2);
 
-                if(!empty($ddevProjectName)) {
+                if (!empty($ddevProjectName)) {
                     $configYaml = <<<EOF
 name: $ddevProjectName
 type: typo3
@@ -128,7 +128,6 @@ EOF;
                     $filesystem->dumpFile('.ddev/config.yaml', $configYaml);
                 }
             }
-
         }
     }
 
@@ -144,14 +143,14 @@ EOF;
 
         $force = GitScript::getArguments($event->getArguments())['force'] ?? false;
 
-        if($force) {
+        if ($force) {
             $answer = true;
         } else {
             $answer = $event->getIO()->askConfirmation('Really want to delete ' . implode(', ', $filesToDelete) . '? [y/<fg=cyan;options=bold>n</>] ', false);
         }
 
 
-        if($answer) {
+        if ($answer) {
             $filesystem = new Filesystem();
             $filesystem->remove($filesToDelete);
             $event->getIO()->write('<info>Done deleting files.</info>');
@@ -188,14 +187,14 @@ EOF;
         $filesystem = new Filesystem();
 
         // Test for existing repository
-        if($filesystem->exists(self::$coreDevFolder . '/.git'))  {
+        if ($filesystem->exists(self::$coreDevFolder . '/.git')) {
             $event->getIO()->write('<fg=green;options=bold>✔</> Repository exists.');
         } else {
             $event->getIO()->write('<fg=red;options=bold>✘</> TYPO3 Repository not in place, please run "composer tdk:clone"');
         }
 
         // Test if hooks are set up
-        if($filesystem->exists([
+        if ($filesystem->exists([
             self::$coreDevFolder . '/.git/hooks/pre-commit',
             self::$coreDevFolder . '/.git/hooks/commit-msg',
         ])) {
@@ -210,7 +209,7 @@ EOF;
         $process->execute($command, $output, self::$coreDevFolder);
 
         preg_match('/^ssh:\/\/(.*)@review\.typo3\.org/', $output, $matches);
-        if(!empty($matches)) {
+        if (!empty($matches)) {
             $event->getIO()->write('<fg=green;options=bold>✔</> Git "remote.origin.pushurl" seems correct.');
         } else {
             $event->getIO()->write('<fg=red;options=bold>✘</> Git "remote.origin.pushurl" not set correctly, please run "composer tdk:set-push-url".');
@@ -220,14 +219,14 @@ EOF;
         $commandTemplate = 'git config --get commit.template';
         $process->execute($commandTemplate, $outputTemplate, self::$coreDevFolder);
 
-        if(!empty($outputTemplate) && $filesystem->exists(trim($outputTemplate))) {
+        if (!empty($outputTemplate) && $filesystem->exists(trim($outputTemplate))) {
             $event->getIO()->write('<fg=green;options=bold>✔</> Git "commit.template" is set to ' . trim($outputTemplate) . '.');
         } else {
             $event->getIO()->write('<fg=red;options=bold>✘</> Git "commit.template" not set or file does not exist, please run "composer tdk:set-commit-template"');
         }
 
         // Test vendor folder
-        if($filesystem->exists('vendor')) {
+        if ($filesystem->exists('vendor')) {
             $event->getIO()->write('<fg=green;options=bold>✔</> Vendor folder exists.');
         } else {
             $event->getIO()->write('<fg=red;options=bold>✘</> Vendor folder is missing, please run "composer install"');

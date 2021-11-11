@@ -5,7 +5,7 @@ use Codeception\Example;
 class TdkCest
 {
     private static string $coreDevFolder = 'typo3-core/';
-    private static string $testFolder = __DIR__ . '/../test-acceptance-tdk/';
+    private static string $testFolder = __DIR__ . '/../../test-acceptance-tdk/';
 
     public function _before(AcceptanceTester $I)
     {

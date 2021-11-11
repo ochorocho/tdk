@@ -1,0 +1,38 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+jobs:
+  testsuite:
+    name: all tests
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        php: ['7.4', '8.0' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: phpstan
+        run:  ./vendor/bin/phpstan analyse -c .phpstan.neon --no-progress
+
+      - name: php-cs-fixer
+        run:  ./vendor/bin/php-cs-fixer fix -v --config=./.php_cs.php --using-cache no
+
+      - name: Run acceptance tests
+        run: ./vendor/bin/codecept run --html
