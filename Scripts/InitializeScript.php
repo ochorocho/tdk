@@ -29,7 +29,7 @@ class InitializeScript
         ];
 
         foreach ($questions as $question) {
-            $force = GitScript::getArguments($event->getArguments())['force'] ?? false;
+            $force = (bool)(GitScript::getArguments($event->getArguments())['force'] ?? false);
 
             if ($force) {
                 $answer = true;

@@ -18,11 +18,11 @@ class GitScript
 
         // Validate username
         $validator = function ($value) {
-            if (!preg_match('/^[a-zA-Z0-9\._-]*$/', trim($value))) {
+            if (is_bool($value) || !preg_match('/^[a-zA-Z0-9._-]*$/', trim($value))) {
                 throw new \UnexpectedValueException('Invalid username "' . $value . '"');
             }
 
-            return trim($value)."\n";
+            return $value;
         };
 
         if ($arguments['username'] ?? false) {
