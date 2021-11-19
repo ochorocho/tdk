@@ -50,7 +50,7 @@ class TdkCest
      */
     public function commitTemplate(AcceptanceTester $I): void
     {
-        $I->runShellCommand('composer tdk:set-commit-template');
+        $I->runShellCommand('composer tdk:set-commit-template -- --file=./.gitmessage.txt');
         $I->seeInShellOutput('Set "commit.template" to ');
 
         $I->runShellCommand('git -C ' . self::$coreDevFolder . ' config --get commit.template');
