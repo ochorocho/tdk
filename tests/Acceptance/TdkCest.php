@@ -36,13 +36,13 @@ class TdkCest
      * @depends clone
      * @param AcceptanceTester $I
      */
-    public function pushUrl(AcceptanceTester $I): void
+    public function gitConfig(AcceptanceTester $I): void
     {
-        $I->runShellCommand('composer tdk:set-push-url -- --username=username');
-        $I->seeInShellOutput('Set "remote.origin.pushurl" to "ssh://username@review.typo3.org:29418/Packages/TYPO3.CMS.git"');
+        $I->runShellCommand('composer tdk:set-git-config -- --username=ochorocho');
+        $I->seeInShellOutput('Set "remote.origin.pushurl" to "ssh://ochorocho@review.typo3.org:29418/Packages/TYPO3.CMS.git"');
 
         $I->runShellCommand('git -C ' . self::$coreDevFolder . ' config --get remote.origin.pushurl');
-        $I->seeInShellOutput('ssh://username@review.typo3.org');
+        $I->seeInShellOutput('ssh://ochorocho@review.typo3.org');
     }
 
     /**
