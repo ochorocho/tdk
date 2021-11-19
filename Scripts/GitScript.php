@@ -48,8 +48,27 @@ class GitScript
 
     public static function setCommitTemplate(Event $event)
     {
+        $arguments = self::getArguments($event->getArguments());
+
+        // Validate file
+        $validator = function ($value) {
+            $path = realpath($value);
+            if (!is_file($path)) {
+                throw new \UnexpectedValueException('Invalid file path "' . $path . '"');
+            }
+
+            return $value;
+        };
+
+        if ($arguments['file'] ?? false) {
+            $file = $arguments['file'];
+            $validator($file);
+        } else {
+            $file = $event->getIO()->askAndValidate('Set TYPO3 commit message template [.gitmessage.txt]? ', $validator, 2, './.gitmessage.txt');
+        }
+
         $process = new ProcessExecutor();
-        $template = realpath('./.gitmessage.txt');
+        $template = realpath($file);
         $status = $process->execute('git config commit.template ' . $template, $output, self::$coreDevFolder);
 
         if ($status) {
@@ -83,7 +102,7 @@ class GitScript
         foreach ($array as $argument) {
             preg_match('/^--(.*)/', $argument, $parsed);
 
-            $key = explode('=', $parsed[1]);
+            $key = explode('=', $parsed[1] ?? '');
             $items[$key[0]] = $key[1] ?? true;
         }
 
