@@ -30,14 +30,12 @@ class GitScript
         };
 
         if ($arguments['username'] ?? false) {
-            $typo3AccountUsername = $arguments['username'];
-            $validator($typo3AccountUsername);
+            $userData = $validator($arguments['username']);
         } else {
             $userData = $event->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', $validator, 2);
-            $typo3AccountUsername = $userData['username'];
         }
 
-        $pushUrl = '"ssh://' . $typo3AccountUsername . '@review.typo3.org:29418/Packages/TYPO3.CMS.git"';
+        $pushUrl = '"ssh://' . $userData['username'] . '@review.typo3.org:29418/Packages/TYPO3.CMS.git"';
         $process = new ProcessExecutor();
 
         // Set git pushUrl
