@@ -18,7 +18,7 @@
         ],
         "tdk:setup": [
             "@tdk:clone",
-            "@tdk:set-push-url",
+            "@tdk:set-git-config",
             "@tdk:enable-hooks",
             "@tdk:ddev-config"
         ],
@@ -30,7 +30,7 @@
         "tdk:ddev-config": "Ochorocho\\Tdk\\Scripts\\InitializeScript::createDdevConfig",
         "tdk:help": "Ochorocho\\Tdk\\Scripts\\InitializeScript::showSummary",
         "tdk:set-commit-template": "Ochorocho\\Tdk\\Scripts\\GitScript::setCommitTemplate",
-        "tdk:set-push-url": "Ochorocho\\Tdk\\Scripts\\GitScript::setGerritPushUrl",
+        "tdk:set-git-config": "Ochorocho\\Tdk\\Scripts\\GitScript::setGitConfig",
         "typo3": "./vendor/bin/typo3 --"
     },
     "repositories": {

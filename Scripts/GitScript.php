@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Ochorocho\Tdk\Scripts;
 
+use Composer\Downloader\TransportException;
 use Composer\Script\Event;
+use Composer\Util\HttpDownloader;
 use Composer\Util\ProcessExecutor;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -12,44 +14,56 @@ class GitScript
 {
     private static string $coreDevFolder = 'typo3-core';
 
-    public static function setGerritPushUrl(Event $event)
+    public static function setGitConfig(Event $event)
     {
         $arguments = self::getArguments($event->getArguments());
 
-        // Validate username
-        $validator = function ($value) {
-            if (!preg_match('/^[a-zA-Z0-9_-]*$/', trim($value))) {
-                throw new \UnexpectedValueException('Invalid username "' . $value . '"');
+        // Validate the username
+        $validator = function ($value) use ($event) {
+            try {
+                $userData = self::getGerritUserData($event, $value);
+            } catch (TransportException $exception) {
+                throw new \UnexpectedValueException('Username "' . $value . '" not found in TYPO3 Gerrit: ' . PHP_EOL . $exception->getMessage());
             }
 
-            return trim($value)."\n";
+            return $userData;
         };
 
         if ($arguments['username'] ?? false) {
-            $typo3AccountUsername = $arguments['username'];
-            $validator($typo3AccountUsername);
+            $userData = $validator($arguments['username']);
         } else {
-            $typo3AccountUsername = $event->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', $validator, 2);
+            $userData = $event->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', $validator, 2);
         }
 
-        if (!empty($typo3AccountUsername)) {
-            $pushUrl = '"ssh://' . trim($typo3AccountUsername) . '@review.typo3.org:29418/Packages/TYPO3.CMS.git"';
-            $process = new ProcessExecutor();
-            $command = 'git config remote.origin.pushurl ' . $pushUrl;
-            $status = $process->execute($command, $output, self::$coreDevFolder);
-
-            if ($status) {
-                $event->getIO()->writeError('<error>Could not enable Git Commit Template!</error>');
-            } else {
-                $event->getIO()->write('<info>Set "remote.origin.pushurl" to ' . $pushUrl . ' </info>');
-            }
-        }
+        $pushUrl = 'ssh://' . $userData['username'] . '@review.typo3.org:29418/Packages/TYPO3.CMS.git';
+        self::setGitConfigValue($event, 'remote.origin.pushurl', $pushUrl);
+        self::setGitConfigValue($event, 'user.name', $userData['display_name']);
+        self::setGitConfigValue($event, 'user.email', $userData['email']);
     }
 
     public static function setCommitTemplate(Event $event)
     {
+        $arguments = self::getArguments($event->getArguments());
+
+        // Validate file
+        $validator = function ($value) {
+            $path = realpath($value);
+            if (!is_file($path)) {
+                throw new \UnexpectedValueException('Invalid file path "' . $path . '"');
+            }
+
+            return $value;
+        };
+
+        if ($arguments['file'] ?? false) {
+            $file = $arguments['file'];
+            $validator($file);
+        } else {
+            $file = $event->getIO()->askAndValidate('Set TYPO3 commit message template [.gitmessage.txt]? ', $validator, 2, './.gitmessage.txt');
+        }
+
         $process = new ProcessExecutor();
-        $template = realpath('./.gitmessage.txt');
+        $template = realpath($file);
         $status = $process->execute('git config commit.template ' . $template, $output, self::$coreDevFolder);
 
         if ($status) {
@@ -83,10 +97,35 @@ class GitScript
         foreach ($array as $argument) {
             preg_match('/^--(.*)/', $argument, $parsed);
 
-            $key = explode('=', $parsed[1]);
+            $key = explode('=', $parsed[1] ?? '');
             $items[$key[0]] = $key[1] ?? true;
         }
 
         return $items;
+    }
+
+    private static function getGerritUserData(Event $event, string $username): array
+    {
+        $request = new HttpDownloader($event->getIO(), $event->getComposer()->getConfig());
+        $json = $request->get('https://review.typo3.org/accounts/' . urlencode($username) . '/?pp=0');
+
+        // Gerrit does not return valid JSON using their JSON API
+        // therefore we need to chop off the first line
+        // Sounds weird? See why https://gerrit-review.googlesource.com/Documentation/rest-api.html#output
+        $validJson = str_replace(')]}\'', '', $json->getBody());
+
+        return json_decode($validJson, true);
+    }
+
+    private static function setGitConfigValue(Event $event, string $config, string $value): void
+    {
+        $process = new ProcessExecutor();
+        $command = 'git config ' . $config . ' "' . $value . '"';
+        $status = $process->execute($command, $output, self::$coreDevFolder);
+        if ($status > 0) {
+            $event->getIO()->writeError('<error>Could not set "' . $config . '" to "' . $value . '"</error>');
+        } else {
+            $event->getIO()->write('<info>Set "' . $config . '" to "' . $value . '"</info>');
+        }
     }
 }

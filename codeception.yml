@@ -17,7 +17,7 @@ suites:
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
-bootstrap: Acceptance/bootstrap.php
+bootstrap: bootstrap.php
 params:
     - env
 
