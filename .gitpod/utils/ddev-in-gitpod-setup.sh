@@ -14,6 +14,8 @@ if [ -z "$DP_PHP_VERSION" ]; then
   DP_PHP_VERSION="7.4"
 fi
 
+
+mkdir $DDEV_DIR
 cat <<CONFIGEND > "${DDEV_DIR}"/config.gitpod.yaml
 #ddev-gitpod-generated
 php_version: "$DP_PHP_VERSION"
