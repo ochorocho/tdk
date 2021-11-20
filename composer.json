@@ -10,8 +10,8 @@
         }
     ],
     "scripts": {
-        "post-root-package-install": "@tdk:setup",
         "pre-install-cmd": "@tdk:clone",
+        "post-root-package-install": "@tdk:setup",
         "post-create-project-cmd": [
             "@tdk:help",
             "Ochorocho\\Tdk\\Scripts\\InitializeScript::done"

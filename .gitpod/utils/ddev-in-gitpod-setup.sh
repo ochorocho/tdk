@@ -29,8 +29,8 @@ host_mailhog_port: "8025"
 # Assign phpMyAdmin port
 host_phpmyadmin_port: 8036
 
-#web_environment:
-#- DRUSH_OPTIONS_URI=https://127.0.0.1:8080
+web_environment:
+- DRUSH_OPTIONS_URI=https://127.0.0.1:8080
 CONFIGEND
 
 # Misc housekeeping before start
