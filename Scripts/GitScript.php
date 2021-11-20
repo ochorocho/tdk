@@ -35,35 +35,10 @@ class GitScript
             $userData = $event->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', $validator, 2);
         }
 
-        $pushUrl = '"ssh://' . $userData['username'] . '@review.typo3.org:29418/Packages/TYPO3.CMS.git"';
-        $process = new ProcessExecutor();
-
-        // Set git pushUrl
-        $command = 'git config remote.origin.pushurl ' . $pushUrl;
-        $status = $process->execute($command, $output, self::$coreDevFolder);
-        if ($status) {
-            $event->getIO()->writeError('<error>Could not set "remote.origin.pushurl" to ' . $pushUrl . ' </error>');
-        } else {
-            $event->getIO()->write('<info>Set "remote.origin.pushurl" to ' . $pushUrl . '</info>');
-        }
-
-        // Set git display name
-        $command = 'git config user.name ' . $userData['display_name'];
-        $status = $process->execute($command, $output, self::$coreDevFolder);
-        if ($status) {
-            $event->getIO()->writeError('<error>Could not set "user.name" to ' . $userData['display_name'] . ' </error>');
-        } else {
-            $event->getIO()->write('<info>Set "remote.origin.pushurl" to ' . $userData['display_name'] . '</info>');
-        }
-
-        // Set git email address
-        $command = 'git config user.email ' . $userData['email'];
-        $status = $process->execute($command, $output, self::$coreDevFolder);
-        if ($status) {
-            $event->getIO()->writeError('<error>Could not set "user.email" to ' . $userData['email'] . ' </error>');
-        } else {
-            $event->getIO()->write('<info>Set "user.email" to ' . $userData['email'] . '</info>');
-        }
+        $pushUrl = 'ssh://' . $userData['username'] . '@review.typo3.org:29418/Packages/TYPO3.CMS.git';
+        self::setGitConfigValue($event, 'remote.origin.pushurl', $pushUrl);
+        self::setGitConfigValue($event, 'user.name', $userData['display_name']);
+        self::setGitConfigValue($event, 'user.email', $userData['email']);
     }
 
     public static function setCommitTemplate(Event $event)
@@ -140,5 +115,17 @@ class GitScript
         $validJson = str_replace(')]}\'', '', $json->getBody());
 
         return json_decode($validJson, true);
+    }
+
+    private static function setGitConfigValue(Event $event, string $config, string $value): void
+    {
+        $process = new ProcessExecutor();
+        $command = 'git config ' . $config . ' "' . $value . '"';
+        $status = $process->execute($command, $output, self::$coreDevFolder);
+        if ($status > 0) {
+            $event->getIO()->writeError('<error>Could not set "' . $config . '" to "' . $value . '"</error>');
+        } else {
+            $event->getIO()->write('<info>Set "' . $config . '" to "' . $value . '"</info>');
+        }
     }
 }

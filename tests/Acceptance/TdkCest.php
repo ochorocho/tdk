@@ -1,6 +1,10 @@
 <?php
 
-use Codeception\Example;
+declare(strict_types=1);
+
+namespace Acceptance;
+
+use \AcceptanceTester as AcceptanceTester;
 
 class TdkCest
 {
@@ -39,10 +43,22 @@ class TdkCest
     public function gitConfig(AcceptanceTester $I): void
     {
         $I->runShellCommand('composer tdk:set-git-config -- --username=ochorocho');
+        $I->amGoingTo('See expected response text of command');
         $I->seeInShellOutput('Set "remote.origin.pushurl" to "ssh://ochorocho@review.typo3.org:29418/Packages/TYPO3.CMS.git"');
+        $I->seeInShellOutput('Set "user.email" to "rothjochen@gmail.com"');
+        $I->seeInShellOutput('Set "user.name" to "Jochen Roth"');
 
+        $I->amGoingTo('See newly set "remote.origin.pushurl"');
         $I->runShellCommand('git -C ' . self::$coreDevFolder . ' config --get remote.origin.pushurl');
         $I->seeInShellOutput('ssh://ochorocho@review.typo3.org');
+
+        $I->amGoingTo('See newly set "user.name"');
+        $I->runShellCommand('git -C ' . self::$coreDevFolder . ' config --get user.name');
+        $I->seeInShellOutput('Jochen Roth');
+
+        $I->amGoingTo('See newly set "user.email"');
+        $I->runShellCommand('git -C ' . self::$coreDevFolder . ' config --get user.email');
+        $I->seeInShellOutput('rothjochen@gmail.com');
     }
 
     /**
