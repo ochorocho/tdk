@@ -10,6 +10,7 @@ tasks:
     command: |
       .gitpod/utils/ddev-in-gitpod-setup.sh
       .gitpod/utils/env-setup.sh
+      composer tdk:clone
       composer install
       composer tdk:set-git-config
       composer tdk:enable-hooks
