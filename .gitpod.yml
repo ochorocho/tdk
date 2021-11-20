@@ -4,7 +4,6 @@ image: drupalpod/drupalpod-gitpod-base:20211116-ready-made-envs
 # when starting a workspace all docker images are ready
 tasks:
   - init: |
-      .gitpod/utils/send-a-message-gcs.sh
       .gitpod/utils/download-ddev-images.sh
       .gitpod/utils/ddev-in-gitpod-setup.sh
     command: |
@@ -15,6 +14,11 @@ tasks:
       composer tdk:set-git-config
       composer tdk:enable-hooks
       composer tdk:ddev-config
+      ddev start
+      touch public/FIRST_INSTALL
+
+# Auto generate frontend!
+
 # VScode xdebug extension
 vscode:
   extensions:
