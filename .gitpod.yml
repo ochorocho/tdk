@@ -4,9 +4,8 @@ image: drupalpod/drupalpod-gitpod-base:20211116-ready-made-envs
 # when starting a workspace all docker images are ready
 tasks:
   - init: |
-      .gitpod/utils/download-ddev-images.sh
-      ddev config --docroot=public --create-docroot --project-type=typo3 --project-name=typo3
       .gitpod/utils/ddev-in-gitpod-setup.sh
+      ddev config --docroot=public --create-docroot --project-type=typo3 --project-name=typo3
     command: |
       .gitpod/utils/env-setup.sh
       composer tdk:clone

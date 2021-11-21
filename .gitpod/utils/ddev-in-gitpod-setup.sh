@@ -1,4 +1,13 @@
 #!/usr/bin/env bash
+
+# Download ddev images
+ddev version | awk '/(drud|phpmyadmin)/ {print $2;}' >/tmp/images.txt
+while IFS= read -r item
+do
+  docker pull "$item"
+done < <(cat /tmp/images.txt)
+
+# Setup
 DDEV_DIR="${GITPOD_REPO_ROOT}/.ddev"
 mkdir $DDEV_DIR
 
@@ -6,6 +15,7 @@ if [ -z "$PHP_VERSION" ]; then
   PHP_VERSION="8.0"
 fi
 
+# ddev config for Gitpod only, will override values in .ddev/config.yml
 cat <<CONFIGEND > "${DDEV_DIR}"/config.gitpod.yaml
 #ddev-gitpod-generated
 php_version: "$PHP_VERSION"
@@ -22,7 +32,8 @@ host_mailhog_port: "8025"
 host_phpmyadmin_port: 8036
 CONFIGEND
 
-cat <<COMPOSEEND > "${DDEV_DIR}"/docker-compose.context.yaml
+# Set ddev specific environment variables
+cat <<COMPOSEEND > "${DDEV_DIR}"/docker-compose.typo3.yaml
 version: '3.6'
 services:
    web:
