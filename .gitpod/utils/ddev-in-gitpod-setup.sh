@@ -22,5 +22,13 @@ host_mailhog_port: "8025"
 host_phpmyadmin_port: 8036
 CONFIGEND
 
+cat <<COMPOSEEND > "${DDEV_DIR}"/docker-compose.context.yaml
+version: '3.6'
+services:
+   web:
+    environment:
+      - TYPO3_CONTEXT=Development
+COMPOSEEND
+
 # Misc housekeeping before start
 ddev config global --instrumentation-opt-in=true --omit-containers=ddev-router
