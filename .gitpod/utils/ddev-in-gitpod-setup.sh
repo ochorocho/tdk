@@ -1,24 +1,14 @@
 #!/usr/bin/env bash
-if [ -n "$DEBUG_DRUPALPOD" ] || [ -n "$GITPOD_HEADLESS" ]; then
-    set -x
-fi
-
-# Set up ddev for use on gitpod
-
 DDEV_DIR="${GITPOD_REPO_ROOT}/.ddev"
-# Generate a config.gitpod.yaml that adds the gitpod
-# proxied ports so they're known to ddev.
+mkdir $DDEV_DIR
 
-# Set the default PHP version to 7.4
-if [ -z "$DP_PHP_VERSION" ]; then
-  DP_PHP_VERSION="7.4"
+if [ -z "$PHP_VERSION" ]; then
+  PHP_VERSION="8.0"
 fi
 
-
-mkdir $DDEV_DIR
 cat <<CONFIGEND > "${DDEV_DIR}"/config.gitpod.yaml
 #ddev-gitpod-generated
-php_version: "$DP_PHP_VERSION"
+php_version: "$PHP_VERSION"
 
 bind_all_interfaces: true
 host_webserver_port: 8080
@@ -30,9 +20,6 @@ host_db_port: 3306
 host_mailhog_port: "8025"
 # Assign phpMyAdmin port
 host_phpmyadmin_port: 8036
-
-web_environment:
-- DRUSH_OPTIONS_URI=https://127.0.0.1:8080
 CONFIGEND
 
 # Misc housekeeping before start

@@ -5,19 +5,16 @@ image: drupalpod/drupalpod-gitpod-base:20211116-ready-made-envs
 tasks:
   - init: |
       .gitpod/utils/download-ddev-images.sh
+      ddev config --docroot=public --create-docroot --project-type=typo3 --project-name=typo3
       .gitpod/utils/ddev-in-gitpod-setup.sh
     command: |
-      .gitpod/utils/ddev-in-gitpod-setup.sh
       .gitpod/utils/env-setup.sh
       composer tdk:clone
       composer install
-      composer tdk:set-git-config
-      composer tdk:enable-hooks
-      composer tdk:ddev-config
+      composer tdk:set-git-config -- --username=ochorocho
+      composer tdk:enable-hooks -- --force
       ddev start
       touch public/FIRST_INSTALL
-
-# Auto generate frontend!
 
 # VScode xdebug extension
 vscode:
