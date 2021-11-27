@@ -12,6 +12,7 @@ tasks:
       composer tdk:enable-hooks -- --force
       ddev start
       touch public/FIRST_INSTALL
+      composer tdk:help
 
 # VScode xdebug extension
 vscode:
