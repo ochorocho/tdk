@@ -37,7 +37,7 @@ class GitScript
 
         $pushUrl = 'ssh://' . $userData['username'] . '@review.typo3.org:29418/Packages/TYPO3.CMS.git';
         self::setGitConfigValue($event, 'remote.origin.pushurl', $pushUrl);
-        self::setGitConfigValue($event, 'user.name', $userData['display_name']);
+        self::setGitConfigValue($event, 'user.name', $userData['display_name'] ?? $userData['name'] ?? $userData['username']);
         self::setGitConfigValue($event, 'user.email', $userData['email']);
     }
 
