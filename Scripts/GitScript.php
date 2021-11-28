@@ -84,7 +84,7 @@ class GitScript
         if ($filesystem->exists(self::$coreDevFolder)) {
             $process = new ProcessExecutor();
             $command = 'git fetch https://review.typo3.org/Packages/TYPO3.CMS ' . $ref . ' && git cherry-pick FETCH_HEAD';
-            $event->getIO()->write('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
+            $event->getIO()->write('<info>Apply patch ' . $ref . '</info>');
             $status = $process->executeTty($command, self::$coreDevFolder);
 
             if ($status) {

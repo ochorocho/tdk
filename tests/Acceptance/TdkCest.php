@@ -98,6 +98,18 @@ class TdkCest
     /**
      * @param AcceptanceTester $I
      */
+    public function applyPatch(AcceptanceTester $I): void
+    {
+        $I->runShellCommand('composer tdk:apply-patch -- --ref=refs/changes/75/72275/17');
+        $I->seeInShellOutput('Apply patch refs/changes/75/72275/17');
+
+        $I->runShellCommand('git -C ' . self::$coreDevFolder . ' log -1 --oneline');
+        $I->seeInShellOutput('Properly handle l10n_display=displayAsReadonly');
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     */
     public function clear(AcceptanceTester $I): void
     {
         $I->runShellCommand('composer tdk:clear -- --force');
