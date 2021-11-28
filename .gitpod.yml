@@ -10,6 +10,8 @@ tasks:
       composer install
       composer tdk:set-git-config
       composer tdk:enable-hooks -- --force
+      # Disable ssl verification for "git fetch" @todo find a way to make it work with ssl!
+      git config --global http.sslverify false
       composer tdk:apply-patch
       ddev start
       touch public/FIRST_INSTALL
