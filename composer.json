@@ -10,8 +10,8 @@
         }
     ],
     "scripts": {
-        "post-root-package-install": "@tdk:setup",
         "pre-install-cmd": "@tdk:clone",
+        "post-root-package-install": "@tdk:setup",
         "post-create-project-cmd": [
             "@tdk:help",
             "Ochorocho\\Tdk\\Scripts\\InitializeScript::done"
@@ -31,6 +31,7 @@
         "tdk:help": "Ochorocho\\Tdk\\Scripts\\InitializeScript::showSummary",
         "tdk:set-commit-template": "Ochorocho\\Tdk\\Scripts\\GitScript::setCommitTemplate",
         "tdk:set-git-config": "Ochorocho\\Tdk\\Scripts\\GitScript::setGitConfig",
+        "tdk:apply-patch": "Ochorocho\\Tdk\\Scripts\\GitScript::applyPatch",
         "typo3": "./vendor/bin/typo3 --"
     },
     "repositories": {

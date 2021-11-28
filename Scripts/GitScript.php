@@ -29,8 +29,11 @@ class GitScript
             return $userData;
         };
 
-        if ($arguments['username'] ?? false) {
-            $userData = $validator($arguments['username']);
+        $username = $arguments['username'] ?? getenv('TDK_USERNAME') ?? false;
+        if($username === 'none') {
+            return 0;
+        } elseif ($username) {
+            $userData = $validator($username);
         } else {
             $userData = $event->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', $validator, 2);
         }
@@ -56,8 +59,7 @@ class GitScript
         };
 
         if ($arguments['file'] ?? false) {
-            $file = $arguments['file'];
-            $validator($file);
+            $file = $validator($arguments['file']);
         } else {
             $file = $event->getIO()->askAndValidate('Set TYPO3 commit message template [.gitmessage.txt]? ', $validator, 2, './.gitmessage.txt');
         }
@@ -70,6 +72,28 @@ class GitScript
             $event->getIO()->writeError('<error>Could not enable Git Commit Template!</error>');
         } else {
             $event->getIO()->write('<info>Set "commit.template" to ' . $template . ' </info>');
+        }
+    }
+
+    public static function applyPatch(Event $event)
+    {
+        $ref = self::getArguments($event->getArguments())['ref'] ?? getenv('TDK_PATCH_REF') ?? false;
+        if(empty($ref)) {
+            $event->getIO()->write('<warning>No patch ref given</warning>');
+        }
+
+        $filesystem = new Filesystem();
+        if ($filesystem->exists(self::$coreDevFolder)) {
+            $process = new ProcessExecutor();
+            $command = 'git fetch https://review.typo3.org/Packages/TYPO3.CMS ' . $ref . ' && git cherry-pick FETCH_HEAD';
+            $event->getIO()->write('<info>Apply patch ' . $ref . '</info>');
+            $status = $process->executeTty($command, self::$coreDevFolder);
+
+            if ($status) {
+                $event->getIO()->write('<warning>Could not apply patch ' . $ref . ' </warning>');
+            }
+        } else {
+            $event->getIO()->write('Could not apply patch, repository does not exist. Please run "composer tdk:clone"');
         }
     }
 

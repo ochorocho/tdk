@@ -27,7 +27,7 @@ composer based TYPO3 CoreDev environment.
 
 ## Additional Composer commands/scripts
 
-`composer tdk:<command>`
+`composer <command>`
 
 * `tdk:setup`: Setup everything to run a Composer based CoreDev Setup
 * `tdk:clear`: Delete all files and folder
@@ -38,7 +38,8 @@ composer based TYPO3 CoreDev environment.
 * `tdk:ddev-config`: Create a basic ddev configuration
 * `tdk:help`: Show summary with links to the TYPO3 Contribution Guide
 * `tdk:doctor`: Show potential issues
-* `typo3`: Shortcut to run TYPO3 Commands 
+* `typo3`: Shortcut to run TYPO3 Commands
+* `tdk:apply-patch`: Apply Gerrit patch e.g. `composer tdk:apply-patch -- --ref=refs/changes/75/72275/17` 
 
 ## Demo run
 
