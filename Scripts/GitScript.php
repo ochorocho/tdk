@@ -30,7 +30,9 @@ class GitScript
         };
 
         $username = $arguments['username'] ?? getenv('TDK_USERNAME') ?? false;
-        if ($username) {
+        if($username === 'none') {
+            return 0;
+        } elseif ($username) {
             $userData = $validator($username);
         } else {
             $userData = $event->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', $validator, 2);
