@@ -28,9 +28,8 @@ class InitializeScript
             ],
         ];
 
+        $force = (bool)(GitScript::getArguments($event->getArguments())['force'] ?? getenv('TDK_HOOK_FORCE_CREATE') ?? false);
         foreach ($questions as $question) {
-            $force = (bool)(GitScript::getArguments($event->getArguments())['force'] ?? false);
-
             if ($force) {
                 $answer = true;
             } else {
@@ -98,7 +97,10 @@ class InitializeScript
         $test = $windows ? 'where' : 'command -v';
 
         if (is_executable(trim(shell_exec($test . ' ddev') ?? ''))) {
-            $answer = $event->getIO()->askConfirmation('Create a basic ddev config? [y/<fg=cyan;options=bold>n</>] ', false);
+            $answer = (bool)(GitScript::getArguments($event->getArguments())['--yes'] ?? getenv('TDK_CREATE_DDEV_PROJECT_NAME') ?? false);
+            if (!$answer) {
+                $answer = $event->getIO()->askConfirmation('Create a basic ddev config? [y/<fg=cyan;options=bold>n</>] ', false);
+            }
 
             if ($answer) {
                 // Validate ddev project name
@@ -110,7 +112,12 @@ class InitializeScript
                     return trim($value)."\n";
                 };
 
-                $ddevProjectName = $event->getIO()->askAndValidate('What should be the ddev projects name? ', $validator, 2);
+                $ddevProjectName = GitScript::getArguments($event->getArguments())['--project-name'] ?? getenv('TDK_CREATE_DDEV_PROJECT_NAME') ?? false;
+                if (!$ddevProjectName) {
+                    $ddevProjectName = $event->getIO()->askAndValidate('What should be the ddev projects name? ', $validator, 2);
+                } else {
+                    $ddevProjectName = $validator($ddevProjectName);
+                }
 
                 if (!empty($ddevProjectName)) {
                     $configYaml = <<<EOF
@@ -157,7 +164,6 @@ EOF;
         } else {
             $answer = $event->getIO()->askConfirmation('Really want to delete ' . implode(', ', $filesToDelete) . '? [y/<fg=cyan;options=bold>n</>] ', false);
         }
-
 
         if ($answer) {
             $filesystem = new Filesystem();
