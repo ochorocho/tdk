@@ -31,6 +31,7 @@
         "tdk:help": "Ochorocho\\Tdk\\Scripts\\InitializeScript::showSummary",
         "tdk:set-commit-template": "Ochorocho\\Tdk\\Scripts\\GitScript::setCommitTemplate",
         "tdk:set-git-config": "Ochorocho\\Tdk\\Scripts\\GitScript::setGitConfig",
+        "tdk:apply-patch": "Ochorocho\\Tdk\\Scripts\\GitScript::applyPatch",
         "typo3": "./vendor/bin/typo3 --"
     },
     "repositories": {
