@@ -8,8 +8,9 @@ tasks:
       .gitpod/utils/env-setup.sh
       composer tdk:clone
       composer install
-      composer tdk:set-git-config -- --username=ochorocho
+      composer tdk:set-git-config
       composer tdk:enable-hooks -- --force
+      composer tdk:apply-patch
       ddev start
       touch public/FIRST_INSTALL
       composer tdk:help
