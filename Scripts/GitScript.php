@@ -126,7 +126,7 @@ class GitScript
 
         $process = new ProcessExecutor();
         $command = sprintf('git checkout %s', ProcessExecutor::escape($branch));
-        $event->getIO()->write('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
+        $event->getIO()->write('<info>Checking out branch "' . $branch . '"!</info>');
         $status = $process->executeTty($command, self::$coreDevFolder);
         if ($status) {
             $event->getIO()->write('<warning>Could not checkout branch ' . $branch . ' </warning>');

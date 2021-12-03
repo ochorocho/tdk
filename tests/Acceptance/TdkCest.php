@@ -110,6 +110,18 @@ class TdkCest
     /**
      * @param AcceptanceTester $I
      */
+    public function checkoutBranch(AcceptanceTester $I): void
+    {
+        $I->runShellCommand('composer tdk:checkout -- --branch=main');
+        $I->seeInShellOutput('Checking out branch "main"!');
+
+        $I->runShellCommand('git -C ' . self::$coreDevFolder . ' branch --show-current');
+        $I->seeInShellOutput('main');
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     */
     public function clear(AcceptanceTester $I): void
     {
         $I->runShellCommand('composer tdk:clear -- --force');
