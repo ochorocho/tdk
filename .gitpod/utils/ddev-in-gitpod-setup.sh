@@ -18,7 +18,7 @@ fi
 # ddev config for Gitpod only, will override values in .ddev/config.yml
 cat <<CONFIGEND > "${DDEV_DIR}"/config.gitpod.yaml
 #ddev-gitpod-generated
-php_version: "$PHP_VERSION"
+php_version: "$TDK_PHP_VERSION"
 
 bind_all_interfaces: true
 host_webserver_port: 8080

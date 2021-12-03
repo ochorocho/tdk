@@ -80,6 +80,7 @@ class GitScript
         $ref = self::getArguments($event->getArguments())['ref'] ?? getenv('TDK_PATCH_REF') ?? false;
         if(empty($ref)) {
             $event->getIO()->write('<warning>No patch ref given</warning>');
+            return 1;
         }
 
         $filesystem = new Filesystem();
@@ -112,6 +113,23 @@ class GitScript
             }
         } else {
             $event->getIO()->write('Repository exists! Therefore no download required.');
+        }
+    }
+
+    public static function checkoutBranch(Event $event)
+    {
+        $branch = self::getArguments($event->getArguments())['branch'] ?? getenv('TDK_BRANCH') ?? false;
+        if(empty($branch)) {
+            $event->getIO()->write('<warning>No branch name given</warning>');
+            return 1;
+        }
+
+        $process = new ProcessExecutor();
+        $command = sprintf('git checkout %s', ProcessExecutor::escape($branch));
+        $event->getIO()->write('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
+        $status = $process->executeTty($command, self::$coreDevFolder);
+        if ($status) {
+            $event->getIO()->write('<warning>Could not checkout branch ' . $branch . ' </warning>');
         }
     }
 
