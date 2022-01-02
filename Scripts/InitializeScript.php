@@ -131,13 +131,14 @@ router_https_port: "443"
 xdebug_enabled: false
 additional_hostnames: []
 additional_fqdns: []
-mariadb_version: "10.3"
+mariadb_version: "10.5"
 mysql_version: ""
 nfs_mount_enabled: false
 mutagen_enabled: false
 use_dns_when_possible: true
 composer_version: ""
-web_environment: []
+web_environment: 
+ - TYPO3_CONTEXT=Development
 EOF;
 
                     $filesystem = new Filesystem();
