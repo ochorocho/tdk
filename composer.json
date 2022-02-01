@@ -96,7 +96,7 @@
         "codeception/module-webdriver": "dev-master",
         "codeception/module-filesystem": "dev-master",
         "phpstan/phpstan": "^1.1",
-        "composer/composer": "2.2.x-dev",
+        "composer/composer": "^2.2.0",
         "friendsofphp/php-cs-fixer": "dev-master"
     }
 }
