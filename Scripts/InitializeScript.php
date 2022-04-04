@@ -124,7 +124,7 @@ class InitializeScript
 name: $ddevProjectName
 type: typo3
 docroot: public
-php_version: "8.0"
+php_version: "8.1"
 webserver_type: nginx-fpm
 router_http_port: "80"
 router_https_port: "443"
