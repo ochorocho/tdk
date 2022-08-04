@@ -91,12 +91,12 @@
         "typo3/cms-workspaces": "@dev"
     },
     "require-dev": {
-        "codeception/codeception": "^4.1.22",
-        "codeception/module-cli": "^1.1.1",
-        "codeception/module-webdriver": "^2.0",
-        "codeception/module-filesystem": "^2.0",
-        "phpstan/phpstan": "^1.1",
-        "composer/composer": "^2.2.0",
-        "friendsofphp/php-cs-fixer": "dev-master"
+        "codeception/codeception": "*",
+        "codeception/module-cli": "*",
+        "codeception/module-webdriver": "*",
+        "codeception/module-filesystem": "*",
+        "phpstan/phpstan": "*",
+        "composer/composer": "*",
+        "friendsofphp/php-cs-fixer": "*"
     }
 }
