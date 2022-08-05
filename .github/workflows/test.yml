@@ -17,14 +17,15 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate --no-check-all --no-check-lock
 
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v2
-        with:
-          path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-php-
+# Disable cache for now as it causes more issues than it solves
+#      - name: Cache Composer packages
+#        id: composer-cache
+#        uses: actions/cache@v2
+#        with:
+#          path: vendor
+#          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-php-
 
       - name: Install dependencies
         # Do a clone here to make sure the repository exists on install
