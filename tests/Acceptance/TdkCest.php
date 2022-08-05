@@ -96,15 +96,17 @@ class TdkCest
     }
 
     /**
+     * @todo: Find a more generic way to test the tdk:apply-patch command
+     *
      * @param AcceptanceTester $I
      */
     public function applyPatch(AcceptanceTester $I): void
     {
-        $I->runShellCommand('composer tdk:apply-patch -- --ref=refs/changes/75/72275/17');
-        $I->seeInShellOutput('Apply patch refs/changes/75/72275/17');
+        $I->runShellCommand('composer tdk:apply-patch -- --ref=refs/changes/43/70643/35');
+        $I->seeInShellOutput('Apply patch refs/changes/43/70643/35');
 
         $I->runShellCommand('git -C ' . self::$coreDevFolder . ' log -1 --oneline');
-        $I->seeInShellOutput('Properly handle l10n_display=displayAsReadonly');
+        $I->seeInShellOutput('Add configurable template for locked backend');
     }
 
     /**

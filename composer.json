@@ -98,5 +98,10 @@
         "phpstan/phpstan": "*",
         "composer/composer": "*",
         "friendsofphp/php-cs-fixer": "*"
+    },
+    "config": {
+        "allow-plugins": {
+            "typo3/class-alias-loader": true
+        }
     }
 }
