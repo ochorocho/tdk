@@ -46,7 +46,6 @@
             "url": "packages/*"
         }
     },
-    "minimum-stability": "dev",
     "autoload-dev": {
         "psr-4": {
             "Ochorocho\\Tdk\\Scripts\\": "Scripts/"
