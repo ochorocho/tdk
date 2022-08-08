@@ -14,14 +14,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Validate composer.json and composer.lock
-        run: composer validate --no-check-all --no-check-lock
-
       - uses: docker-practice/actions-setup-docker@master
       - run: |
           set -x
-          
           docker version
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --no-check-all --no-check-lock
 
       - name: Install docker
         run: sudo apt update && sudo apt install -y docker

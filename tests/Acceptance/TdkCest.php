@@ -37,7 +37,6 @@ class TdkCest
     }
 
     /**
-     * @depends clone
      * @param AcceptanceTester $I
      */
     public function gitConfig(AcceptanceTester $I): void
@@ -114,8 +113,18 @@ class TdkCest
      */
     public function ddevConfig(AcceptanceTester $I): void
     {
+        $I->amGoingTo('use a invalid project name');
+        $I->runShellCommand('composer tdk:ddev-config -- --project-name="typo3 invalid"');
+        $I->seeInShellOutput('Invalid ddev project name');
+
+        $I->amGoingTo('abort configuration');
+        $I->runShellCommand('echo n | composer tdk:ddev-config');
+        $I->seeInShellOutput('Aborted! No ddev config created');
+
+        $I->amGoingTo('create a ddev config');
         $I->runShellCommand('composer tdk:ddev-config -- --project-name="typo3-dev"');
-        $I->seeResultCodeIs(1);
+        $I->seeFileFound('config.yaml', 'test-acceptance-tdk/.ddev/');
+        $I->seeResultCodeIs(0);
     }
 
     /**

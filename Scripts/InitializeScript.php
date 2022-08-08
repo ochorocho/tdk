@@ -115,8 +115,8 @@ class InitializeScript
             if (!$ddevProjectName) {
                 $createConfig = $event->getIO()->askConfirmation('Create a basic ddev config? [y/<fg=cyan;options=bold>n</>] ', false);
                 if(!$createConfig) {
-                    $event->getIO()->warning('Aborted! No ddev config created.');
-                    return false;
+                    $event->getIO()->write('<warning>Aborted! No ddev config created.</warning>');
+                    return 0;
                 }
             }
 
@@ -128,16 +128,23 @@ class InitializeScript
                 try {
                     $ddevProjectName = $validator($ddevProjectName);
                 } catch (\UnexpectedValueException $e) {
-                    $event->getIO()->alert($e->getMessage());
-                    return false;
+                    $event->getIO()->write('<error>' . $e->getMessage() . '</error>');
+                    return 1;
                 }
             }
 
-            $composer = json_decode(file_get_contents('typo3-core/composer.json'), true, 512, JSON_THROW_ON_ERROR);
-            preg_match('/[0-9]\.[0-9]/', $composer['require']['php'], $phpVersion);
-            $ddevCommand = 'ddev config --docroot public --project-name ' . $ddevProjectName . ' --web-environment-add TYPO3_CONTEXT=Development --project-type typo3 --php-version 8.1 --create-docroot 1> /dev/null';
-            $huhu = exec($ddevCommand);
-            return $huhu;
+            if($fileContent = file_get_contents('typo3-core/composer.json')) {
+                $json = json_decode($fileContent, true, 512, JSON_THROW_ON_ERROR);
+                preg_match_all('/[0-9].[0-9]/', $json['require']['php'], $versions);
+                $phpVersion = $versions[0][0];
+            } else {
+                $phpVersion = '8.1';
+            }
+
+            $ddevCommand = 'ddev config --docroot public --project-name ' . $ddevProjectName . ' --web-environment-add TYPO3_CONTEXT=Development --project-type typo3 --php-version ' . $phpVersion . ' --create-docroot 1> /dev/null';
+            exec($ddevCommand, $output, $statusCode);
+
+            exit($statusCode);
         }
     }
 
