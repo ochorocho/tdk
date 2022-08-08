@@ -112,6 +112,15 @@ class TdkCest
     /**
      * @param AcceptanceTester $I
      */
+    public function ddevConfig(AcceptanceTester $I): void
+    {
+        $I->runShellCommand('composer tdk:ddev-config -- --project-name="typo3-dev"');
+        $I->seeResultCodeIs(1);
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     */
     public function checkoutBranch(AcceptanceTester $I): void
     {
         $I->runShellCommand('composer tdk:checkout -- --branch=main');

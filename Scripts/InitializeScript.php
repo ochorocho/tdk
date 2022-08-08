@@ -52,6 +52,20 @@ class InitializeScript
         ]);
     }
 
+    /**
+     * @return \Closure
+     */
+    protected static function validateDdevProjectName(): \Closure
+    {
+        return function ($value) {
+            if (!preg_match('/^[a-zA-Z0-9_-]*$/', trim($value))) {
+                throw new \UnexpectedValueException('Invalid ddev project name "' . $value . '"');
+            }
+
+            return trim($value);
+        };
+    }
+
     private static function enableCommitMessageHook(Event $event)
     {
         $filesystem = new Filesystem();
@@ -97,54 +111,33 @@ class InitializeScript
         $test = $windows ? 'where' : 'command -v';
 
         if (is_executable(trim(shell_exec($test . ' ddev') ?? ''))) {
-            $answer = (bool)(GitScript::getArguments($event->getArguments())['--yes'] ?? getenv('TDK_CREATE_DDEV_PROJECT_NAME') ?? false);
-            if (!$answer) {
-                $answer = $event->getIO()->askConfirmation('Create a basic ddev config? [y/<fg=cyan;options=bold>n</>] ', false);
+            $ddevProjectName = GitScript::getArguments($event->getArguments())['project-name'] ?? getenv('TDK_CREATE_DDEV_PROJECT_NAME') ?? false;
+            if (!$ddevProjectName) {
+                $createConfig = $event->getIO()->askConfirmation('Create a basic ddev config? [y/<fg=cyan;options=bold>n</>] ', false);
+                if(!$createConfig) {
+                    $event->getIO()->warning('Aborted! No ddev config created.');
+                    return false;
+                }
             }
 
-            if ($answer) {
-                // Validate ddev project name
-                $validator = function ($value) {
-                    if (!preg_match('/^[a-zA-Z0-9_-]*$/', trim($value))) {
-                        throw new \UnexpectedValueException('Invalid ddev project name "' . $value . '"');
-                    }
+            $validator = self::validateDdevProjectName();
 
-                    return trim($value)."\n";
-                };
-
-                $ddevProjectName = GitScript::getArguments($event->getArguments())['--project-name'] ?? getenv('TDK_CREATE_DDEV_PROJECT_NAME') ?? false;
-                if (!$ddevProjectName) {
-                    $ddevProjectName = $event->getIO()->askAndValidate('What should be the ddev projects name? ', $validator, 2);
-                } else {
+            if (!$ddevProjectName) {
+                $ddevProjectName = $event->getIO()->askAndValidate('What should be the ddev projects name? ', $validator, 2);
+            } else {
+                try {
                     $ddevProjectName = $validator($ddevProjectName);
-                }
-
-                if (!empty($ddevProjectName)) {
-                    $configYaml = <<<EOF
-name: $ddevProjectName
-type: typo3
-docroot: public
-php_version: "8.1"
-webserver_type: nginx-fpm
-router_http_port: "80"
-router_https_port: "443"
-xdebug_enabled: false
-additional_hostnames: []
-additional_fqdns: []
-mariadb_version: "10.5"
-mysql_version: ""
-nfs_mount_enabled: false
-mutagen_enabled: false
-use_dns_when_possible: true
-composer_version: ""
-web_environment: 
- - TYPO3_CONTEXT=Development
-EOF;
-
-                    $filesystem = new Filesystem();
-                    $filesystem->dumpFile('.ddev/config.yaml', $configYaml);
+                } catch (\UnexpectedValueException $e) {
+                    $event->getIO()->alert($e->getMessage());
+                    return false;
                 }
             }
+
+            $composer = json_decode(file_get_contents('typo3-core/composer.json'), true, 512, JSON_THROW_ON_ERROR);
+            preg_match('/[0-9]\.[0-9]/', $composer['require']['php'], $phpVersion);
+            $ddevCommand = 'ddev config --docroot public --project-name ' . $ddevProjectName . ' --web-environment-add TYPO3_CONTEXT=Development --project-type typo3 --php-version 8.1 --create-docroot 1> /dev/null';
+            $huhu = exec($ddevCommand);
+            return $huhu;
         }
     }
 
