@@ -123,7 +123,8 @@ class InitializeScript
             $validator = self::validateDdevProjectName();
 
             if (!$ddevProjectName) {
-                $ddevProjectName = $event->getIO()->askAndValidate('What should be the ddev projects name? ', $validator, 2);
+                $defaultProjectName = basename(getcwd());
+                $ddevProjectName = $event->getIO()->askAndValidate('What should be the ddev projects name [default: ' . $defaultProjectName . '] ? ', $validator, 2, $defaultProjectName);
             } else {
                 try {
                     $ddevProjectName = $validator($ddevProjectName);
@@ -144,8 +145,10 @@ class InitializeScript
             $ddevCommand = 'ddev config --docroot public --project-name ' . $ddevProjectName . ' --web-environment-add TYPO3_CONTEXT=Development --project-type typo3 --php-version ' . $phpVersion . ' --create-docroot 1> /dev/null';
             exec($ddevCommand, $output, $statusCode);
 
-            exit($statusCode);
+            return $statusCode;
         }
+
+        return 0;
     }
 
     public static function removeFilesAndFolders(Event $event): void
