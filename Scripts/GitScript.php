@@ -30,9 +30,11 @@ class GitScript
         };
 
         $username = $arguments['username'] ?? getenv('TDK_USERNAME') ?? false;
-        if($username === 'none') {
+        if ($username === 'none') {
             return 0;
-        } elseif ($username) {
+        }
+
+        if($username) {
             $userData = $validator($username);
         } else {
             $userData = $event->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', $validator, 2);
@@ -42,26 +44,19 @@ class GitScript
         self::setGitConfigValue($event, 'remote.origin.pushurl', $pushUrl);
         self::setGitConfigValue($event, 'user.name', $userData['display_name'] ?? $userData['name'] ?? $userData['username']);
         self::setGitConfigValue($event, 'user.email', $userData['email']);
+
+        return 0;
     }
 
     public static function setCommitTemplate(Event $event)
     {
         $arguments = self::getArguments($event->getArguments());
-
-        // Validate file
-        $validator = function ($value) {
-            $path = realpath($value);
-            if (!is_file($path)) {
-                throw new \UnexpectedValueException('Invalid file path "' . $path . '"');
-            }
-
-            return $value;
-        };
+        $validator = self::validateFilePath();
 
         if ($arguments['file'] ?? false) {
             $file = $validator($arguments['file']);
         } else {
-            $file = $event->getIO()->askAndValidate('Set TYPO3 commit message template [.gitmessage.txt]? ', $validator, 2, './.gitmessage.txt');
+            $file = $event->getIO()->askAndValidate('Set TYPO3 commit message template [.gitmessage.txt]? ', $validator, 3, '.gitmessage.txt');
         }
 
         $process = new ProcessExecutor();
@@ -96,9 +91,11 @@ class GitScript
         } else {
             $event->getIO()->write('Could not apply patch, repository does not exist. Please run "composer tdk:clone"');
         }
+
+        return 0;
     }
 
-    public static function cloneRepository(Event $event)
+    public static function cloneRepository(Event $event): void
     {
         $filesystem = new Filesystem();
         if (!$filesystem->exists(self::$coreDevFolder)) {
@@ -131,6 +128,8 @@ class GitScript
         if ($status) {
             $event->getIO()->write('<warning>Could not checkout branch ' . $branch . ' </warning>');
         }
+
+        return 0;
     }
 
     public static function getArguments($array): array
@@ -146,6 +145,9 @@ class GitScript
         return $items;
     }
 
+    /**
+     * @throws \JsonException
+     */
     private static function getGerritUserData(Event $event, string $username): array
     {
         $request = new HttpDownloader($event->getIO(), $event->getComposer()->getConfig());
@@ -156,7 +158,7 @@ class GitScript
         // Sounds weird? See why https://gerrit-review.googlesource.com/Documentation/rest-api.html#output
         $validJson = str_replace(')]}\'', '', $json->getBody());
 
-        return json_decode($validJson, true);
+        return json_decode($validJson, true, 512, JSON_THROW_ON_ERROR);
     }
 
     private static function setGitConfigValue(Event $event, string $config, string $value): void
@@ -169,5 +171,19 @@ class GitScript
         } else {
             $event->getIO()->write('<info>Set "' . $config . '" to "' . $value . '"</info>');
         }
+    }
+
+    /**
+     * @return \Closure
+     */
+    protected static function validateFilePath(): \Closure
+    {
+        return function ($value) {
+            if (!is_file($value)) {
+                throw new \UnexpectedValueException('Invalid file path "' . $value . '"');
+            }
+
+            return $value;
+        };
     }
 }
