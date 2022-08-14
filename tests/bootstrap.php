@@ -22,3 +22,10 @@ if (is_dir('test-acceptance-tdk/typo3-core')) {
 if (is_dir('test-acceptance-tdk/vendor')) {
     shell_exec('rm -Rf test-acceptance-tdk/vendor');
 }
+
+$windows = strpos(PHP_OS, 'WIN') === 0;
+$test = $windows ? 'where' : 'command -v';
+
+if (is_executable(trim(shell_exec($test . ' ddev') ?? ''))) {
+    exec('ddev stop --unlist typo3-dev-tdk');
+}

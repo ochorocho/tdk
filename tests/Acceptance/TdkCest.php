@@ -122,7 +122,7 @@ class TdkCest
         $I->seeInShellOutput('Aborted! No ddev config created');
 
         $I->amGoingTo('create a ddev config');
-        $I->runShellCommand('composer tdk:ddev-config -- --project-name="typo3-dev"');
+        $I->runShellCommand('composer tdk:ddev-config -- --project-name="typo3-dev-tdk"');
         $I->seeFileFound('config.yaml', 'test-acceptance-tdk/.ddev/');
         $I->seeResultCodeIs(0);
     }
