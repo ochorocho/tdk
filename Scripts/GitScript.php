@@ -56,7 +56,7 @@ class GitScript
         if ($arguments['file'] ?? false) {
             $file = $validator($arguments['file']);
         } else {
-            $file = $event->getIO()->askAndValidate('Set TYPO3 commit message template [.gitmessage.txt]? ', $validator, 3, '.gitmessage.txt');
+            $file = $event->getIO()->askAndValidate('Set TYPO3 commit message template [default: .gitmessage.txt]? ', $validator, 3, '.gitmessage.txt');
         }
 
         $process = new ProcessExecutor();
