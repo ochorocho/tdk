@@ -3,6 +3,8 @@ name: tests
 on:
   push:
   pull_request:
+  schedule:
+    - cron: "0 4 * * *"
 jobs:
   testsuite:
     name: Tests
@@ -37,7 +39,7 @@ jobs:
         run:  ./vendor/bin/phpstan analyse -c .phpstan.neon --no-progress
 
       - name: php-cs-fixer
-        run:  ./vendor/bin/php-cs-fixer fix -v --config=./.php_cs.php --using-cache no
+        run:  ./vendor/bin/php-cs-fixer fix -v --config=./.php_cs.php --using-cache no --diff --dry-run
 
       - name: Run acceptance tests
         run: ./vendor/bin/codecept run --html

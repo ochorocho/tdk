@@ -98,7 +98,7 @@ class InitializeScript extends BaseScript
             $ddevProjectName = GitScript::getArguments($event->getArguments())['project-name'] ?? getenv('TDK_CREATE_DDEV_PROJECT_NAME') ?? false;
             if (!$ddevProjectName) {
                 $createConfig = $event->getIO()->askConfirmation('Create a basic ddev config? [y/<fg=cyan;options=bold>n</>] ', false);
-                if(!$createConfig) {
+                if (!$createConfig) {
                     $event->getIO()->write('<warning>Aborted! No ddev config created.</warning>');
                     return 0;
                 }
@@ -118,7 +118,7 @@ class InitializeScript extends BaseScript
                 }
             }
 
-            if($fileContent = file_get_contents(self::$coreDevFolder . '/composer.json')) {
+            if ($fileContent = file_get_contents(self::$coreDevFolder . '/composer.json')) {
                 $json = json_decode($fileContent, true, 512, JSON_THROW_ON_ERROR);
                 preg_match_all('/[0-9].[0-9]/', $json['require']['php'], $versions);
                 $phpVersion = $versions[0][0];

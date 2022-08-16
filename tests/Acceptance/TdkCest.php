@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Acceptance;
 
-use \AcceptanceTester as AcceptanceTester;
+use AcceptanceTester as AcceptanceTester;
 
 class TdkCest
 {
@@ -158,7 +158,8 @@ class TdkCest
     /**
      * @param AcceptanceTester $I
      */
-    public function removeHooks(AcceptanceTester $I) {
+    public function removeHooks(AcceptanceTester $I)
+    {
         $hooksFolder = self::$testFolder . self::$coreDevFolder . '.git/hooks/';
 
         $I->amGoingTo('Delete the hooks');

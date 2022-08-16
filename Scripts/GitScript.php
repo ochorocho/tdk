@@ -20,7 +20,7 @@ class GitScript extends BaseScript
             return 0;
         }
 
-        if($username) {
+        if ($username) {
             $userData = $validator($username);
         } else {
             $userData = $event->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', $validator, 2);
@@ -59,7 +59,7 @@ class GitScript extends BaseScript
     public static function applyPatch(Event $event)
     {
         $ref = self::getArguments($event->getArguments())['ref'] ?? getenv('TDK_PATCH_REF') ?? false;
-        if(empty($ref)) {
+        if (empty($ref)) {
             $event->getIO()->write('<warning>No patch ref given</warning>');
             return 1;
         }
@@ -102,7 +102,7 @@ class GitScript extends BaseScript
     public static function checkoutBranch(Event $event)
     {
         $branch = self::getArguments($event->getArguments())['branch'] ?? getenv('TDK_BRANCH') ?? false;
-        if(empty($branch)) {
+        if (empty($branch)) {
             $event->getIO()->write('<warning>No branch name given</warning>');
             return 1;
         }
