@@ -18,7 +18,8 @@ class TdkCest
 
     public function clone(AcceptanceTester $I): void
     {
-        $I->runShellCommand('composer tdk:clone');
+        // Use "composer install" because it triggers tdk:clone
+        $I->runShellCommand('composer install');
         $I->seeResultCodeIs(0);
         $I->seeInShellOutput('Cloning TYPO3 repository. This may take a while depending on your internet connection!');
         $I->seeInShellOutput('Cloning into');
