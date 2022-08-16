@@ -75,7 +75,7 @@ class TdkCest
     /**
      * @param AcceptanceTester $I
      */
-    public function hooks(AcceptanceTester $I): void
+    public function enableHooks(AcceptanceTester $I): void
     {
         $hooksFolder = self::$testFolder . self::$coreDevFolder . '.git/hooks/';
 
@@ -85,13 +85,6 @@ class TdkCest
         $I->seeResultCodeIs(0);
         $I->seeFileFound('commit-msg', $hooksFolder);
         $I->seeFileFound('pre-commit', $hooksFolder);
-
-        $I->amGoingTo('Delete the hooks');
-        $I->runShellCommand('composer tdk:remove-hooks');
-
-        $I->seeResultCodeIs(0);
-        $I->dontSeeFileFound('commit-msg', $hooksFolder);
-        $I->dontSeeFileFound('pre-commit', $hooksFolder);
     }
 
     /**
@@ -137,6 +130,42 @@ class TdkCest
 
         $I->runShellCommand('git -C ' . self::$coreDevFolder . ' branch --show-current');
         $I->seeInShellOutput('main');
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     */
+    public function doctor(AcceptanceTester $I): void
+    {
+        $I->runShellCommand('composer tdk:doctor');
+        $expectedLines = [
+            'Repository exists',
+            'All hooks are in place',
+            'Git "remote.origin.pushurl" seems correct',
+            'Git "commit.template" is set to',
+            'Vendor folder exists.',
+        ];
+        $output = $I->grabShellOutput();
+
+        foreach ($expectedLines as $line) {
+            $I->assertStringContainsString($line, $output);
+        }
+
+        $I->seeResultCodeIs(0);
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     */
+    public function removeHooks(AcceptanceTester $I) {
+        $hooksFolder = self::$testFolder . self::$coreDevFolder . '.git/hooks/';
+
+        $I->amGoingTo('Delete the hooks');
+        $I->runShellCommand('composer tdk:remove-hooks');
+
+        $I->seeResultCodeIs(0);
+        $I->dontSeeFileFound('commit-msg', $hooksFolder);
+        $I->dontSeeFileFound('pre-commit', $hooksFolder);
     }
 
     /**
