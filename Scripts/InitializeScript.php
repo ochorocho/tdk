@@ -9,10 +9,8 @@ use Composer\Util\ProcessExecutor;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
-class InitializeScript
+class InitializeScript extends BaseScript
 {
-    private static string $coreDevFolder = 'typo3-core';
-
     public static function enableHooks(Event $event)
     {
         $questions = [
@@ -50,20 +48,6 @@ class InitializeScript
             self::$coreDevFolder . '/.git/hooks/pre-commit',
             self::$coreDevFolder . '/.git/hooks/commit-msg',
         ]);
-    }
-
-    /**
-     * @return \Closure
-     */
-    protected static function validateDdevProjectName(): \Closure
-    {
-        return function ($value) {
-            if (!preg_match('/^[a-zA-Z0-9_-]*$/', trim($value))) {
-                throw new \UnexpectedValueException('Invalid ddev project name "' . $value . '"');
-            }
-
-            return trim($value);
-        };
     }
 
     private static function enableCommitMessageHook(Event $event)
@@ -134,7 +118,7 @@ class InitializeScript
                 }
             }
 
-            if($fileContent = file_get_contents('typo3-core/composer.json')) {
+            if($fileContent = file_get_contents(self::$coreDevFolder . '/composer.json')) {
                 $json = json_decode($fileContent, true, 512, JSON_THROW_ON_ERROR);
                 preg_match_all('/[0-9].[0-9]/', $json['require']['php'], $versions);
                 $phpVersion = $versions[0][0];
@@ -157,7 +141,7 @@ class InitializeScript
             'composer.lock',
             'public/index.php',
             'public/typo3',
-            'typo3-core',
+            self::$coreDevFolder,
             'var',
         ];
 
@@ -178,6 +162,7 @@ class InitializeScript
 
     public static function showSummary(Event $event): void
     {
+        $coreFolder = self::$coreDevFolder;
         $summary = <<<EOF
 
 💡For more Details read the docs:
@@ -187,7 +172,7 @@ class InitializeScript
   https://docs.typo3.org/m/typo3/guide-contributionworkflow/master/en-us/Setup/Git/Index.html
 * Setup your IDE:
   https://docs.typo3.org/m/typo3/guide-contributionworkflow/master/en-us/Setup/SetupIde.html
-* runTests.sh docs still apply, but don't forget to cd into 'typo3-core':
+* runTests.sh docs still apply, but don't forget to cd into '$coreFolder':
   https://docs.typo3.org/m/typo3/guide-contributionworkflow/master/en-us/Testing/Index.html
 
 <fg=yellow;options=bold>To be able to push to Gerrit, you need to add your public key, see https://review.typo3.org/settings/#SSHKeys</>
@@ -231,7 +216,7 @@ EOF;
         if (!empty($matches)) {
             $event->getIO()->write('<fg=green;options=bold>✔</> Git "remote.origin.pushurl" seems correct.');
         } else {
-            $event->getIO()->write('<fg=red;options=bold>✘</> Git "remote.origin.pushurl" not set correctly, please run "composer tdk:set-push-url".');
+            $event->getIO()->write('<fg=red;options=bold>✘</> Git "remote.origin.pushurl" not set correctly, please run "composer tdk:set-git-config".');
         }
 
         // Test commit template

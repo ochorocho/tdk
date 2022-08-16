@@ -4,30 +4,16 @@ declare(strict_types=1);
 
 namespace Ochorocho\Tdk\Scripts;
 
-use Composer\Downloader\TransportException;
 use Composer\Script\Event;
-use Composer\Util\HttpDownloader;
 use Composer\Util\ProcessExecutor;
 use Symfony\Component\Filesystem\Filesystem;
 
-class GitScript
+class GitScript extends BaseScript
 {
-    private static string $coreDevFolder = 'typo3-core';
-
     public static function setGitConfig(Event $event)
     {
         $arguments = self::getArguments($event->getArguments());
-
-        // Validate the username
-        $validator = function ($value) use ($event) {
-            try {
-                $userData = self::getGerritUserData($event, $value);
-            } catch (TransportException $exception) {
-                throw new \UnexpectedValueException('Username "' . $value . '" not found in TYPO3 Gerrit: ' . PHP_EOL . $exception->getMessage());
-            }
-
-            return $userData;
-        };
+        $validator = self::validateUsername($event);
 
         $username = $arguments['username'] ?? getenv('TDK_USERNAME') ?? false;
         if ($username === 'none') {
@@ -145,22 +131,6 @@ class GitScript
         return $items;
     }
 
-    /**
-     * @throws \JsonException
-     */
-    private static function getGerritUserData(Event $event, string $username): array
-    {
-        $request = new HttpDownloader($event->getIO(), $event->getComposer()->getConfig());
-        $json = $request->get('https://review.typo3.org/accounts/' . urlencode($username) . '/?pp=0');
-
-        // Gerrit does not return valid JSON using their JSON API
-        // therefore we need to chop off the first line
-        // Sounds weird? See why https://gerrit-review.googlesource.com/Documentation/rest-api.html#output
-        $validJson = str_replace(')]}\'', '', $json->getBody());
-
-        return json_decode($validJson, true, 512, JSON_THROW_ON_ERROR);
-    }
-
     private static function setGitConfigValue(Event $event, string $config, string $value): void
     {
         $process = new ProcessExecutor();
@@ -171,19 +141,5 @@ class GitScript
         } else {
             $event->getIO()->write('<info>Set "' . $config . '" to "' . $value . '"</info>');
         }
-    }
-
-    /**
-     * @return \Closure
-     */
-    protected static function validateFilePath(): \Closure
-    {
-        return function ($value) {
-            if (!is_file($value)) {
-                throw new \UnexpectedValueException('Invalid file path "' . $value . '"');
-            }
-
-            return $value;
-        };
     }
 }

@@ -33,8 +33,7 @@
         "tdk:set-commit-template": "Ochorocho\\Tdk\\Scripts\\GitScript::setCommitTemplate",
         "tdk:set-git-config": "Ochorocho\\Tdk\\Scripts\\GitScript::setGitConfig",
         "tdk:apply-patch": "Ochorocho\\Tdk\\Scripts\\GitScript::applyPatch",
-        "tdk:checkout": "Ochorocho\\Tdk\\Scripts\\GitScript::checkoutBranch",
-        "typo3": "./vendor/bin/typo3 --"
+        "tdk:checkout": "Ochorocho\\Tdk\\Scripts\\GitScript::checkoutBranch"
     },
     "repositories": {
         "typo3-core-packages": {
@@ -96,7 +95,8 @@
         "codeception/module-filesystem": "*",
         "phpstan/phpstan": "*",
         "composer/composer": "*",
-        "friendsofphp/php-cs-fixer": "*"
+        "friendsofphp/php-cs-fixer": "*",
+        "codeception/module-asserts": "^3.0"
     },
     "config": {
         "allow-plugins": {

@@ -9,3 +9,4 @@ packages/*
 .ddev/
 config/
 test-acceptance-tdk/
+/tests/_support/_generated

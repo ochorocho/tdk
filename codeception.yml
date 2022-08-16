@@ -7,6 +7,7 @@ suites:
             enabled:
                 - \Helper\Acceptance
                 - \Codeception\Module\Cli
+                - \Codeception\Module\Asserts
                 - Filesystem
         # add Codeception\Step\Retry trait to AcceptanceTester to enable retries
         step_decorators:
