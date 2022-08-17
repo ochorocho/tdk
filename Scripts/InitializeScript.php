@@ -97,7 +97,7 @@ class InitializeScript extends BaseScript
         if (is_executable(trim(shell_exec($test . ' ddev') ?? ''))) {
             $ddevProjectName = GitScript::getArguments($event->getArguments())['project-name'] ?? getenv('TDK_CREATE_DDEV_PROJECT_NAME') ?? false;
             if (!$ddevProjectName) {
-                $createConfig = $event->getIO()->askConfirmation('Create a basic ddev config? [y/<fg=cyan;options=bold>n</>] ', false);
+                $createConfig = $event->getIO()->askConfirmation('Create a basic ddev config [<fg=cyan;options=bold>y</>/n] ?', true);
                 if (!$createConfig) {
                     $event->getIO()->write('<warning>Aborted! No ddev config created.</warning>');
                     return 0;
@@ -108,7 +108,7 @@ class InitializeScript extends BaseScript
 
             if (!$ddevProjectName) {
                 $defaultProjectName = basename(getcwd());
-                $ddevProjectName = $event->getIO()->askAndValidate('What should be the ddev projects name [default: ' . $defaultProjectName . '] ? ', $validator, 2, $defaultProjectName);
+                $ddevProjectName = $event->getIO()->askAndValidate('Choose a ddev project name [default: ' . $defaultProjectName . '] :', $validator, 2, $defaultProjectName);
             } else {
                 try {
                     $ddevProjectName = $validator($ddevProjectName);
