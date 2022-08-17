@@ -97,7 +97,14 @@ class InitializeScript extends BaseScript
         if (is_executable(trim(shell_exec($test . ' ddev') ?? ''))) {
             $ddevProjectName = GitScript::getArguments($event->getArguments())['project-name'] ?? getenv('TDK_CREATE_DDEV_PROJECT_NAME') ?? false;
             if (!$ddevProjectName) {
-                $createConfig = $event->getIO()->askConfirmation('Create a basic ddev config [<fg=cyan;options=bold>y</>/n] ?', true);
+                $skip = isset(GitScript::getArguments($event->getArguments())['no']) ?? false;
+                if($skip) {
+                    $createConfig = false;
+                } else {
+                    $createConfig = $event->getIO()->askConfirmation('Create a basic ddev config [<fg=cyan;options=bold>y</>/n] ?');
+                }
+
+
                 if (!$createConfig) {
                     $event->getIO()->write('<warning>Aborted! No ddev config created.</warning>');
                     return 0;

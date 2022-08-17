@@ -92,11 +92,11 @@
         "codeception/codeception": "*",
         "codeception/module-cli": "*",
         "codeception/module-webdriver": "*",
-        "codeception/module-filesystem": "*",
         "phpstan/phpstan": "*",
         "composer/composer": "*",
         "friendsofphp/php-cs-fixer": "*",
-        "codeception/module-asserts": "^3.0"
+        "codeception/module-asserts": "^3.0",
+        "codeception/module-filesystem": "^3.0"
     },
     "config": {
         "allow-plugins": {

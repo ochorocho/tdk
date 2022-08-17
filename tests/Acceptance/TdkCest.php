@@ -110,10 +110,12 @@ class TdkCest
         $I->amGoingTo('use a invalid project name');
         $I->runShellCommand('composer tdk:ddev-config -- --project-name="typo3 invalid"');
         $I->seeInShellOutput('Invalid ddev project name');
+        $I->dontSeeFileFound('.ddev', 'test-acceptance-tdk/');
 
         $I->amGoingTo('abort configuration');
-        $I->runShellCommand('echo n | composer tdk:ddev-config');
+        $I->runShellCommand('composer tdk:ddev-config -- --no');
         $I->seeInShellOutput('Aborted! No ddev config created');
+        $I->dontSeeFileFound('.ddev', 'test-acceptance-tdk/');
 
         $I->amGoingTo('create a ddev config');
         $I->runShellCommand('composer tdk:ddev-config -- --project-name="typo3-dev-tdk"');
