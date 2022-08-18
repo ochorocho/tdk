@@ -1,10 +1,16 @@
+# Example
+# https://gitpod.io/#TDK_PHP_VERSION=8.1,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F12%2F75512%2F2,TDK_USERNAME=ochorocho,TDK_PATCH_ID=75512/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
+
 image: gitpod/workspace-mysql
 tasks:
   - init: |
+      mkdir -p .vscode
+      cp -Rp .gitpod/vscode/settings.json .vscode/settings.json
       sudo update-alternatives --set php $(which php${TDK_PHP_VERSION:=8.1})
       echo -e "max_execution_time=240\nmax_input_vars=1500" | sudo tee -a /etc/php/${TDK_PHP_VERSION:=8.1}/cli/conf.d/40-php.ini | sudo tee -a  /etc/php/${TDK_PHP_VERSION:=8.1}/apache2/conf.d/40-php.ini
       echo "gp preview \$(gp url 8001)" | sudo tee -a /usr/local/bin/preview
       sudo chmod +x /usr/local/bin/preview
+      gp open .gitpod/info.md
     command: |
       composer tdk:clone
       composer tdk:checkout

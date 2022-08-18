@@ -1,0 +1,3 @@
+# TDK setup is running ...
+
+see the terminal below for details.
