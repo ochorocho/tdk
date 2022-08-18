@@ -2,7 +2,7 @@ image: gitpod/workspace-mysql
 tasks:
   - init: |
       sudo update-alternatives --set php $(which php${TDK_PHP_VERSION:=8.1})
-      sudo echo -e "max_execution_time=240\nmax_input_vars=1500" | sudo tee -a  /etc/php/${TDK_PHP_VERSION:=8.1}/cli/conf.d/40-php.ini | sudo tee -a  /etc/php/${TDK_PHP_VERSION:=8.1}/apache/conf.d/40-php.ini
+      sudo echo -e "max_execution_time=240\nmax_input_vars=1500" | sudo tee -a  /etc/php/${TDK_PHP_VERSION:=8.1}/cli/conf.d/40-php.ini | sudo tee -a  /etc/php/${TDK_PHP_VERSION:=8.1}/apache2/conf.d/40-php.ini
       mkdir public
       service apache2 start
     command: |
