@@ -2,6 +2,7 @@ image: gitpod/workspace-mysql
 tasks:
   - init: |
       sudo update-alternatives --set php $(which php${TDK_PHP_VERSION:=8.1})
+      mkdir public
       apachectl start
     command: |
       composer tdk:clone
@@ -13,7 +14,6 @@ tasks:
       ddev start
       touch public/FIRST_INSTALL
       composer tdk:help
-      apachectl start
 
 # VScode xdebug extension
 vscode:
