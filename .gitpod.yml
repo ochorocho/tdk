@@ -2,9 +2,8 @@ image:
   file: .gitpod/.gitpod.Dockerfile
 tasks:
   - init: |
-      echo "Init stuff"
+      sudo update-alternatives --set php $(which php${TDK_PHP_VERSION:=8.1})
     command: |
-      .gitpod/utils/env-setup.sh
       composer tdk:clone
       composer tdk:checkout
       composer install
@@ -17,11 +16,8 @@ tasks:
   - name: preview setup
     openMode: split-right
     command: >
-      gp open public/index.php && 
-      gp sync-await npmdone && 
-      gp await-port 3306 &&
-      apachectl start &&
-      ./node_modules/.bin/webpack --watch
+      gp open public/index.php &&  
+      apachectl start
 # VScode xdebug extension
 vscode:
   extensions:
@@ -36,5 +32,3 @@ ports:
     onOpen: ignore
   - port: 8001
     onOpen: ignore
-  - port: 3005
-    onOpen: open-preview
