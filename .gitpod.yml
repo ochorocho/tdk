@@ -4,7 +4,7 @@ tasks:
       sudo update-alternatives --set php $(which php${TDK_PHP_VERSION:=8.1})
       sudo echo -e "max_execution_time=240\nmax_input_vars=1500" | sudo tee -a  /etc/php/${TDK_PHP_VERSION:=8.1}/cli/conf.d/40-php.ini
       mkdir public
-      export NGINX_DOCROOT_IN_REPO="public"
+      export NGINX_DOCROOT_IN_REPO="/public"
       service nginx start
     command: |
       composer tdk:clone
