@@ -1,9 +1,8 @@
-image: ochorocho/gitpod-tdk:latest
-
+image:
+  file: .gitpod/.gitpod.Dockerfile
 tasks:
   - init: |
-      .gitpod/utils/ddev-in-gitpod-setup.sh
-      ddev config --docroot=public --create-docroot --project-type=typo3 --project-name=typo3
+      echo "Init stuff"
     command: |
       .gitpod/utils/env-setup.sh
       composer tdk:clone
@@ -15,7 +14,14 @@ tasks:
       ddev start
       touch public/FIRST_INSTALL
       composer tdk:help
-
+  - name: preview setup
+    openMode: split-right
+    command: >
+      gp open public/index.php && 
+      gp sync-await npmdone && 
+      gp await-port 3306 &&
+      apachectl start &&
+      ./node_modules/.bin/webpack --watch
 # VScode xdebug extension
 vscode:
   extensions:
@@ -25,29 +31,10 @@ vscode:
     - neilbrayfield.php-docblocker
     - bmewburn.vscode-intelephense-client
 
-    # Bash extensions.
-    - timonwong.shellcheck
-    - rogalmic.bash-debug
-
 ports:
-  # Used by ddev - direct-bind https port
-  - port: 2222
-    onOpen: ignore
-  # Used by ddev - local db clients
   - port: 3306
     onOpen: ignore
-  # Used by projector
-  - port: 6942
+  - port: 8001
     onOpen: ignore
-  # Used by MailHog
-  - port: 8025
-    onOpen: ignore
-  # Used by phpMyAdmin
-  - port: 8036
-    onOpen: ignore
-  # Direct-connect ddev-webserver port that is the main port
-  - port: 8080
-    onOpen: ignore
-  # xdebug port
-  - port: 9000
-    onOpen: ignore
+  - port: 3005
+    onOpen: open-preview
