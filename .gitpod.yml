@@ -1,8 +1,8 @@
-image:
-  file: .gitpod/.gitpod.Dockerfile
+image: gitpod/workspace-mysql
 tasks:
   - init: |
       sudo update-alternatives --set php $(which php${TDK_PHP_VERSION:=8.1})
+      apachectl start
     command: |
       composer tdk:clone
       composer tdk:checkout
@@ -13,11 +13,8 @@ tasks:
       ddev start
       touch public/FIRST_INSTALL
       composer tdk:help
-  - name: preview setup
-    openMode: split-right
-    command: >
-      gp open public/index.php &&  
       apachectl start
+
 # VScode xdebug extension
 vscode:
   extensions:
