@@ -2,7 +2,9 @@ image: gitpod/workspace-mysql
 tasks:
   - init: |
       sudo update-alternatives --set php $(which php${TDK_PHP_VERSION:=8.1})
-      sudo echo -e "max_execution_time=240\nmax_input_vars=1500" | sudo tee -a  /etc/php/${TDK_PHP_VERSION:=8.1}/cli/conf.d/40-php.ini | sudo tee -a  /etc/php/${TDK_PHP_VERSION:=8.1}/apache2/conf.d/40-php.ini
+      echo -e "max_execution_time=240\nmax_input_vars=1500" | sudo tee -a /etc/php/${TDK_PHP_VERSION:=8.1}/cli/conf.d/40-php.ini | sudo tee -a  /etc/php/${TDK_PHP_VERSION:=8.1}/apache2/conf.d/40-php.ini
+      echo "gp preview \$(gp url 8001)" | sudo tee -a /usr/local/bin/preview
+      chmod +x /usr/local/bin/preview
     command: |
       composer tdk:clone
       composer tdk:checkout
@@ -14,6 +16,7 @@ tasks:
       touch public/FIRST_INSTALL
       composer tdk:help
       apachectl start
+      preview
 
 # VScode xdebug extension
 vscode:
