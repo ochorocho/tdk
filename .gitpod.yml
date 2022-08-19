@@ -1,8 +1,10 @@
 # Example
 # https://gitpod.io/#TDK_PHP_VERSION=8.1,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
 image: gitpod/workspace-mysql
+
 tasks:
-  - init: |
+  - name: TYPO3 TDK
+    init: |
       mkdir -p .vscode
       cp -Rp .gitpod/vscode/settings.json .vscode/settings.json
       sudo update-alternatives --set php $(which php${TDK_PHP_VERSION:=8.1})
