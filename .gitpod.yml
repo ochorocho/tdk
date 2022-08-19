@@ -20,6 +20,7 @@ tasks:
       composer tdk:enable-hooks -- --force
       composer tdk:apply-patch
       touch public/FIRST_INSTALL
+      mkdir -p public/typo3conf
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
       composer tdk:help
