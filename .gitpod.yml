@@ -7,7 +7,6 @@ tasks:
       cp -Rp .gitpod/vscode/settings.json .vscode/settings.json
       sudo update-alternatives --set php $(which php${TDK_PHP_VERSION:=8.1})
       echo -e "max_execution_time=240\nmax_input_vars=1500" | sudo tee -a /etc/php/${TDK_PHP_VERSION:=8.1}/cli/conf.d/40-php.ini | sudo tee -a  /etc/php/${TDK_PHP_VERSION:=8.1}/apache2/conf.d/40-php.ini
-      echo "gp preview \$(gp url 8001)" | sudo tee -a /usr/local/bin/preview
       sudo chmod +x /usr/local/bin/preview
       mysql -e "CREATE DATABASE db CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;"
       mysql -e "CREATE USER 'db'@'localhost' IDENTIFIED BY 'db';"
@@ -20,9 +19,9 @@ tasks:
       composer tdk:enable-hooks -- --force
       composer tdk:apply-patch
       touch public/FIRST_INSTALL
-      mkdir -p public/typo3conf
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
+      echo "gp preview \$(gp url 8001)" | sudo tee -a /usr/local/bin/preview
       composer tdk:help
       apachectl start
       preview
