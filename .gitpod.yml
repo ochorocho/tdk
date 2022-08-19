@@ -25,7 +25,7 @@ tasks:
       echo "gp preview \$(gp url 8001) --external" | sudo tee -a /usr/local/bin/t3-fe
       echo "gp preview \$(gp url 8001)/typo3 --external" | sudo tee -a /usr/local/bin/t3-be
       echo "touch \$GITPOD_REPO_ROOTS/public/typo3conf/ENABLE_INSTALL_TOOL && gp preview \$(gp url 8001)/typo3/install.php --external" | sudo tee -a /usr/local/bin/t3-install
-      chmod +x /usr/local/bin/t3-*
+      sudo chmod +x /usr/local/bin/t3-*
       composer tdk:help
       apachectl start
       t3-fe
