@@ -1,6 +1,5 @@
 # Example
-# https://gitpod.io/#TDK_PHP_VERSION=8.1,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F12%2F75512%2F2,TDK_USERNAME=ochorocho,TDK_PATCH_ID=75512/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
-
+# https://gitpod.io/#TDK_PHP_VERSION=8.1,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
 image: gitpod/workspace-mysql
 tasks:
   - init: |
@@ -14,15 +13,15 @@ tasks:
       mysql -e "CREATE USER 'db'@'localhost' IDENTIFIED BY 'db';"
       mysql -e "GRANT ALL PRIVILEGES ON * . * TO 'db'@'localhost';"
       gp open .gitpod/info.md
-    command: |
       composer tdk:clone
       composer tdk:checkout
       composer install
       composer tdk:set-git-config
       composer tdk:enable-hooks -- --force
       composer tdk:apply-patch
-      ddev start
       touch public/FIRST_INSTALL
+      cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
+    command: |
       composer tdk:help
       apachectl start
       preview
