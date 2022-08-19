@@ -1,6 +1,7 @@
 # TDK setup is running ...
 
-see the terminal below for details.
+See the terminal below for details.
+Once finished TYPO3 will open in a separate tab
 
 ### Database:
 
