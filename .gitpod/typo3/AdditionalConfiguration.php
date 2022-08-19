@@ -35,6 +35,11 @@ $GLOBALS['TYPO3_CONF_VARS'] = array_replace_recursive(
             'trustedHostsPattern' => '.*.*',
             'devIPmask' => '*',
             'displayErrors' => 1,
+            'features' => [
+                'unifiedPageTranslationHandling' => true,
+                'yamlImportsFollowDeclarationOrder' => true,
+                'security.backend.enforceReferrer' => false,
+            ],
         ],
     ]
 );
