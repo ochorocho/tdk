@@ -44,7 +44,7 @@ vscode:
     - wongjn.php-sniffer
     - neilbrayfield.php-docblocker
     - bmewburn.vscode-intelephense-client
-    - https://marketplace.visualstudio.com/_apis/public/gallery/publishers/vs-publisher-988541/vsextensions/apexsql-power-tools/2021.1.81/vspackage
+    - bajdzis.vscode-database
 
 ports:
   - port: 3306
