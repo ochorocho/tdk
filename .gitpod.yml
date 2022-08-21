@@ -21,10 +21,11 @@ tasks:
       touch public/FIRST_INSTALL
       mkdir public/typo3conf
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
+# ./vendor/bin/typo3 extension:setup
     command: |
       echo "export TYPO3_CONTEXT=Development" >> /etc/apache2/envvars
       echo -e "max_execution_time=240\nmax_input_vars=1500" | sudo tee -a /etc/php/${TDK_PHP_VERSION:=8.1}/cli/conf.d/40-php.ini | sudo tee -a  /etc/php/${TDK_PHP_VERSION:=8.1}/apache2/conf.d/40-php.ini
-      echo "gp preview \$(gp url 8001)" | sudo tee -a /usr/local/bin/t3-fe
+      echo "gp preview \$(gp url 8001) --external" | sudo tee -a /usr/local/bin/t3-fe
       echo "gp preview \$(gp url 8001)/typo3 --external" | sudo tee -a /usr/local/bin/t3-be
       echo "touch \$GITPOD_REPO_ROOTS/public/typo3conf/ENABLE_INSTALL_TOOL && gp preview \$(gp url 8001)/typo3/install.php --external" | sudo tee -a /usr/local/bin/t3-install
       sudo chmod +x /usr/local/bin/t3-*
