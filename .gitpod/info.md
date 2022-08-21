@@ -9,3 +9,7 @@
 * Password: db
 * Database: db
 * Host: 127.0.0.1
+
+Root user:
+* User: root
+* Password: password
