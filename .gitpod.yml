@@ -40,8 +40,6 @@ tasks:
 vscode:
   extensions:
     # PHP extensions.
-    - mtxr.sqltools
-    - mtxr.sqltools-driver-mysql
     - felixfbecker.php-debug
     - wongjn.php-sniffer
     - neilbrayfield.php-docblocker
