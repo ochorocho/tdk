@@ -39,12 +39,11 @@ tasks:
 # VScode xdebug extension
 vscode:
   extensions:
-    # PHP extensions.
     - felixfbecker.php-debug
     - wongjn.php-sniffer
     - neilbrayfield.php-docblocker
     - bmewburn.vscode-intelephense-client
-    - bajdzis.vscode-database
+    - mtxr.sqltools-driver-mysql
 
 ports:
   - port: 3306

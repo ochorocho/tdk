@@ -1,14 +1,19 @@
 {
   "workbench.startupEditor": "none",
   "workbench.tree.indent": 20,
-  "database.connections": [
+  "sqltools.connections": [
     {
-      "type": "mysql",
-      "name": "TYPO3 DB",
-      "host": "127.0.0.1",
-      "user": "root",
-      "password": "password",
-      "database": "db"
+      "mysqlOptions": {
+        "authProtocol": "default"
+      },
+      "previewLimit": 50,
+      "server": "127.0.0.1",
+      "port": 3306,
+      "driver": "MySQL",
+      "name": "TYPO3",
+      "database": "db",
+      "username": "root",
+      "password": "password"
     }
   ]
 }
