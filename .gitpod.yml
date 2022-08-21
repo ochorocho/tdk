@@ -40,12 +40,12 @@ tasks:
 vscode:
   extensions:
     # PHP extensions.
+    - mtxr.sqltools
+    - mtxr.sqltools-driver-mysql
     - felixfbecker.php-debug
     - wongjn.php-sniffer
     - neilbrayfield.php-docblocker
     - bmewburn.vscode-intelephense-client
-    - mtxr.sqltools
-    - mtxr.sqltools-driver-mysql
 
 ports:
   - port: 3306
