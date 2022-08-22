@@ -23,6 +23,7 @@ tasks:
       mkdir public/typo3conf
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
+      sudo apt update
       sudo apt-get install php8.1-xdebug
       nix-env -iA nixpkgs.mailhog
       nohup MailHog >/dev/null 2>&1 &
