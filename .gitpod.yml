@@ -23,6 +23,7 @@ tasks:
       mkdir public/typo3conf
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
+      sudo apt-get install php8.1-xdebug
       nix-env -iA nixpkgs.mailhog
       nohup MailHog >/dev/null 2>&1 &
       echo "export TYPO3_CONTEXT=Development" >> /etc/apache2/envvars
@@ -47,10 +48,17 @@ vscode:
 
 ports:
   - port: 3306
+    name: database
     onOpen: ignore
   - port: 8001
+    name: apache
     onOpen: ignore
   - port: 1025
     onOpen: ignore
   - port: 8025
+    name: mailhog
+    onOpen: ignore
+  - port: 9003
+    name: xdebug
+    description: xdebug
     onOpen: ignore
