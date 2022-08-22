@@ -24,7 +24,7 @@ tasks:
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
       sudo apt update
-      sudo apt install -y php8.1-xdebug
+      sudo apt-get -y install php8.1-xdebug
       nix-env -iA nixpkgs.mailhog
       nohup MailHog >/dev/null 2>&1 &
       echo "export TYPO3_CONTEXT=Development" >> /etc/apache2/envvars
