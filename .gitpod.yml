@@ -2,6 +2,9 @@
 # https://gitpod.io/#TDK_PHP_VERSION=8.1,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
 image: gitpod/workspace-mysql
 
+# xDEBUG CONFIG..... Private ports is ok.
+#  !!!! Check path mapping for sysext, ext and packages!
+
 tasks:
   - name: TYPO3 TDK
     init: |
@@ -25,6 +28,7 @@ tasks:
     command: |
       sudo apt update
       sudo apt-get -y install php8.1-xdebug
+      cat .gitpod/php/xdebug.ini | tee /etc/php/8.1/apache2/conf.d/20-xdebug.ini /etc/php/8.0/apache2/conf.d/20-xdebug.ini /etc/php/7.4/apache2/conf.d/20-xdebug.ini > /dev/null
       nix-env -iA nixpkgs.mailhog
       nohup MailHog >/dev/null 2>&1 &
       echo "export TYPO3_CONTEXT=Development" >> /etc/apache2/envvars
