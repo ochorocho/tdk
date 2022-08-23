@@ -10,6 +10,7 @@ tasks:
     init: |
       mkdir -p .vscode
       cp -Rp .gitpod/vscode/settings.json .vscode/settings.json
+      cp -Rp .gitpod/vscode/launch.json .vscode/launch.json
       sudo update-alternatives --set php $(which php${TDK_PHP_VERSION:=8.1})
       mysql -e "CREATE DATABASE db CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;"
       mysql -e "CREATE USER 'db'@'localhost' IDENTIFIED BY 'db';"
