@@ -10,7 +10,7 @@ use Composer\Util\HttpDownloader;
 
 abstract class BaseScript
 {
-    protected static string $coreDevFolder = 'typo3-core';
+    protected static $coreDevFolder = 'typo3-core';
 
     /**
      * Get php version:
@@ -18,11 +18,11 @@ abstract class BaseScript
      * 2. composer.json of current branch
      * 3. Default: 8.1
      *
-     * @param $jsonPath
+     * @param string $jsonPath
      * @return string
      * @throws \JsonException
      */
-    public static function getPhpVersion($jsonPath = ''): string
+    public static function getPhpVersion(string $jsonPath = ''): string
     {
         if ($version = getenv('TDK_PHP_VERSION')) {
             return $version;
