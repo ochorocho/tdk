@@ -104,7 +104,6 @@ class InitializeScript extends BaseScript
                     $createConfig = $event->getIO()->askConfirmation('Create a basic ddev config [<fg=cyan;options=bold>y</>/n] ?');
                 }
 
-
                 if (!$createConfig) {
                     $event->getIO()->write('<warning>Aborted! No ddev config created.</warning>');
                     return 0;
@@ -125,14 +124,7 @@ class InitializeScript extends BaseScript
                 }
             }
 
-            if ($fileContent = file_get_contents(self::$coreDevFolder . '/composer.json')) {
-                $json = json_decode($fileContent, true, 512, JSON_THROW_ON_ERROR);
-                preg_match_all('/[0-9].[0-9]/', $json['require']['php'], $versions);
-                $phpVersion = $versions[0][0];
-            } else {
-                $phpVersion = '8.1';
-            }
-
+            $phpVersion = self::getPhpVersion();
             $ddevCommand = 'ddev config --docroot public --project-name ' . $ddevProjectName . ' --web-environment-add TYPO3_CONTEXT=Development --project-type typo3 --php-version ' . $phpVersion . ' --create-docroot 1> /dev/null';
             exec($ddevCommand, $output, $statusCode);
 

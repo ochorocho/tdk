@@ -118,6 +118,7 @@ class GitScript extends BaseScript
         return 0;
     }
 
+    // @todo: Move to BaseScript?
     public static function getArguments($array): array
     {
         $items = [];

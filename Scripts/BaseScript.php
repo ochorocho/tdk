@@ -13,6 +13,35 @@ abstract class BaseScript
     protected static string $coreDevFolder = 'typo3-core';
 
     /**
+     * Get php version:
+     * 1. From env (TDK_PHP_VERSION)
+     * 2. composer.json of current branch
+     * 3. Default: 8.1
+     *
+     * @param $jsonPath
+     * @return string
+     * @throws \JsonException
+     */
+    public static function getPhpVersion($jsonPath = ''): string
+    {
+        if ($version = getenv('TDK_PHP_VERSION')) {
+            return $version;
+        }
+
+        if ($jsonPath === '') {
+            $jsonPath = self::$coreDevFolder . '/composer.json';
+        }
+
+        if ($fileContent = file_get_contents($jsonPath)) {
+            $json = json_decode($fileContent, true, 512, JSON_THROW_ON_ERROR);
+            preg_match_all('/[0-9].[0-9]/', $json['require']['php'], $versions);
+            return $versions[0][0];
+        }
+
+        return '8.1';
+    }
+
+    /**
      * @return \Closure
      */
     protected static function validateDdevProjectName(): \Closure

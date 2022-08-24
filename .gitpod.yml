@@ -1,9 +1,9 @@
 # Example
-# https://gitpod.io/#TDK_PHP_VERSION=8.1,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
+# 8.1 https://gitpod.io/#TDK_PHP_VERSION=8.1,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
+# 8.0 https://gitpod.io/#TDK_PHP_VERSION=8.0,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
+# Detect php: https://gitpod.io/#TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
 image: gitpod/workspace-mysql
-
-# xDEBUG CONFIG..... Private ports is ok.
-#  !!!! Check path mapping for sysext, ext and packages!
+# !!!! Check path mapping for sysext (works), ext and packages!
 
 tasks:
   - name: TYPO3 TDK
@@ -11,7 +11,8 @@ tasks:
       mkdir -p .vscode
       cp -Rp .gitpod/vscode/settings.json .vscode/settings.json
       cp -Rp .gitpod/vscode/launch.json .vscode/launch.json
-      sudo update-alternatives --set php $(which php${TDK_PHP_VERSION:=8.1})
+      export PHP_VERSION=$(php .gitpod/php/version.php)
+      sudo update-alternatives --set php $(which php${PHP_VERSION})
       mysql -e "CREATE DATABASE db CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;"
       mysql -e "CREATE USER 'db'@'localhost' IDENTIFIED BY 'db';"
       mysql -e "GRANT ALL PRIVILEGES ON * . * TO 'db'@'localhost';"
@@ -27,13 +28,14 @@ tasks:
       mkdir public/typo3conf
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
+      export PHP_VERSION=$(php .gitpod/php/version.php)
       sudo apt update
-      sudo apt-get -y install php${TDK_PHP_VERSION:=8.1}-xdebug
-      cat .gitpod/php/xdebug.ini | sudo tee /etc/php/${TDK_PHP_VERSION:=8.1}/apache2/conf.d/20-xdebug.ini > /dev/null
+      sudo apt-get -y install php${PHP_VERSION}-xdebug
+      cat .gitpod/php/xdebug.ini | sudo tee /etc/php/${PHP_VERSION:=8.1}/apache2/conf.d/20-xdebug.ini > /dev/null
       nix-env -iA nixpkgs.mailhog
       nohup MailHog >/dev/null 2>&1 &
       echo "export TYPO3_CONTEXT=Development" >> /etc/apache2/envvars
-      echo -e "max_execution_time=240\nmax_input_vars=1500" | sudo tee -a /etc/php/${TDK_PHP_VERSION:=8.1}/cli/conf.d/40-php.ini | sudo tee -a  /etc/php/${TDK_PHP_VERSION:=8.1}/apache2/conf.d/40-php.ini
+      echo -e "max_execution_time=240\nmax_input_vars=1500" | sudo tee -a /etc/php/${PHP_VERSION}/cli/conf.d/40-php.ini | sudo tee -a  /etc/php/${PHP_VERSION}/apache2/conf.d/40-php.ini
       echo "gp preview \$(gp url 8001) --external" | sudo tee -a /usr/local/bin/t3-fe
       echo "gp preview \$(gp url 8001)/typo3 --external" | sudo tee -a /usr/local/bin/t3-be
       echo "gp preview \$(gp url 8025) --external" | sudo tee -a /usr/local/bin/t3-mailhog
