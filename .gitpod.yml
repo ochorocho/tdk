@@ -28,8 +28,8 @@ tasks:
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
       sudo apt update
-      sudo apt-get -y install php8.1-xdebug
-      cat .gitpod/php/xdebug.ini | sudo tee /etc/php/8.1/apache2/conf.d/20-xdebug.ini /etc/php/8.0/apache2/conf.d/20-xdebug.ini /etc/php/7.4/apache2/conf.d/20-xdebug.ini > /dev/null
+      sudo apt-get -y install php${TDK_PHP_VERSION:=8.1}-xdebug
+      cat .gitpod/php/xdebug.ini | sudo tee /etc/php/${TDK_PHP_VERSION:=8.1}/apache2/conf.d/20-xdebug.ini > /dev/null
       nix-env -iA nixpkgs.mailhog
       nohup MailHog >/dev/null 2>&1 &
       echo "export TYPO3_CONTEXT=Development" >> /etc/apache2/envvars
