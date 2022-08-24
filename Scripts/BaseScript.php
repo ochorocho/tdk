@@ -10,7 +10,7 @@ use Composer\Util\HttpDownloader;
 
 abstract class BaseScript
 {
-    protected static $coreDevFolder = 'typo3-core';
+    protected static string $coreDevFolder = 'typo3-core';
 
     /**
      * Get php version:
