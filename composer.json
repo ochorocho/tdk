@@ -95,8 +95,8 @@
         "phpstan/phpstan": "*",
         "composer/composer": "*",
         "friendsofphp/php-cs-fixer": "*",
-        "codeception/module-asserts": "^3.0",
-        "codeception/module-filesystem": "^3.0"
+        "codeception/module-asserts": "*",
+        "codeception/module-filesystem": "*"
     },
     "config": {
         "allow-plugins": {
