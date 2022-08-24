@@ -1,7 +1,7 @@
 # Example
 # 8.1 https://gitpod.io/#TDK_PHP_VERSION=8.1,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
 # 8.0 https://gitpod.io/#TDK_PHP_VERSION=8.0,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
-# Detect php: https://gitpod.io/#TDK_BRANCH=10.4,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
+# Detect php: https://gitpod.io/#TDK_BRANCH=11.1,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
 image: gitpod/workspace-mysql
 # !!!! Check path mapping for sysext (works), ext and packages!
 
@@ -24,8 +24,8 @@ tasks:
       composer tdk:set-git-config
       composer tdk:enable-hooks -- --force
       composer tdk:apply-patch
+      mkdir -p public/typo3conf
       touch public/FIRST_INSTALL
-      mkdir public/typo3conf
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
       export PHP_VERSION=$(php .gitpod/php/version.php)
