@@ -35,6 +35,9 @@ tasks:
       nix-env -iA nixpkgs.mailhog
       nohup MailHog >/dev/null 2>&1 &
       echo "export TYPO3_CONTEXT=Development" >> /etc/apache2/envvars
+      echo "export GITPOD_REPO_ROOT=/workspace/tdk" >> /etc/apache2/envvars
+      echo "export APACHE_DOCROOT_IN_REPO=public" >> /etc/apache2/envvars
+      echo "export APACHE_SERVER_NAME=localhost" >> /etc/apache2/envvars
       echo -e "max_execution_time=240\nmax_input_vars=1500" | sudo tee -a /etc/php/${PHP_VERSION}/cli/conf.d/40-php.ini | sudo tee -a  /etc/php/${PHP_VERSION}/apache2/conf.d/40-php.ini
       echo "gp preview \$(gp url 8001) --external" | sudo tee -a /usr/local/bin/t3-fe
       echo "gp preview \$(gp url 8001)/typo3 --external" | sudo tee -a /usr/local/bin/t3-be
