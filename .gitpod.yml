@@ -2,7 +2,9 @@
 # 8.1 https://gitpod.io/#TDK_PHP_VERSION=8.1,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
 # 8.0 https://gitpod.io/#TDK_PHP_VERSION=8.0,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
 # Detect php: https://gitpod.io/#TDK_BRANCH=11.1,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
-image: gitpod/workspace-mysql
+#image: gitpod/workspace-mysql
+image:
+  file: .gitpod/Dockerfile
 # !!!! Check path mapping for sysext (works), ext and packages!
 
 tasks:
@@ -34,10 +36,6 @@ tasks:
       cat .gitpod/php/xdebug.ini | sudo tee /etc/php/${PHP_VERSION:=8.1}/apache2/conf.d/20-xdebug.ini > /dev/null
       nix-env -iA nixpkgs.mailhog
       nohup MailHog >/dev/null 2>&1 &
-      echo "export TYPO3_CONTEXT=Development" >> /etc/apache2/envvars
-      echo "export GITPOD_REPO_ROOT=/workspace/tdk" >> /etc/apache2/envvars
-      echo "export APACHE_DOCROOT_IN_REPO=public" >> /etc/apache2/envvars
-      echo "export APACHE_SERVER_NAME=localhost" >> /etc/apache2/envvars
       echo -e "max_execution_time=240\nmax_input_vars=1500" | sudo tee -a /etc/php/${PHP_VERSION}/cli/conf.d/40-php.ini | sudo tee -a  /etc/php/${PHP_VERSION}/apache2/conf.d/40-php.ini
       echo "gp preview \$(gp url 8001) --external" | sudo tee -a /usr/local/bin/t3-fe
       echo "gp preview \$(gp url 8001)/typo3 --external" | sudo tee -a /usr/local/bin/t3-be
