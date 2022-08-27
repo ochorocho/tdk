@@ -3,9 +3,7 @@
 ARG=$1
 
 PHP=${ARG:=8.1}
-
-echo $PHP
-
+# @todo add help
 ALL_VERSIONS=$(ls /etc/php)
 
 if [[ ${ALL_VERSIONS[*]} =~ $PHP ]]
