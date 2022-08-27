@@ -3,8 +3,7 @@
 # 8.0 https://gitpod.io/#TDK_PHP_VERSION=8.0,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
 # Detect php: https://gitpod.io/#TDK_BRANCH=11.1,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
 #image: gitpod/workspace-mysql
-image:
-  file: .gitpod/docker/Dockerfile
+image: ochorocho/gitpod-tdk:latest
 # !!!! Check path mapping for sysext (works), ext and packages!
 
 tasks:
