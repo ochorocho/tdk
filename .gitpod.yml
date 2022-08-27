@@ -30,11 +30,7 @@ tasks:
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
       export PHP_VERSION=$(php .gitpod/php/version.php)
-      sudo apt update
-      sudo apt-get -y install php${PHP_VERSION}-xdebug
       cat .gitpod/php/xdebug.ini | sudo tee /etc/php/${PHP_VERSION:=8.1}/apache2/conf.d/20-xdebug.ini > /dev/null
-      nix-env -iA nixpkgs.mailhog
-      nohup MailHog >/dev/null 2>&1 &
       echo -e "max_execution_time=240\nmax_input_vars=1500" | sudo tee -a /etc/php/${PHP_VERSION}/cli/conf.d/40-php.ini | sudo tee -a  /etc/php/${PHP_VERSION}/apache2/conf.d/40-php.ini
       echo "gp preview \$(gp url 8001) --external" | sudo tee -a /usr/local/bin/t3-fe
       echo "gp preview \$(gp url 8001)/typo3 --external" | sudo tee -a /usr/local/bin/t3-be
