@@ -47,6 +47,7 @@ tasks:
       composer tdk:help
       apachectl start
       t3-fe
+      echo -e "<?php \nphpinfo();" > public/info.php
 
 # VScode xdebug extension
 vscode:
