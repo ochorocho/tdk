@@ -10,7 +10,7 @@
 ### END INIT INFO
 
 dir="/home/gitpod/"
-cmd="/home/gitpod/go-packages/bin/MailHog"
+cmd="/home/gitpod/go/bin/MailHog"
 user="root"
 
 name=`basename $0`

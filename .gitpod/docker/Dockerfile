@@ -16,14 +16,13 @@ COPY scripts/tdk-* /usr/bin/
 RUN chmod a+x /usr/bin/tdk-*
 
 ## Install ImageMagick7
-RUN apt remove -y imagemagick imagemagick-6-common
-#RUN sudo apt-get install -y rlwrap checkinstall libwebp-dev libopenjp2-7-dev librsvg2-dev libde265-dev && \
-#    wget https://imagemagick.org/archive/ImageMagick.tar.gz && \
-#    tar xzvf ImageMagick.tar.gz && cd ImageMagick-* && \
-#    ./configure --enable-shared --with-modules --with-gslib && \
-#    sudo ldconfig /user/local/lib && \
-#    make && sudo make install && \
-#    cd .. && rm -Rf cd ImageMagick*
+RUN apt-get install -y rlwrap checkinstall libwebp-dev libopenjp2-7-dev librsvg2-dev libde265-dev && \
+    wget https://imagemagick.org/archive/ImageMagick.tar.gz && \
+    tar xzvf ImageMagick.tar.gz && cd ImageMagick-* && \
+    ./configure --enable-shared --with-modules --with-gslib && \
+    sudo ldconfig /user/local/lib && \
+    make && sudo make install && \
+    cd .. && rm -Rf cd ImageMagick*
 
 # Install required packages
 RUN add-apt-repository ppa:ondrej/php
@@ -32,7 +31,6 @@ RUN apt-get update && \
     libapache2-mod-php* php*-xdebug php*-curl php*-zip php*-gd php*-intl php*-mysql golang-go mysql-server && \
     mkdir -p /var/run/mysqld /var/log/mysql && \
     chown -R gitpod:gitpod /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade && \
-    apt-get clean && \
     phpenmod zip curl gd intl mysqli
 RUN go get github.com/mailhog/MailHog
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
@@ -43,8 +41,10 @@ COPY config/mysql-client.cnf /etc/mysql/mysql.conf.d/client.cnf
 COPY scripts/mysql-bashrc-launch.sh /etc/mysql/mysql-bashrc-launch.sh
 
 # Cleanup image
-RUN sudo apt remove -y --purge gcc-7 apt-utils python2.7 python3 make linux-headers gcc g++ subversion mercurial && \
-    sudo apt autoremove -y
+RUN apt-get remove -y --purge \
+    gcc-7 build-essential apt-utils python2.7 python3 make linux-headers gcc g++ subversion mercurial && \
+    apt-get autoremove -y && \
+    apt-get clean
 
 # @todo: Replace by init script?!
 USER gitpod
