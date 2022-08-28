@@ -15,18 +15,18 @@ COPY scripts/tdk-* /usr/bin/
 RUN chmod a+x /usr/bin/tdk-*
 
 ## Install ImageMagick7
-RUN apt-get install -y rlwrap checkinstall libwebp-dev libopenjp2-7-dev librsvg2-dev libde265-dev && \
+RUN apt-get install --no-install-recommends -y rlwrap checkinstall libwebp-dev libopenjp2-7-dev librsvg2-dev libde265-dev && \
     wget https://imagemagick.org/archive/ImageMagick.tar.gz && \
     tar xzvf ImageMagick.tar.gz && cd ImageMagick-* && \
     ./configure --enable-shared --with-modules --with-gslib && \
     sudo ldconfig /user/local/lib && \
-    make && sudo make install && \
+    make -j4 && sudo make install && \
     cd .. && rm -Rf cd ImageMagick*
 
 # Install required packages
 RUN add-apt-repository ppa:ondrej/php
 RUN apt-get update && \
-    apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+    apt-get install --no-install-recommends -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
     libapache2-mod-php* php*-xdebug php*-curl php*-zip php*-gd php*-intl php*-mysql golang-go mysql-server && \
     mkdir -p /var/run/mysqld /var/log/mysql && \
     chown -R gitpod:gitpod /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade && \
