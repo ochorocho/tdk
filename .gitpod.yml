@@ -12,7 +12,7 @@ tasks:
       mkdir -p .vscode
       cp -Rp .gitpod/vscode/settings.json .vscode/settings.json
       cp -Rp .gitpod/vscode/launch.json .vscode/launch.json
-      tdk-switch-php $(php .gitpod/php/version.php)
+      tdk-php-switch "$(php .gitpod/php/version.php)"
       tdk-db create
       gp open .gitpod/info.md
       composer tdk:clone
