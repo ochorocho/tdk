@@ -7,7 +7,7 @@ typo3-core
 packages/*
 !packages/.gitkeep
 .ddev/
-config/
+/config/
 test-acceptance-tdk/
 /tests/_support/_generated
 /.vscode

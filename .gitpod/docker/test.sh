@@ -11,3 +11,4 @@ which MailHog || exit 1
 sudo service mailhog start
 sudo service mailhog status
 sudo service mailhog stop
+sudo service mailhog status
