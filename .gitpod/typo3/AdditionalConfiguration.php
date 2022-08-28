@@ -23,8 +23,8 @@ $GLOBALS['TYPO3_CONF_VARS'] = array_replace_recursive(
         // This GFX configuration allows processing by installed ImageMagick 6
         'GFX' => [
             'processor' => 'ImageMagick',
-            'processor_path' => '/usr/bin/',
-            'processor_path_lzw' => '/usr/bin/',
+            'processor_path' => '/usr/local/bin/',
+            'processor_path_lzw' => '/usr/local/bin/',
         ],
         // This mail configuration sends all emails to mailhog
         'MAIL' => [

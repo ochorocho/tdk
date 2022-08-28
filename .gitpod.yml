@@ -23,7 +23,8 @@ tasks:
       mkdir -p public/typo3conf
       touch public/FIRST_INSTALL
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
-    command: |     
+    command: |
+      tdk-php-switch "$(php .gitpod/php/version.php)"
       composer tdk:help
       sudo service apache2 start
       sudo service mailhog start
