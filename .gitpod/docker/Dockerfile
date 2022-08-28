@@ -21,5 +21,9 @@ RUN sudo chmod a+x /etc/init.d/mailhog
 COPY scripts/tdk-* /usr/bin/
 RUN sudo chmod a+x /usr/bin/tdk-*
 
+# Cleanup image
+RUN sudo apt remove -y --purge gcc-7 apt-utils python2.7 python3 make linux-headers gcc g++ subversion mercurial && \
+    sudo apt autoremove
+
 # @todo Reset required?!
 # export APACHE_SERVER_NAME=$(gp url 8001 | sed -e s/https:\\/\\/// | sed -e s/\\///)
