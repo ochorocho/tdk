@@ -7,7 +7,6 @@ USER root
 COPY config /config
 
 COPY config/envvars.txt /etc/apache2/envvars
-RUN bash /config/setup.sh
 
 COPY scripts/mailhog /etc/init.d/mailhog
 RUN chmod a+x /etc/init.d/mailhog
@@ -31,7 +30,9 @@ RUN apt-get update && \
     libapache2-mod-php* php*-xdebug php*-curl php*-zip php*-gd php*-intl php*-mysql golang-go mysql-server && \
     mkdir -p /var/run/mysqld /var/log/mysql && \
     chown -R gitpod:gitpod /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade && \
-    phpenmod zip curl gd intl mysqli
+    phpenmod zip curl gd intl mysqli && \
+    # Configure all available PHP versions + xdebug
+    bash /config/setup.sh
 RUN go get github.com/mailhog/MailHog
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
