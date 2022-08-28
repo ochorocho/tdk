@@ -8,5 +8,5 @@ ALL_VERSIONS=$(ls /etc/php)
 for version in $ALL_VERSIONS
 do
     cat config/xdebug.ini | sudo tee /etc/php/${version}/apache2/conf.d/20-xdebug.ini > /dev/null
-    echo -e "max_execution_time=240\nmax_input_vars=1500" | sudo tee -a /etc/php/${version}/cli/conf.d/40-php.ini | sudo tee -a  /etc/php/${version}/apache2/conf.d/40-php.ini
+    echo -e "memory_limit=256M\nmax_execution_time=240\nmax_input_vars=1500" | sudo tee -a /etc/php/${version}/cli/conf.d/40-php.ini | sudo tee -a  /etc/php/${version}/apache2/conf.d/40-php.ini
 done
