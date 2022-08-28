@@ -46,9 +46,12 @@ RUN apt-get remove -y --purge \
     apt-get autoremove -y && \
     apt-get clean
 
+RUN chown -R gitpod:gitpod /etc/apache2
+
 # @todo: Replace by init script?!
 USER gitpod
 COPY scripts/mysql-bashrc-launch.sh /home/gitpod/.bashrc.d/100-mysql-launch
+COPY config/apache.conf /etc/apache2/apache2.conf
 
 # @todo Reset required?!
 # export APACHE_SERVER_NAME=$(gp url 8001 | sed -e s/https:\\/\\/// | sed -e s/\\///)
