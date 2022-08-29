@@ -35,6 +35,7 @@ $GLOBALS['TYPO3_CONF_VARS'] = array_replace_recursive(
             'trustedHostsPattern' => '.*.*',
             'devIPmask' => '*',
             'displayErrors' => 1,
+            'systemLocale' => 'en_US.utf8',
             'features' => [
                 'unifiedPageTranslationHandling' => true,
                 'yamlImportsFollowDeclarationOrder' => true,

@@ -48,6 +48,7 @@ ports:
     name: apache
     onOpen: ignore
   - port: 1025
+    name: mailhog catcher
     onOpen: ignore
   - port: 8025
     name: mailhog
