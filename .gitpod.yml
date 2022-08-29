@@ -11,7 +11,7 @@ tasks:
       mkdir -p .vscode
       cp -Rp .gitpod/vscode/settings.json .vscode/settings.json
       cp -Rp .gitpod/vscode/launch.json .vscode/launch.json
-      tdk-php-switch "$(php .gitpod/php/version.php)"
+      tdk-php-switch "$(php .gitpod/php/version.php)" --no-reload
       tdk-db create
       gp open .gitpod/info.md
       composer tdk:clone
@@ -24,9 +24,8 @@ tasks:
       touch public/FIRST_INSTALL
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
-      tdk-php-switch "$(php .gitpod/php/version.php)" --no-reload
+      tdk-php-switch "$(php .gitpod/php/version.php)"
       composer tdk:help
-      sudo service apache2 start
       sudo service mailhog start
       tdk-preview fe
       echo -e "<?php \nphpinfo();" > public/info.php
