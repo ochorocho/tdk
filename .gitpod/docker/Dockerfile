@@ -31,7 +31,7 @@ RUN apt-get update && \
     mkdir -p /var/run/mysqld /var/log/mysql && \
     chown -R gitpod:gitpod /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade && \
     phpenmod zip curl gd intl mysqli pdo_mysql mbstring pdo && \
-    a2enmod alias authz_core autoindex deflate expires filter headers setenvif rewrite && \
+    a2enmod alias authz_core autoindex deflate expires filter headers setenvif rewrite xdebug && \
     # Configure all available PHP versions + xdebug
     bash /config/setup.sh
 RUN go get github.com/mailhog/MailHog
