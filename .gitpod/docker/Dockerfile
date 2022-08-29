@@ -31,7 +31,8 @@ RUN apt-get update && \
     phpenmod zip curl gd intl mysqli pdo_mysql mbstring pdo xdebug && \
     a2enmod alias authz_core autoindex deflate expires filter headers setenvif rewrite && \
     # Configure all available PHP versions + xdebug
-    bash /config/setup.sh
+    bash /config/setup.sh \
+    touch /var/log/apache2/xdebug.log
 RUN go get github.com/mailhog/MailHog
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
