@@ -5,7 +5,6 @@ USER root
 
 # Add custom config to container
 COPY config /config
-COPY config/envvars.txt /etc/apache2/envvars
 
 COPY scripts/mailhog /etc/init.d/mailhog
 RUN chmod a+x /etc/init.d/mailhog
@@ -29,8 +28,8 @@ RUN apt-get update && \
     apache2 libapache2-mod-php* php*-xdebug php*-curl php*-zip php*-gd php*-intl php*-mysql php*-mbstring golang-go mysql-server ghostscript && \
     mkdir -p /var/run/mysqld /var/log/mysql && \
     chown -R gitpod:gitpod /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade && \
-    phpenmod zip curl gd intl mysqli pdo_mysql mbstring pdo && \
-    a2enmod alias authz_core autoindex deflate expires filter headers setenvif rewrite xdebug && \
+    phpenmod zip curl gd intl mysqli pdo_mysql mbstring pdo xdebug && \
+    a2enmod alias authz_core autoindex deflate expires filter headers setenvif rewrite && \
     # Configure all available PHP versions + xdebug
     bash /config/setup.sh
 RUN go get github.com/mailhog/MailHog
@@ -53,6 +52,7 @@ RUN chown -R gitpod:gitpod /etc/apache2
 USER gitpod
 COPY scripts/mysql-bashrc-launch.sh /home/gitpod/.bashrc.d/100-mysql-launch
 COPY config/apache.conf /etc/apache2/apache2.conf
+COPY config/envvars.txt /etc/apache2/envvars
 
 # @todo Reset required?!
 # export APACHE_SERVER_NAME=$(gp url 8001 | sed -e s/https:\\/\\/// | sed -e s/\\///)
