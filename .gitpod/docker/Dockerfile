@@ -25,7 +25,7 @@ RUN apt-get install --no-install-recommends -y rlwrap checkinstall libwebp-dev l
 RUN add-apt-repository ppa:ondrej/php
 RUN apt-get update && \
     apt-get install --no-install-recommends -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-    apache2 libapache2-mod-php* php*-xdebug php*-curl php*-zip php*-gd php*-intl php*-mysql php*-mbstring golang-go mysql-server ghostscript && \
+    apache2 libapache2-mod-php* php*-xdebug php*-curl php*-zip php*-gd php*-intl php*-mysql php*-mbstring golang-go mysql-server ghostscript php-xdebug-all-dev && \
     mkdir -p /var/run/mysqld /var/log/mysql && \
     chown -R gitpod:gitpod /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade && \
     phpenmod zip curl gd intl mysqli pdo_mysql mbstring pdo xdebug && \
