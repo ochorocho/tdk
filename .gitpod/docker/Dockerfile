@@ -6,8 +6,6 @@ USER root
 # Add custom config to container
 COPY config /config
 
-COPY config/envvars.txt /etc/apache2/envvars
-
 COPY scripts/mailhog /etc/init.d/mailhog
 RUN chmod a+x /etc/init.d/mailhog
 
@@ -54,6 +52,7 @@ RUN chown -R gitpod:gitpod /etc/apache2
 USER gitpod
 COPY scripts/mysql-bashrc-launch.sh /home/gitpod/.bashrc.d/100-mysql-launch
 COPY config/apache.conf /etc/apache2/apache2.conf
+COPY config/envvars.txt /etc/apache2/envvars
 
 # @todo Reset required?!
 # export APACHE_SERVER_NAME=$(gp url 8001 | sed -e s/https:\\/\\/// | sed -e s/\\///)
