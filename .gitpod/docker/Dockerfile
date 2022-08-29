@@ -32,7 +32,6 @@ RUN apt-get update && \
     a2enmod alias authz_core autoindex deflate expires filter headers setenvif rewrite && \
     # Configure all available PHP versions + xdebug
     bash /config/setup.sh && \
-    touch /var/log/apache2/xdebug.log
 RUN go get github.com/mailhog/MailHog
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
@@ -49,8 +48,8 @@ RUN apt-get remove -y --purge \
 
 RUN chown -R gitpod:gitpod /etc/apache2
 
-# @todo: Replace by init script?!
 USER gitpod
+RUN touch /var/log/apache2/xdebug.log
 COPY scripts/mysql-bashrc-launch.sh /home/gitpod/.bashrc.d/100-mysql-launch
 COPY config/apache.conf /etc/apache2/apache2.conf
 COPY config/envvars.txt /etc/apache2/envvars
