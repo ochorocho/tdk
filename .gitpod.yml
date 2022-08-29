@@ -24,7 +24,7 @@ tasks:
       touch public/FIRST_INSTALL
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
-      tdk-php-switch "$(php .gitpod/php/version.php)"
+      tdk-php-switch "$(php .gitpod/php/version.php)" --no-reload
       composer tdk:help
       sudo service apache2 start
       sudo service mailhog start
