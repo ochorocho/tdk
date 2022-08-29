@@ -47,7 +47,9 @@ RUN apt-get remove -y --purge \
     apt-get clean
 
 RUN chown -R gitpod:gitpod /etc/apache2
-RUN touch /var/log/apache2/xdebug.log && chown -R gitpod:gitpod /var/log/apache2/xdebug.log
+RUN touch /var/log/apache2/xdebug.log && \
+    chmod 770 /var/log/apache2/xdebug.log &&  \
+    chown -R gitpod:gitpod /var/log/apache2/xdebug.log
 
 USER gitpod
 COPY scripts/mysql-bashrc-launch.sh /home/gitpod/.bashrc.d/100-mysql-launch
