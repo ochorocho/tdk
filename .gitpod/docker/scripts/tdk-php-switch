@@ -29,9 +29,9 @@ done
 
 sudo a2enmod "php$PHP" > /dev/null 2>&1
 
-if [[ $2 != '--no-reload' ]]
+if [[ $2 = '--no-reload' ]]
 then
-    sudo service apache2 restart
-else
     echo "Apache was not reloaded due to $1 option. Please reload manually using 'service apache2 restart'"
+else
+    sudo service apache2 restart
 fi
