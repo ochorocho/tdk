@@ -13,19 +13,19 @@ COPY scripts/tdk-* /usr/bin/
 RUN chmod a+x /usr/bin/tdk-*
 
 ## Install ImageMagick7
-RUN apt-get install --no-install-recommends -y libpng-dev libfontconfig1-dev libfreetype6-dev ghostscript libltdl-dev wget gcc make rlwrap checkinstall libwebp-dev libopenjp2-7-dev librsvg2-dev libde265-dev && \
-    wget https://imagemagick.org/archive/ImageMagick.tar.gz && \
-    tar xzvf ImageMagick.tar.gz && cd ImageMagick-* && \
-    ./configure --build=x86_64-linux-gnu --includedir=${prefix}/include --mandir=${prefix}/share/man --infodir=${prefix}/share/info --localstatedir=/var --runstatedir=/run --disable-maintainer-mode --disable-dependency-tracking --enable-reproducible-build --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu --sysconfdir=/etc --with-includearch-dir=/usr/include/x86_64-linux-gnu/ --mandir=/usr/share/man --infodir=/usr/share/info --with-modules --with-gs-font-dir=/usr/share/fonts/type1/gsfonts --with-magick-plus-plus --with-djvu --with-heic --with-openjp2 --with-webp --with-wmf --without-gvc --enable-shared --without-dps --without-fpx --with-perl --with-perl-options=INSTALLDIRS=vendor --without-rsvg --without-gcc-arch --disable-silent-rules --with-quantum-depth=16 --enable-hdri=no && \
-    sudo ldconfig /user/local/lib && \
-    make -j4 && sudo make install && \
-    cd .. && rm -Rf cd ImageMagick*
+#RUN apt-get install --no-install-recommends -y libpng-dev libfontconfig1-dev libfreetype6-dev ghostscript libltdl-dev wget gcc make rlwrap checkinstall libwebp-dev libopenjp2-7-dev librsvg2-dev libde265-dev && \
+#    wget https://imagemagick.org/archive/ImageMagick.tar.gz && \
+#    tar xzvf ImageMagick.tar.gz && cd ImageMagick-* && \
+#    ./configure --build=x86_64-linux-gnu --includedir=${prefix}/include --mandir=${prefix}/share/man --infodir=${prefix}/share/info --localstatedir=/var --runstatedir=/run --disable-maintainer-mode --disable-dependency-tracking --enable-reproducible-build --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu --sysconfdir=/etc --with-includearch-dir=/usr/include/x86_64-linux-gnu/ --mandir=/usr/share/man --infodir=/usr/share/info --with-modules --with-gs-font-dir=/usr/share/fonts/type1/gsfonts --with-magick-plus-plus --with-djvu --with-heic --with-openjp2 --with-webp --with-wmf --without-gvc --enable-shared --without-dps --without-fpx --with-perl --with-perl-options=INSTALLDIRS=vendor --without-rsvg --without-gcc-arch --disable-silent-rules --with-quantum-depth=16 --enable-hdri=no && \
+#    sudo ldconfig /user/local/lib && \
+#    make -j4 && sudo make install && \
+#    cd .. && rm -Rf cd ImageMagick*
 
 # Install required packages
 RUN add-apt-repository ppa:ondrej/php
 RUN apt-get update && \
     apt-get install --no-install-recommends -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-    apache2 libapache2-mod-php* php*-xdebug php*-curl php*-zip php*-gd php*-intl php*-mysql php*-mbstring golang-go mysql-server ghostscript php-xdebug-all-dev && \
+    imagemagick apache2 libapache2-mod-php* php*-xdebug php*-curl php*-zip php*-gd php*-intl php*-mysql php*-mbstring golang-go mysql-server ghostscript php-xdebug-all-dev && \
     mkdir -p /var/run/mysqld /var/log/mysql && \
     chown -R gitpod:gitpod /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade && \
     phpenmod zip curl gd intl mysqli pdo_mysql mbstring pdo xdebug && \
