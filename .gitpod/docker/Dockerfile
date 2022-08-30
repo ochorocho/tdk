@@ -13,19 +13,19 @@ COPY scripts/tdk-* /usr/bin/
 RUN chmod a+x /usr/bin/tdk-*
 
 ## Install ImageMagick7
-#RUN apt-get install --no-install-recommends -y rlwrap checkinstall libwebp-dev libopenjp2-7-dev librsvg2-dev libde265-dev && \
-#    wget https://imagemagick.org/archive/ImageMagick.tar.gz && \
-#    tar xzvf ImageMagick.tar.gz && cd ImageMagick-* && \
-#    ./configure --enable-shared --with-modules --with-gslib && \
-#    sudo ldconfig /user/local/lib && \
-#    make -j4 && sudo make install && \
-#    cd .. && rm -Rf cd ImageMagick*
+RUN apt-get install --no-install-recommends -y libpng-dev libfontconfig1-dev libfreetype6-dev ghostscript libltdl-dev wget gcc make rlwrap checkinstall libwebp-dev libopenjp2-7-dev librsvg2-dev libde265-dev && \
+    wget https://imagemagick.org/archive/ImageMagick.tar.gz && \
+    tar xzvf ImageMagick.tar.gz && cd ImageMagick-* && \
+    ./configure --enable-shared --with-modules --with-gslib && \
+    sudo ldconfig /user/local/lib && \
+    make -j4 && sudo make install && \
+    cd .. && rm -Rf cd ImageMagick*
 
 # Install required packages
 RUN add-apt-repository ppa:ondrej/php
 RUN apt-get update && \
     apt-get install --no-install-recommends -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-    imagemagick imagemagick-common  apache2 libapache2-mod-php* php*-xdebug php*-curl php*-zip php*-gd php*-intl php*-mysql php*-mbstring golang-go mysql-server ghostscript php-xdebug-all-dev && \
+    apache2 libapache2-mod-php* php*-xdebug php*-curl php*-zip php*-gd php*-intl php*-mysql php*-mbstring golang-go mysql-server ghostscript php-xdebug-all-dev && \
     mkdir -p /var/run/mysqld /var/log/mysql && \
     chown -R gitpod:gitpod /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade && \
     phpenmod zip curl gd intl mysqli pdo_mysql mbstring pdo xdebug && \
