@@ -16,7 +16,7 @@ RUN chmod a+x /usr/bin/tdk-*
 RUN apt-get install --no-install-recommends -y libpng-dev libfontconfig1-dev libfreetype6-dev ghostscript libltdl-dev wget gcc make rlwrap checkinstall libwebp-dev libopenjp2-7-dev librsvg2-dev libde265-dev && \
     wget https://imagemagick.org/archive/ImageMagick.tar.gz && \
     tar xzvf ImageMagick.tar.gz && cd ImageMagick-* && \
-    ./configure --enable-shared --with-modules --with-gslib && \
+    ./configure --prefix=/usr --with-gslib --with-gs-font-dir=/usr/share/ghostscript/fonts/ --enable-delegate-build --enable-shared --disable-static --with-modules && \
     sudo ldconfig /user/local/lib && \
     make -j4 && sudo make install && \
     cd .. && rm -Rf cd ImageMagick*
