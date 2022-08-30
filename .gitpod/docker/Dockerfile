@@ -3,7 +3,7 @@ FROM gitpod/workspace-base
 
 USER root
 
-# Add custom config to container
+# Add custom config/scripts to container
 COPY config /config
 
 COPY scripts/mailhog /etc/init.d/mailhog
@@ -11,15 +11,8 @@ RUN chmod a+x /etc/init.d/mailhog
 
 COPY scripts/tdk-* /usr/bin/
 RUN chmod a+x /usr/bin/tdk-*
-
-## Install ImageMagick7
-#RUN apt-get install --no-install-recommends -y libpng-dev libfontconfig1-dev libfreetype6-dev ghostscript libltdl-dev wget gcc make rlwrap checkinstall libwebp-dev libopenjp2-7-dev librsvg2-dev libde265-dev && \
-#    wget https://imagemagick.org/archive/ImageMagick.tar.gz && \
-#    tar xzvf ImageMagick.tar.gz && cd ImageMagick-* && \
-#    ./configure --build=x86_64-linux-gnu --includedir=${prefix}/include --mandir=${prefix}/share/man --infodir=${prefix}/share/info --localstatedir=/var --runstatedir=/run --disable-maintainer-mode --disable-dependency-tracking --enable-reproducible-build --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu --sysconfdir=/etc --with-includearch-dir=/usr/include/x86_64-linux-gnu/ --mandir=/usr/share/man --infodir=/usr/share/info --with-modules --with-gs-font-dir=/usr/share/fonts/type1/gsfonts --with-magick-plus-plus --with-djvu --with-heic --with-openjp2 --with-webp --with-wmf --without-gvc --enable-shared --without-dps --without-fpx --with-perl --with-perl-options=INSTALLDIRS=vendor --without-rsvg --without-gcc-arch --disable-silent-rules --with-quantum-depth=16 --enable-hdri=no && \
-#    sudo ldconfig /user/local/lib && \
-#    make -j4 && sudo make install && \
-#    cd .. && rm -Rf cd ImageMagick*
+# Allow ImageMagick 6 to read/write pdf files
+COPY config/imagemagick-policy.xml /etc/ImageMagick-6/policy.xml
 
 # Install required packages
 RUN add-apt-repository ppa:ondrej/php
@@ -31,7 +24,9 @@ RUN apt-get update && \
     phpenmod zip curl gd intl mysqli pdo_mysql mbstring pdo xdebug && \
     a2enmod alias authz_core autoindex deflate expires filter headers setenvif rewrite && \
     # Configure all available PHP versions + xdebug
-    bash /config/setup.sh
+    bash /config/php-setup.sh
+
+# Install mailhog
 RUN go get github.com/mailhog/MailHog
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
@@ -46,6 +41,7 @@ RUN apt-get remove -y --purge \
     apt-get autoremove -y && \
     apt-get clean
 
+# Create log file and set permissions, otherwise it will be reported as missing
 RUN chown -R gitpod:gitpod /etc/apache2
 RUN touch /var/log/apache2/xdebug.log && \
     chown -R gitpod:gitpod /var/log/apache2
