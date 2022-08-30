@@ -32,6 +32,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin -
 
 # Configure mysql
 COPY config/mysql-client.cnf /etc/mysql/mysql.conf.d/client.cnf
+COPY config/mysql.cnf /etc/mysql/mysql.conf.d/mysql.cnf
 # @todo: Why is this copied twice, see below
 COPY scripts/mysql-bashrc-launch.sh /etc/mysql/mysql-bashrc-launch.sh
 
