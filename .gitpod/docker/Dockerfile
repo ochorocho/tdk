@@ -16,7 +16,7 @@ RUN chmod a+x /usr/bin/tdk-*
 RUN apt-get install --no-install-recommends -y libpng-dev libfontconfig1-dev libfreetype6-dev ghostscript libltdl-dev wget gcc make rlwrap checkinstall libwebp-dev libopenjp2-7-dev librsvg2-dev libde265-dev && \
     wget https://imagemagick.org/archive/ImageMagick.tar.gz && \
     tar xzvf ImageMagick.tar.gz && cd ImageMagick-* && \
-    ./configure --prefix=/usr --with-gslib --with-gs-font-dir=/usr/share/ghostscript/fonts/ --enable-delegate-build --enable-shared --disable-static --with-modules && \
+    ./configure --build=x86_64-linux-gnu --includedir=${prefix}/include --mandir=${prefix}/share/man --infodir=${prefix}/share/info --localstatedir=/var --libdir=${prefix}/lib/x86_64-linux-gnu --libexecdir=${prefix}/lib/x86_64-linux-gnu --runstatedir=/run --disable-maintainer-mode --disable-dependency-tracking --enable-reproducible-build --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu --docdir=/usr/share/doc/imagemagick-6-common/html --with-extra-doc-dir= (on debian system you may install the imagemagick-6 package) --sysconfdir=/etc --with-includearch-dir=/usr/include/x86_64-linux-gnu/ --mandir=/usr/share/man --infodir=/usr/share/info --with-modules --with-gs-font-dir=/usr/share/fonts/type1/gsfonts --with-magick-plus-plus --with-djvu --with-heic --with-openjp2 --with-webp --with-wmf --without-gvc --enable-shared --without-dps --without-fpx --with-perl --with-perl-options=INSTALLDIRS=vendor --x-includes=/usr/include/X11 --x-libraries=/usr/lib/X11 --without-rsvg --cache-file=../../config.cache --without-gcc-arch --disable-silent-rules --with-quantum-depth=16 --enable-hdri=no && \
     sudo ldconfig /user/local/lib && \
     make -j4 && sudo make install && \
     cd .. && rm -Rf cd ImageMagick*
