@@ -33,8 +33,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin -
 # Configure mysql
 COPY config/mysql-client.cnf /etc/mysql/mysql.conf.d/client.cnf
 COPY config/mysql.cnf /etc/mysql/mysql.conf.d/mysql.cnf
-# @todo: Why is this copied twice, see below
-COPY scripts/mysql-bashrc-launch.sh /etc/mysql/mysql-bashrc-launch.sh
+COPY config/mysql-debian.cnf /etc/mysql/debian.cnf
 
 # Cleanup image
 RUN apt-get remove -y --purge \
@@ -48,7 +47,6 @@ RUN touch /var/log/apache2/xdebug.log && \
     chown -R gitpod:gitpod /var/log/apache2
 
 USER gitpod
-COPY scripts/mysql-bashrc-launch.sh /home/gitpod/.bashrc.d/100-mysql-launch
 COPY config/apache.conf /etc/apache2/apache2.conf
 COPY config/envvars.txt /etc/apache2/envvars
 

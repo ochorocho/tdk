@@ -3,6 +3,9 @@
 ARG=$1
 DBNAME="db"
 
+# initialize database structures on disk, if needed
+[ ! -d /workspace/mysql ] && mysqld --initialize-insecure
+
 case $ARG in
   create)
     if [ -d /workspace/mysql/db ] ; then

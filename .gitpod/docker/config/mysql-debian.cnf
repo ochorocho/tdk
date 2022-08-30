@@ -1,0 +1,11 @@
+# Required for the init.d script to work
+[client]
+host     = localhost
+user     = db
+password = db
+socket   = /var/run/mysqld/mysqld.sock
+[mysql_upgrade]
+host     = localhost
+user     = db
+password = db
+socket   = /var/run/mysqld/mysqld.sock
