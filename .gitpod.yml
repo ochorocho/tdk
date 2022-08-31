@@ -26,6 +26,7 @@ tasks:
       tdk-php-switch "$(php .gitpod/php/version.php)"
       sudo service mailhog start
       sudo service mysql start
+      sleep 5
       tdk-db create
       composer tdk:help
       tdk-preview fe
