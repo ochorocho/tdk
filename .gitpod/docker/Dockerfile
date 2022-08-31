@@ -1,5 +1,5 @@
 # Image on docker hub: https://hub.docker.com/r/ochorocho/gitpod-tdk/tags
-FROM gitpod/workspace-base:2022-07-18-21-06-18
+FROM gitpod/workspace-base:latest
 
 USER root
 
