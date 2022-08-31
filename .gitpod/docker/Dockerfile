@@ -8,6 +8,8 @@ COPY config /config
 
 COPY scripts/mailhog /etc/init.d/mailhog
 RUN chmod a+x /etc/init.d/mailhog
+COPY scripts/mysql /etc/init.d/mysql
+RUN chmod a+x /etc/init.d/mysql
 
 COPY scripts/tdk-* /usr/bin/
 RUN chmod a+x /usr/bin/tdk-*
@@ -33,7 +35,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin -
 # Configure mysql
 COPY config/mysql-client.cnf /etc/mysql/mysql.conf.d/client.cnf
 COPY config/mysql.cnf /etc/mysql/mysql.conf.d/mysql.cnf
-COPY scripts/mysql /etc/init.d/mysql
 
 # Cleanup image
 RUN apt-get remove -y --purge \
