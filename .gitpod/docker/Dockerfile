@@ -32,9 +32,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin -
 
 # Configure mysql
 COPY config/mysql-debian.cnf /etc/mysql/debian.cnf
-# RUN mysqld --damonize  && \
-RUN sudo mysql -e "CREATE USER 'debian-sys-maint'@'localhost' IDENTIFIED BY 'password';" && \
-    sudo mysql -e "GRANT ALL PRIVILEGES ON * . * TO 'debian-sys-maint'@'localhost';"
 COPY config/mysql-client.cnf /etc/mysql/mysql.conf.d/client.cnf
 COPY config/mysql.cnf /etc/mysql/mysql.conf.d/mysql.cnf
 

@@ -1,11 +1,9 @@
 # Required for the init.d script to work
 [client]
 host     = localhost
-user     = debian-sys-maint
-password = password
+user     = root
 socket   = /var/run/mysqld/mysqld.sock
 [mysql_upgrade]
 host     = localhost
-user     = debian-sys-maint
-password = password
+user     = root
 socket   = /var/run/mysqld/mysqld.sock
