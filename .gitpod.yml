@@ -24,7 +24,7 @@ tasks:
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
       tdk-php-switch "$(php .gitpod/php/version.php)"
-      sudo service mysql start
+      tdk-db start
       tdk-db create
       sudo service mailhog start
       composer tdk:help
