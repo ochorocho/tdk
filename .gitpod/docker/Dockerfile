@@ -31,7 +31,7 @@ RUN go get github.com/mailhog/MailHog
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
 # Configure mysql
-COPY config/mysql-debian.cnf /etc/mysql/debian.cnf
+# COPY config/mysql-debian.cnf /etc/mysql/debian.cnf
 COPY config/mysql-client.cnf /etc/mysql/mysql.conf.d/client.cnf
 COPY config/mysql.cnf /etc/mysql/mysql.conf.d/mysql.cnf
 
