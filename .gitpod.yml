@@ -7,7 +7,7 @@ image: ochorocho/gitpod-tdk:latest
 # !!!! Check path mapping for sysext (works), ext and packages!
 
 tasks:
-  - name: TYPO3 TDK
+  - name: TDK
     init: |
       mkdir -p .vscode
       cp -Rp .gitpod/vscode/settings.json .vscode/settings.json
@@ -31,7 +31,12 @@ tasks:
       tdk-db create
       composer tdk:help
       tdk-preview fe
-      echo -e "<?php \nphpinfo();" > public/info.php
+      gp sync-done tdk-done
+  - name: Database
+    init: gp sync-await tdk-done
+    command: |
+      mycli -uroot db
+    openMode: tab-after
 
 # VScode xdebug extension
 vscode:
@@ -40,8 +45,7 @@ vscode:
     - wongjn.php-sniffer
     - neilbrayfield.php-docblocker
     - bmewburn.vscode-intelephense-client
-    - mtxr.sqltools
-    - mtxr.sqltools-driver-mysql
+    - vscode-mysql
 
 ports:
   - port: 3306
