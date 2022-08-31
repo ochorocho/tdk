@@ -1,3 +1,4 @@
+---
 # Example
 # 8.1 https://gitpod.io/#TDK_PHP_VERSION=8.1,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
 # 8.0 https://gitpod.io/#TDK_PHP_VERSION=8.0,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
@@ -39,6 +40,7 @@ vscode:
     - wongjn.php-sniffer
     - neilbrayfield.php-docblocker
     - bmewburn.vscode-intelephense-client
+    - mtxr.sqltools
     - mtxr.sqltools-driver-mysql
 
 ports:
