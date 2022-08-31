@@ -33,6 +33,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin -
 # Configure mysql
 COPY config/mysql-client.cnf /etc/mysql/mysql.conf.d/client.cnf
 COPY config/mysql.cnf /etc/mysql/mysql.conf.d/mysql.cnf
+COPY scripts/mysql /etc/init.d/mysql
 
 # Cleanup image
 RUN apt-get remove -y --purge \
