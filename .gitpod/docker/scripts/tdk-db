@@ -4,16 +4,6 @@ ARG=$1
 DBNAME="db"
 
 case $ARG in
-  start)
-    [ ! -d /workspace/mysql ] && mysqld --initialize-insecure
-    mysqld start
-    exit 0
-    ;;
-  stop)
-    [ ! -d /workspace/mysql ] && mysqld --initialize-insecure
-    mysqld stop
-    exit 0
-    ;;
   create)
     if [ -d /workspace/mysql/db ] ; then
       echo -e "Database '${DBNAME}' already exists"
@@ -22,7 +12,6 @@ case $ARG in
       sudo mysql -e "CREATE DATABASE ${DBNAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;"
       sudo mysql -e "CREATE USER '${DBNAME}'@'localhost' IDENTIFIED BY '${DBNAME}';" > /dev/null 2>&1
       sudo mysql -e "GRANT ALL PRIVILEGES ON * . * TO 'db'@'localhost';"
-      # GRANT ALL PRIVILEGES on *.* TO `debian-sys-maint`@`localhost` IDENTIFIED BY 'your password' WITH GRANT OPTION;
     fi
 
     exit 0
@@ -39,7 +28,7 @@ case $ARG in
     ;;
   *)
     echo "Argument unknown. Choose one of the following:"
-    echo "start, stop, create, delete"
+    echo "create, delete"
     exit 1
     ;;
 esac
