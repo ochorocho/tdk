@@ -5,12 +5,17 @@
 
 ### Local commands
 
-* `t3-be` - open TYPO3 backend
-* `t3-fe` - open TYPO3 frontend
-* `t3-install` - open TYPO3 install tool
-* `t3-mailhog` - open Mailhog mail catcher
+* `tdk-preview <fe|be|install|mailhog>` - Open frontend, backend, installTool or mailcatcher (MailHog)
+* `tdk-db <create|delete>` - Create or delete the default database (db)
+* `tdk-php-switch <PHP_VERSION>` - Switch php version for cli and apache (Versions available 5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0, 8.1, 8.2)
 
-### Database:
+### Services 
+
+* `sudo service mysql <start|stop|status>` - Run MySQL
+* `sudo service apache2 <start|stop|status>` - Run Apache2 webserver
+* `sudo service mailhog <start|stop|status>` - Run MailHog
+
+### Database
 
 * User: db
 * Password: db
@@ -19,4 +24,4 @@
 
 Root user:
 * User: root
-* Password: password
+* Password: <none> 
