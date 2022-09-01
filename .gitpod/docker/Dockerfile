@@ -38,7 +38,7 @@ COPY config/mysql.cnf /etc/mysql/mysql.conf.d/mysql.cnf
 
 # Cleanup image
 RUN apt-get remove -y --purge \
-    gcc-7 build-essential apt-utils python3 make linux-headers gcc g++ subversion mercurial emacs-bin-common emacsen-common vim-common vim && \
+    gcc-7 build-essential apt-utils make linux-headers gcc g++ subversion mercurial emacs-bin-common emacsen-common vim-common vim && \
     apt-get autoremove -y && \
     apt-get clean
 
