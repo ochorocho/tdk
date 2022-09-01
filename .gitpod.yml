@@ -36,7 +36,7 @@ tasks:
     init: gp sync-await tdk-done
     command: |
       mycli -uroot db
-    openMode: tab-after
+    openMode: split-right
 
 # VScode xdebug extension
 vscode:
