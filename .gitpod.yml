@@ -45,7 +45,6 @@ vscode:
     - wongjn.php-sniffer
     - neilbrayfield.php-docblocker
     - bmewburn.vscode-intelephense-client
-    - vscode-mysql
 
 ports:
   - port: 3306
