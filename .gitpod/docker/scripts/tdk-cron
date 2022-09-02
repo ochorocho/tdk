@@ -7,6 +7,7 @@ case $ARG in
   run)
     if [ -f "$TYPO3_CLI_PATH" ] ; then
       /usr/bin/php $TYPO3_CLI_PATH scheduler:run
+      echo -e "$(date) - TYPO3 scheduler - done"
     else
       echo -e "$(date) - CLI command $TYPO3_CLI_PATH not found, please run 'composer tdk:setup'"
     fi
