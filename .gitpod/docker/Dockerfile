@@ -38,7 +38,7 @@ RUN add-apt-repository --yes ppa:ondrej/php && \
     mkdir -p /var/run/mysqld /var/log/mysql && \
     chown -R gitpod:gitpod /etc/apache2 /home/gitpod /var/log/apache2 /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade /var/log/cron.log && \
     chmod a+x /etc/init.d/mysql /etc/init.d/mailhog /usr/bin/tdk-* && \
-    (crontab -l ; echo "* * * * * /usr/bin/tdk-cron >> /var/log/cron.log") | crontab
+    (crontab -l ; echo "* * * * * /usr/bin/tdk-cron run >> /var/log/cron.log") | crontab
 
 # @todo Reset required?!
 # export APACHE_SERVER_NAME=$(gp url 8001 | sed -e s/https:\\/\\/// | sed -e s/\\///)

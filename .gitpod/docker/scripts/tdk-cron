@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ARG=$1
-TYPO3_CLI_PATH=/workspaces/tdk/vendor/bin/typo3
+TYPO3_CLI_PATH=/workspace/tdk/vendor/bin/typo3
 
 case $ARG in
   run)
