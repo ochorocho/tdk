@@ -12,8 +12,8 @@
       "driver": "MySQL",
       "name": "TYPO3",
       "database": "db",
-      "username": "root",
-      "password": "password"
+      "username": "db",
+      "password": "db"
     }
   ]
 }
