@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+ARG=$1
+TYPO3_CLI_PATH=/workspaces/tdk/vendor/bin/typo3
+
+case $ARG in
+  run)
+    if [ -f "$TYPO3_CLI_PATH" ] ; then
+      /usr/bin/php $TYPO3_CLI_PATH scheduler:run
+    else
+      echo -e "$(date) - CLI command $TYPO3_CLI_PATH not found, please run 'composer tdk:setup'"
+    fi
+    exit 0
+    ;;
+  *)
+    echo "Argument unknown. Choose one of the following:"
+    echo "run"
+    exit 1
+    ;;
+esac
