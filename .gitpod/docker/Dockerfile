@@ -20,17 +20,19 @@ COPY config/imagemagick-policy.xml /etc/ImageMagick-6/policy.xml
 RUN add-apt-repository --yes ppa:ondrej/php && \
     apt-get update && \
     apt-get install --no-install-recommends -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-    cron imagemagick apache2 libapache2-mod-php* php*-xdebug php*-curl php*-zip php*-gd php*-intl php*-mysql php*-mbstring golang-go mysql-server ghostscript php-xdebug-all-dev && \
+    bash-completion cron imagemagick apache2 libapache2-mod-php* php*-xdebug php*-curl php*-zip php*-gd php*-intl php*-mysql php*-mbstring golang-go mysql-server ghostscript php-xdebug-all-dev && \
     phpenmod zip curl gd intl mysqli pdo_mysql mbstring pdo xdebug && \
     a2enmod alias authz_core autoindex deflate expires filter headers setenvif rewrite && \
     # Configure all available PHP versions + xdebug
     bash /config/php-setup.sh && \
+    # Enable autocompletion
+    echo "source /etc/profile.d/bash_completion.sh" >> /etc/bash.bashrc && \
     # Install mailhog
     go get github.com/mailhog/MailHog && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     # Cleanup image
     apt-get remove -y --purge \
-    bash-completion python3.8 python python3 python3.8-minimal gcc-7 build-essential apt-utils make linux-headers gcc g++ subversion mercurial emacs-bin-common emacsen-common vim-common vim && \
+    python3.8 python python3 python3.8-minimal gcc-7 build-essential apt-utils make linux-headers gcc g++ subversion mercurial emacs-bin-common emacsen-common vim-common vim && \
     apt-get autoremove -y && \
     apt-get clean && \
     # Create log file and set permissions, otherwise it will be reported as missing
