@@ -35,9 +35,9 @@ RUN add-apt-repository --yes ppa:ondrej/php && \
     python3.8 python python3 python3.8-minimal gcc-7 build-essential apt-utils make linux-headers gcc g++ subversion mercurial emacs-bin-common emacsen-common vim-common vim && \
     apt-get autoremove -y && \
     apt-get clean && \
+    rm -Rf /var/lib/mysql/* /var/lib/apt/lists /usr/share/doc/ /config && \
     # Create log file and set permissions, otherwise it will be reported as missing
     touch /var/log/apache2/xdebug.log /var/log/cron.log && \
-    rm -Rf /var/lib/mysql/* /var/lib/apt/lists /usr/share/doc/ && \
     mkdir -p /var/run/mysqld /var/log/mysql && \
     chown -R gitpod:gitpod /etc/apache2 /home/gitpod /var/log/apache2 /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade /var/log/cron.log && \
     chmod a+x /etc/init.d/mysql /etc/init.d/mailhog /usr/bin/tdk && \
