@@ -8,7 +8,10 @@ image: ochorocho/gitpod-tdk:latest
 
 tasks:
   - name: TDK
-    init: |
+    # Installing sqltools manually to avoid the reload message on start.
+    # vscode:extensions does not work for some reason
+     init: |
+      gitpod-code --install-extension mtxr.sqltools mtxr.sqltools-driver-mysql 
       mkdir -p .vscode
       cp -Rp .gitpod/vscode/settings.json .vscode/settings.json
       cp -Rp .gitpod/vscode/launch.json .vscode/launch.json
