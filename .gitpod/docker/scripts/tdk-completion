@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+complete -W "cron preview db php" tdk
+
+# preview
+# complete -W "fe be install mailhog" tdk preview
+
+# db
+# complete -W "create delete" tdk db
+
+# ALL_VERSIONS=$(ls /etc/php)
+# complete -W "${ALL_VERSIONS}" tdk php

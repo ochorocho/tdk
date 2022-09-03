@@ -9,7 +9,8 @@ COPY config/apache.conf /etc/apache2/apache2.conf
 COPY config/envvars.txt /etc/apache2/envvars
 COPY scripts/mailhog /etc/init.d/mailhog
 COPY scripts/mysql /etc/init.d/mysql
-COPY scripts/tdk-* /usr/bin/
+COPY scripts/tdk /usr/bin/
+COPY scripts/tdk-completion /etc/bash_completion.d/
 COPY config/mysql-client.cnf /etc/mysql/mysql.conf.d/client.cnf
 COPY config/mysql.cnf /etc/mysql/mysql.conf.d/mysql.cnf
 # Allow ImageMagick 6 to read/write pdf files
@@ -29,7 +30,7 @@ RUN add-apt-repository --yes ppa:ondrej/php && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     # Cleanup image
     apt-get remove -y --purge \
-    python3.8 python python3 python3.8-minimal gcc-7 build-essential apt-utils make linux-headers gcc g++ subversion mercurial emacs-bin-common emacsen-common vim-common vim && \
+    bash-completion python3.8 python python3 python3.8-minimal gcc-7 build-essential apt-utils make linux-headers gcc g++ subversion mercurial emacs-bin-common emacsen-common vim-common vim && \
     apt-get autoremove -y && \
     apt-get clean && \
     # Create log file and set permissions, otherwise it will be reported as missing
@@ -37,8 +38,8 @@ RUN add-apt-repository --yes ppa:ondrej/php && \
     rm -Rf /var/lib/mysql/* /var/lib/apt/lists /usr/share/doc/ /usr/share/man/ && \
     mkdir -p /var/run/mysqld /var/log/mysql && \
     chown -R gitpod:gitpod /etc/apache2 /home/gitpod /var/log/apache2 /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade /var/log/cron.log && \
-    chmod a+x /etc/init.d/mysql /etc/init.d/mailhog /usr/bin/tdk-* && \
-    echo "* * * * * gitpod /usr/bin/tdk-cron run >> /var/log/cron.log" > /etc/cron.d/typo3
+    chmod a+x /etc/init.d/mysql /etc/init.d/mailhog /usr/bin/tdk && \
+    echo "* * * * * gitpod /usr/bin/tdk cron >> /var/log/cron.log" > /etc/cron.d/typo3
 
 # @todo Reset required?!
 # export APACHE_SERVER_NAME=$(gp url 8001 | sed -e s/https:\\/\\/// | sed -e s/\\///)
