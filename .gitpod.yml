@@ -24,14 +24,14 @@ tasks:
       touch public/FIRST_INSTALL
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
-      tdk-php-switch "$(php .gitpod/php/version.php)"
+      tdk php "$(php .gitpod/php/version.php)"
       sudo service mailhog start
       sudo service mysql start
       sudo service cron start
       sleep 5
-      tdk-db create
+      tdk db create
       composer tdk:help
-      tdk-preview fe
+      tdk preview fe
       gp sync-done tdk-done
 
 # VScode xdebug extension
