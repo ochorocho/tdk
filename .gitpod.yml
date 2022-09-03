@@ -41,7 +41,7 @@ vscode:
     - neilbrayfield.php-docblocker
     - bmewburn.vscode-intelephense-client
     # @todo: Installing sqltools does not work as expected
-    #        it always requires a window reload in some cases
+    #        it requires a window reload in some cases
     - mtxr.sqltools
     - mtxr.sqltools-driver-mysql
 
