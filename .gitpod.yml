@@ -3,10 +3,11 @@
 # 8.1 https://gitpod.io/#TDK_PHP_VERSION=8.1,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
 # 8.0 https://gitpod.io/#TDK_PHP_VERSION=8.0,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
 # Detect php: https://gitpod.io/#TDK_BRANCH=11.5,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/task/gitpod-optimize
-image: ochorocho/gitpod-tdk:latest
-
 # @todo: Installing sqltools manually to avoid the reload message on start.
 # vscode:extensions does not work for some reason
+
+image: ochorocho/gitpod-tdk:latest
+
 tasks:
   - name: TDK
      init: |
@@ -36,7 +37,6 @@ tasks:
       tdk preview fe
       gp sync-done tdk-done
 
-# VScode xdebug extension
 vscode:
   extensions:
     - felixfbecker.php-debug
