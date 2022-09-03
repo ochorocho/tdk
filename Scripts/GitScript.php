@@ -13,7 +13,7 @@ class GitScript extends BaseScript
     public static function setGitConfig(Event $event)
     {
         $arguments = self::getArguments($event->getArguments());
-        $validator = self::validateUsername($event);
+        $validator = ValidatorScript::username($event);
 
         $username = $arguments['username'] ?? getenv('TDK_USERNAME') ?? false;
         if ($username === 'none') {
@@ -37,7 +37,7 @@ class GitScript extends BaseScript
     public static function setCommitTemplate(Event $event)
     {
         $arguments = self::getArguments($event->getArguments());
-        $validator = self::validateFilePath();
+        $validator = ValidatorScript::filePath();
 
         if ($arguments['file'] ?? false) {
             $file = $validator($arguments['file']);
@@ -116,20 +116,6 @@ class GitScript extends BaseScript
         }
 
         return 0;
-    }
-
-    // @todo: Move to BaseScript?
-    public static function getArguments($array): array
-    {
-        $items = [];
-        foreach ($array as $argument) {
-            preg_match('/^--(.*)/', $argument, $parsed);
-
-            $key = explode('=', $parsed[1] ?? '');
-            $items[$key[0]] = $key[1] ?? true;
-        }
-
-        return $items;
     }
 
     private static function setGitConfigValue(Event $event, string $config, string $value): void
