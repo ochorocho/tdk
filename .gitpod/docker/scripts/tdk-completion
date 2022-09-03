@@ -1,11 +1,33 @@
 #!/usr/bin/env bash
-complete -W "cron preview db php" tdk
+_tdk()
+{
+    local cur prev
 
-# preview
-# complete -W "fe be install mailhog" tdk preview
+    cur=${COMP_WORDS[COMP_CWORD]}
+    prev=${COMP_WORDS[COMP_CWORD-1]}
 
-# db
-# complete -W "create delete" tdk db
+    case ${COMP_CWORD} in
+        1)
+            COMPREPLY=($(compgen -W "cron preview db php" -- ${cur}))
+            ;;
+        2)
+            case ${prev} in
+                preview)
+                    COMPREPLY=($(compgen -W "fe be install mailhog" -- ${cur}))
+                    ;;
+                db)
+                    COMPREPLY=($(compgen -W "create delete" -- ${cur}))
+                    ;;
+                php)
+                    ALL_VERSIONS=$(ls /etc/php)
+                    COMPREPLY=($(compgen -W "${ALL_VERSIONS}" -- ${cur}))
+                    ;;
+            esac
+            ;;
+        *)
+            COMPREPLY=()
+            ;;
+    esac
+}
 
-# ALL_VERSIONS=$(ls /etc/php)
-# complete -W "${ALL_VERSIONS}" tdk php
+complete -F _tdk tdk
