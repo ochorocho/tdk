@@ -41,6 +41,7 @@ RUN add-apt-repository --yes ppa:ondrej/php && \
     mkdir -p /var/run/mysqld /var/log/mysql && \
     chown -R gitpod:gitpod /etc/apache2 /home/gitpod /var/log/apache2 /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade /var/log/cron.log && \
     chmod a+x /etc/init.d/mysql /etc/init.d/mailhog /usr/bin/tdk && \
+    # Required to run cronjob as user "gitpod" to avoid permission issues
     echo "* * * * * gitpod /usr/bin/tdk cron >> /var/log/cron.log" > /etc/cron.d/typo3
 
 # @todo Reset required?!
