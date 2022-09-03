@@ -11,26 +11,26 @@ _tdk()
 
     case ${COMP_CWORD} in
         1)
-            COMPREPLY=($(compgen -W "cron preview db php" -- ${cur}))
+            mapfile -t COMPREPLY < <(compgen -W "cron preview db php" -- "${cur}")
             ;;
         2)
             case ${prev} in
                 preview)
-                    COMPREPLY=($(compgen -W "fe be install mailhog" -- ${cur}))
+                    mapfile -t COMPREPLY < <(compgen -W "fe be install mailhog" -- "${cur}")
                     ;;
                 db)
-                    COMPREPLY=($(compgen -W "create delete" -- ${cur}))
+                    mapfile -t COMPREPLY < <(compgen -W "create delete" -- "${cur}")
                     ;;
                 php)
                     ALL_VERSIONS=$(ls /etc/php)
-                    COMPREPLY=($(compgen -W "${ALL_VERSIONS}" -- ${cur}))
+                    mapfile -t COMPREPLY < <(compgen -W "${ALL_VERSIONS}" -- "${cur}")
                     ;;
             esac
             ;;
         3)
             case ${prev2} in
                 php)
-                        COMPREPLY=($(compgen -W "--no-reload" -- ${next}))
+                    mapfile -t COMPREPLY < <(compgen -W "--no-reload" -- "${next}")
                     ;;
                 esac
             ;;
