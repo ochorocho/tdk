@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
+
 _tdk()
 {
-    local cur prev
+    local cur prev prev2 next
 
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
+    prev2=${COMP_WORDS[COMP_CWORD-2]}
+    next=${COMP_WORDS[COMP_CWORD+1]}
 
     case ${COMP_CWORD} in
         1)
@@ -23,6 +26,13 @@ _tdk()
                     COMPREPLY=($(compgen -W "${ALL_VERSIONS}" -- ${cur}))
                     ;;
             esac
+            ;;
+        3)
+            case ${prev2} in
+                php)
+                        COMPREPLY=($(compgen -W "--no-reload" -- ${next}))
+                    ;;
+                esac
             ;;
         *)
             COMPREPLY=()
