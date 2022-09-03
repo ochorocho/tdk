@@ -24,6 +24,6 @@
 * Database: db
 * Host: 127.0.0.1
 
-Root user:
+Root user (`mysql -uroot`):
 * User: root
-* Password: <none> 
+* Password: No password set!
