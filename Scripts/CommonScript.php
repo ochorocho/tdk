@@ -46,7 +46,7 @@ class CommonScript extends BaseScript
                 }
             }
 
-            $phpVersion = self::getPhpVersion();
+            $phpVersion = self::getPhpVersion(self::$coreDevFolder . '/composer.json');
             $ddevCommand = 'ddev config --docroot public --project-name ' . $ddevProjectName . ' --web-environment-add TYPO3_CONTEXT=Development --project-type typo3 --php-version ' . $phpVersion . ' --create-docroot 1> /dev/null';
             exec($ddevCommand, $output, $statusCode);
 
@@ -79,6 +79,17 @@ class CommonScript extends BaseScript
             $filesystem->remove($filesToDelete);
             $event->getIO()->write('<info>Done deleting files.</info>');
         }
+    }
+
+    public static function getPhpVersion(string $composerFile): string
+    {
+        if ($fileContent = file_get_contents($composerFile)) {
+            $json = json_decode($fileContent, true, 512, JSON_THROW_ON_ERROR);
+            preg_match_all('/[0-9].[0-9]/', $json['require']['php'], $versions);
+            return $versions[0][0];
+        }
+
+        return '8.1';
     }
 
     public static function doctor(Event $event): void
