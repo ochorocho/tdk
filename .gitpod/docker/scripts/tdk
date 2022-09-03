@@ -90,6 +90,7 @@ phpTask () {
 
     # Set CLI version
     sudo update-alternatives --set php "$(which php${PHP})"
+    ALL_VERSIONS=$(ls /etc/php)
 
     # Disable modules that might have been enabled, but conflicting
     for version in $ALL_VERSIONS
