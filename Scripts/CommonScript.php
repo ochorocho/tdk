@@ -46,7 +46,7 @@ class CommonScript extends BaseScript
                 }
             }
 
-            $phpVersion = self::getPhpVersion(self::$coreDevFolder . '/composer.json');
+            $phpVersion = self::getPhpVersion();
             $ddevCommand = 'ddev config --docroot public --project-name ' . $ddevProjectName . ' --web-environment-add TYPO3_CONTEXT=Development --project-type typo3 --php-version ' . $phpVersion . ' --create-docroot 1> /dev/null';
             exec($ddevCommand, $output, $statusCode);
 
@@ -81,9 +81,27 @@ class CommonScript extends BaseScript
         }
     }
 
-    public static function getPhpVersion(string $composerFile): string
+    /**
+    * Determine php version:
+    * 1. From env (TDK_PHP_VERSION)
+    * 2. composer.json of current branch
+    * 3. Default: 8.1
+    *
+    * @param string $jsonPath
+    * @return string
+    * @throws \JsonException
+    */
+    public static function getPhpVersion(string $jsonPath = ''): string
     {
-        if ($fileContent = file_get_contents($composerFile)) {
+        if ($version = getenv('TDK_PHP_VERSION')) {
+            return $version;
+        }
+
+        if ($jsonPath === '') {
+            $jsonPath = self::$coreDevFolder . '/composer.json';
+        }
+
+        if ($fileContent = file_get_contents($jsonPath)) {
             $json = json_decode($fileContent, true, 512, JSON_THROW_ON_ERROR);
             preg_match_all('/[0-9].[0-9]/', $json['require']['php'], $versions);
             return $versions[0][0];
