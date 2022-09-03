@@ -14,7 +14,7 @@ composer based TYPO3 CoreDev environment.
   which in most cases is your http://my.typo3.org login 
 * Setup Commit Message Hook? [y/n] : default=y
 * Setup Pre Commit Hook? [y/n] : default=y
-* Create a basic ddev config? [y/n] : default=n
+* Create a basic ddev config? [y/n] : default=y
 
 ## Structure
 

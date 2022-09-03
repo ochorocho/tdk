@@ -5,9 +5,11 @@
 
 ### Local commands
 
-* `tdk-preview <fe|be|install|mailhog>` - Open frontend, backend, installTool or mailcatcher (MailHog)
-* `tdk-db <create|delete>` - Create or delete the default database (db)
-* `tdk-php-switch <PHP_VERSION>` - Switch php version for cli and apache (Versions available 5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0, 8.1, 8.2)
+* `tdk preview <fe|be|install|mailhog>` - Open frontend, backend, installTool or mailcatcher (MailHog)
+* `tdk db <create|delete>` - Create or delete the default database (db)
+* `tdk php <PHP_VERSION>` - Switch php version for cli and apache 
+  (Versions available 5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0, 8.1, 8.2)
+* `tdk cron` - Run the scheduler task. This script is triggered by cron every minute 
 
 ### Services 
 

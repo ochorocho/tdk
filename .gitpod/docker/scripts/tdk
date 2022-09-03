@@ -28,7 +28,7 @@ previewTask () {
             ;;
         install)
             # @todo: Check if GITPOD_REPO_ROOT is always set
-            touch $GITPOD_REPO_ROOTS/public/typo3conf/ENABLE_INSTALL_TOOL && gp preview "$(gp url 8001)/typo3/install.php" --external
+            touch "$GITPOD_REPO_ROOTS/public/typo3conf/ENABLE_INSTALL_TOOL" && gp preview "$(gp url 8001)/typo3/install.php" --external
             exit 0
             ;;
         mailhog)
