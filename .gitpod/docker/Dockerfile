@@ -20,9 +20,14 @@ COPY config/imagemagick-policy.xml /etc/ImageMagick-6/policy.xml
 RUN add-apt-repository --yes ppa:ondrej/php && \
     apt-get update && \
     apt-get install --no-install-recommends -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-    bash-completion cron imagemagick apache2 libapache2-mod-php* php*-xdebug php*-curl php*-zip php*-gd php*-intl php*-mysql php*-mbstring golang-go mysql-server ghostscript php-xdebug-all-dev && \
+        gnupg ca-certificates lsb-release bash-completion cron imagemagick apache2 golang-go mysql-server ghostscript \
+        libapache2-mod-php* php*-xdebug php*-curl php*-zip php*-gd php*-intl php*-mysql php*-mbstring php-xdebug-all-dev && \
     phpenmod zip curl gd intl mysqli pdo_mysql mbstring pdo xdebug && \
     a2enmod alias authz_core autoindex deflate expires filter headers setenvif rewrite && \
+    # Setup Docker CE
+    sudo mkdir -p /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+
     # Configure all available PHP versions + xdebug
     bash /config/php-setup.sh && \
     # Enable autocompletion
@@ -30,6 +35,7 @@ RUN add-apt-repository --yes ppa:ondrej/php && \
     # Install mailhog
     go get github.com/mailhog/MailHog && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null && \
     # Cleanup image
     apt-get remove -y --purge \
     python3.8 python python3 python3.8-minimal gcc-7 build-essential apt-utils make linux-headers gcc g++ subversion mercurial emacs-bin-common emacsen-common vim-common vim && \

@@ -15,3 +15,4 @@ done
 which /home/gitpod/go/bin/MailHog || (echo "MailHog Missing" && exit 1)
 convert --version | grep "^Version" || (echo "convert missing" && exit 1)
 identify --version | grep "^Version" || (echo "identify issing" && exit 1)
+docker --version || (echo "Docker missing" && exit 1)
