@@ -1,6 +1,7 @@
 <?php
 
 require dirname(__DIR__) . '/../Scripts/BaseScript.php';
+require dirname(__DIR__) . '/../Scripts/CommonScript.php';
 use Ochorocho\Tdk\Scripts\CommonScript;
 
 $branch = getenv('TDK_BRANCH') ?: 'main';
