@@ -64,3 +64,4 @@ jobs:
         with:
           push: false
           tags: ochorocho/gitpod-tdk:latest
+          file: ./.gitpod/docker/Dockerfile
