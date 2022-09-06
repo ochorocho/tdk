@@ -46,6 +46,13 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: docker-practice/actions-setup-docker@master
+      - run: |
+          set -x
+          docker version
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
