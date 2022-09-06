@@ -41,6 +41,10 @@ $GLOBALS['TYPO3_CONF_VARS'] = array_replace_recursive(
                 'yamlImportsFollowDeclarationOrder' => true,
                 'security.backend.enforceReferrer' => false,
             ],
+            // This is required to fix "Mixed Block" 
+            'reverseProxySSL' => '*',
+            'reverseProxyIP' => '*',
+            'reverseProxyHeaderMultiValue' => 'first'
         ],
     ]
 );
