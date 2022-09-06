@@ -9,9 +9,8 @@ image: ochorocho/gitpod-tdk:latest
 tasks:
   - name: TDK
     init: |
-      mkdir -p .vscode
-      cp -Rp .gitpod/vscode/settings.json .vscode/settings.json
-      cp -Rp .gitpod/vscode/launch.json .vscode/launch.json
+      cp -Rp .gitpod/vscode .vscode
+      cp -Rp .gitpod/phpstorm .idea
       tdk php "$(php .gitpod/php/version.php)" --no-reload
       gp open .gitpod/info.md
       composer tdk:clone
