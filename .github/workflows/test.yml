@@ -78,7 +78,7 @@ jobs:
         name: Build and export to Docker
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: .gitpod/docker/
           load: true
           tags: ${{ steps.meta.outputs.tags }}
       -
