@@ -44,6 +44,7 @@ jobs:
       - name: Run acceptance tests
         run: ./vendor/bin/codecept run --html
   docker:
+    name: Docker Image Builder
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
