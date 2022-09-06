@@ -79,7 +79,5 @@ jobs:
           context: .gitpod/docker/
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
-            ${{ steps.meta.outputs.tags }}
-            # define default branch
-            type=edge,branch=main
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
           labels: ${{ steps.meta.outputs.labels }}
