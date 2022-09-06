@@ -70,7 +70,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ secrets.DOCKER_HUB_USERNAME }}/gitpod-tdk
+          images: ochorocho/gitpod-tdk
       -
         name: Build and push
         uses: docker/build-push-action@v3
