@@ -72,8 +72,8 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ochorocho/gitpod-tdk
-        tags: |
-          type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+          tags: |
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
       -
         name: Build and push
         uses: docker/build-push-action@v3
