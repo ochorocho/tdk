@@ -84,7 +84,8 @@ jobs:
       -
         name: Test for expected binaries
         run: |
-          docker run --rm -v `pwd`/test.sh:/tmp/test.sh --entrypoint "bash" ${{ steps.meta.outputs.images }}:${{ steps.meta.outputs.tags }} /tmp/test.sh
+          echo ${{ steps.meta.outputs.tags }}
+          docker run --rm -v `pwd`/test.sh:/tmp/test.sh --entrypoint "bash" ${{ steps.meta.outputs.tags }} /tmp/test.sh
       -
         name: Build and push
         uses: docker/build-push-action@v3
