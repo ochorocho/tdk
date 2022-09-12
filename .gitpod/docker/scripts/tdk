@@ -109,6 +109,29 @@ phpTask () {
     fi
 }
 
+addSshKeyFromEnvironmentVariable() {
+    if [[ -z "${SSH_PRIVATE_KEY}" ]]; then
+        echo -e "Evironment variable 'SSH_PRIVATE_KEY' not set!\nFor details see https://gitpod.io/variables "
+        exit 0
+    fi
+
+    regex='(-----BEGIN OPENSSH PRIVATE KEY----- )((.|\n)*?)(-----END OPENSSH PRIVATE KEY-----)'
+    privateKeyPath=~/.ssh/id_rsa
+
+    if [[ "${SSH_PRIVATE_KEY}" =~ $regex ]] ; then
+        key=$(echo "${BASH_REMATCH[2]}" | tr " " "\n")
+        echo -e "${BASH_REMATCH[1]}\n$key\n${BASH_REMATCH[4]}" | awk '{$1=$1};1' > ~/.ssh/id_rsa
+        chmod 600 $privateKeyPath
+    fi
+
+    if ssh-keygen -y -e -f ~/.ssh/id_rsa > /dev/null 2>&1; then
+        echo "Stored ssh key in $privateKeyPath"
+    else
+        echo "Private key $privateKeyPath is not valid!"
+        exit 1
+    fi
+}
+
 case $TASK in
   cron)
     cronTask
@@ -126,9 +149,13 @@ case $TASK in
     phpTask
     exit 0
     ;;
+  ssh-add)
+    addSshKeyFromEnvironmentVariable
+    exit 0
+    ;;
   *)
     echo "Argument unknown. Choose one of the following:"
-    echo "cron, preview, db, php"
+    echo "cron, preview, db, php, ssh-add"
     exit 1
     ;;
 esac
