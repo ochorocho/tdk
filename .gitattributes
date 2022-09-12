@@ -4,6 +4,7 @@
 /.gitignore         export-ignore
 /.github            export-ignore
 /.gitpod            export-ignore
+/.gitpod.yml        export-ignore
 /tests              export-ignore
 /.php.cs            export-ignore
 /codeception.yml   export-ignore
