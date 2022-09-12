@@ -27,3 +27,15 @@
 Root user (`mysql -uroot`):
 * User: root
 * Password: No password set!
+
+### SSH Private/Public Key Authentication
+
+Generate a GitPod dedicate private/public key pair:
+
+```
+ssh-keygen -t ed25519 -f gitpod_key -C gitpod
+```
+
+[Add a variable](https://gitpod.io/variables) named `SSH_PRIVATE_KEY` and 
+paste your generated private key. To be able to push to Gerrit you need to add
+your public key in your [Gerrit settings](https://review.typo3.org/settings/#SSHKeys)

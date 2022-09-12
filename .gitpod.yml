@@ -18,12 +18,14 @@ tasks:
       composer install
       composer tdk:set-git-config
       composer tdk:enable-hooks -- --force
+      tdk ssh-add
       composer tdk:apply-patch
       composer install
       mkdir -p public/typo3conf
       touch public/FIRST_INSTALL
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
+      tdk ssh-add
       tdk php "$(php .gitpod/php/version.php)"
       sudo service mailhog start
       sudo service mysql start

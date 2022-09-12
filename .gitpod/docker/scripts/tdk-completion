@@ -11,7 +11,7 @@ _tdk()
 
     case ${COMP_CWORD} in
         1)
-            mapfile -t COMPREPLY < <(compgen -W "cron preview db php" -- "${cur}")
+            mapfile -t COMPREPLY < <(compgen -W "cron preview db php ssh-add" -- "${cur}")
             ;;
         2)
             case ${prev} in
