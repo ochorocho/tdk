@@ -81,7 +81,7 @@ jobs:
         with:
           images: ochorocho/gitpod-tdk
           tags: |
-            type=raw,value=${{ steps.clean_ref.outputs.value }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            type=raw,value=${{ steps.clean_ref.outputs.value }},enable=true
       -
         name: Build and export to Docker
         uses: docker/build-push-action@v3
