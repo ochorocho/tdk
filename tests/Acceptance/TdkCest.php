@@ -95,11 +95,12 @@ class TdkCest
      */
     public function applyPatch(AcceptanceTester $I): void
     {
-        $I->runShellCommand('composer tdk:apply-patch -- --ref=refs/changes/43/70643/35');
-        $I->seeInShellOutput('Apply patch refs/changes/43/70643/35');
+        // @todo: Create a dedicated patch to test against, currently this breaks as soon as the patch gets merged
+        $I->runShellCommand('composer tdk:apply-patch -- --ref=refs/changes/60/69360/6');
+        $I->seeInShellOutput('Apply patch refs/changes/60/69360/6');
 
         $I->runShellCommand('git -C ' . self::$coreDevFolder . ' log -1 --oneline');
-        $I->seeInShellOutput('Add configurable template for locked backend');
+        $I->seeInShellOutput('Add returnUrl for Open Documents/Recently Used Documents');
     }
 
     /**
