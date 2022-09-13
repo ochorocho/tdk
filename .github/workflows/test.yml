@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        php: [ '8.1' ]
+        php: [ '8.1']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -47,13 +47,11 @@ jobs:
     name: Docker Image Builder
     runs-on: ubuntu-latest
     steps:
-      - name: Run find-and-replace to remove slashes
-        uses: mad9000/actions-find-and-replace-string@1
-        id: clean_ref
-        with:
-          source: ${{ github.ref_name }}
-          find: '/'
-          replace: '-'
+      - name: Get Docker Tag Name
+        id: get-tag
+        run: |
+          readonly local tag=$([[ "${{ github.ref_name }}" = "main" ]] && echo "latest" || echo "${{ github.ref_name }}")
+          echo ::set-output name=tag::$tag
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -81,7 +79,7 @@ jobs:
         with:
           images: ochorocho/gitpod-tdk
           tags: |
-            type=raw,value=${{ steps.clean_ref.outputs.value }},enable=true
+            type=raw,value=${{ steps.get-tag.outputs.tag }},enable=true
       -
         name: Build and export to Docker
         uses: docker/build-push-action@v3
@@ -92,9 +90,7 @@ jobs:
       -
         name: Test for expected binaries
         run: |
-          echo ${{ steps.meta.outputs.tags }}
-          echo ${GITHUB_WORKSPACE}
-          docker run --rm -v ${GITHUB_WORKSPACE}/.gitpod/docker/test.sh:/tmp/test.sh --entrypoint "bash" ochorocho/gitpod-tdk:${{ steps.clean_ref.outputs.value }} /tmp/test.sh
+          docker run --rm -v ${GITHUB_WORKSPACE}/.gitpod/docker/test.sh:/tmp/test.sh --entrypoint "bash" ochorocho/gitpod-tdk:${{ steps.get-tag.outputs.tag }} /tmp/test.sh
       -
         name: Build and push
         uses: docker/build-push-action@v3
