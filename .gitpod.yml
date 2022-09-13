@@ -3,6 +3,7 @@
 # 8.1 https://gitpod.io/#TDK_PHP_VERSION=8.1,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/main
 # 8.0 https://gitpod.io/#TDK_PHP_VERSION=8.0,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/main
 # Detect php: https://gitpod.io/#TDK_BRANCH=11.5,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/main
+# https://gitpod.io/#TDK_BRANCH=11.5,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/feature/add-ssh-command
 
 image: ochorocho/gitpod-tdk:feature-add-ssh-command
 
@@ -18,6 +19,7 @@ tasks:
       composer install
       composer tdk:set-git-config
       composer tdk:enable-hooks -- --force
+      composer tdk:set-commit-template -- --file=./.gitmessage.txt
       tdk ssh-add
       composer tdk:apply-patch
       composer install
@@ -25,7 +27,6 @@ tasks:
       touch public/FIRST_INSTALL
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
     command: |
-      tdk ssh-add
       tdk php "$(php .gitpod/php/version.php)"
       sudo service mailhog start
       sudo service mysql start
