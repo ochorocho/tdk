@@ -86,7 +86,8 @@
         "typo3/cms-t3editor": "@dev",
         "typo3/cms-tstemplate": "@dev",
         "typo3/cms-viewpage": "@dev",
-        "typo3/cms-workspaces": "@dev"
+        "typo3/cms-workspaces": "@dev",
+        "ochorocho/tdk-composer-plugin": "@dev"
     },
     "require-dev": {
         "codeception/codeception": "*",
@@ -101,7 +102,8 @@
     "config": {
         "allow-plugins": {
             "typo3/class-alias-loader": true,
-            "typo3/cms-composer-installers": true
+            "typo3/cms-composer-installers": true,
+            "ochorocho/tdk-composer-plugin": true
         }
     }
 }
