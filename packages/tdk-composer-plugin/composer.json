@@ -1,0 +1,19 @@
+{
+  "name": "ochorocho/tdk-composer-plugin",
+  "description": "TYPO3 Development Kit additional Composer commands",
+  "license": "GPL-2.0-or-later",
+  "type": "composer-plugin",
+  "require": {
+    "composer/composer": "^2.4",
+    "composer-plugin-api": "^2.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Ochorocho\\TdkComposer\\": "src/"
+    }
+  },
+  "extra": {
+    "class": "Ochorocho\\TdkComposer\\Plugin",
+    "plugin-modifies-downloads": true
+  }
+}

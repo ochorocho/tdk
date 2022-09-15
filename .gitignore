@@ -6,6 +6,7 @@ composer.lock
 typo3-core
 packages/*
 !packages/.gitkeep
+!packages/tdk-composer-plugin
 .ddev/
 /config/
 test-acceptance-tdk/

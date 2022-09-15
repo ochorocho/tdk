@@ -81,7 +81,7 @@ class TdkCest
         $hooksFolder = self::$testFolder . self::$coreDevFolder . '.git/hooks/';
 
         $I->amGoingTo('Enable the hooks');
-        $I->runShellCommand('composer tdk:enable-hooks -- --force');
+        $I->runShellCommand('composer tdk-plugin:hooks create --force');
 
         $I->seeResultCodeIs(0);
         $I->seeFileFound('commit-msg', $hooksFolder);
@@ -166,7 +166,7 @@ class TdkCest
         $hooksFolder = self::$testFolder . self::$coreDevFolder . '.git/hooks/';
 
         $I->amGoingTo('Delete the hooks');
-        $I->runShellCommand('composer tdk:remove-hooks');
+        $I->runShellCommand('composer tdk-plugin:hooks delete --force');
 
         $I->seeResultCodeIs(0);
         $I->dontSeeFileFound('commit-msg', $hooksFolder);
