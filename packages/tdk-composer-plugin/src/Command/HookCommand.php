@@ -7,6 +7,7 @@ namespace Ochorocho\TdkComposer\Command;
 use Composer\Command\BaseCommand;
 use Ochorocho\TdkComposer\Service\HookService;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,7 +25,7 @@ final class HookCommand extends BaseCommand
             ->setName('tdk-plugin:hooks')
             ->setDescription('Enable hooks')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force to overwrite hooks')
-            ->addArgument('action', InputOption::VALUE_NONE, 'Create/delete hooks')
+            ->addArgument('action', InputArgument::OPTIONAL, 'Create/delete hooks')
             ->setHelp(<<<EOT
 The package command creates an archive file (tar) and json file for Gitlab Packages.
 EOT
@@ -48,7 +49,7 @@ EOT
             case 'delete':
                 $actionLabel = 'Delete';
                 break;
-            case 'info':
+            default:
                 return $this->info($hooks);
         }
 
@@ -75,6 +76,18 @@ EOT
         }
 
         return $code;
+    }
+
+    protected function create(string $file): int
+    {
+        try {
+            $this->hookService->create($file);
+            $this->output->writeln('<info>Created "' . $file . '" hook</info>');
+            return Command::SUCCESS;
+        } catch (IOException $e) {
+            $this->output->writeln('<warning>Failed to create "' . $file . '" hook:' . $e->getMessage() . '</warning>');
+            return Command::FAILURE;
+        }
     }
 
     protected function delete(string $file): int
@@ -106,17 +119,5 @@ EOT
         }
 
         return $code;
-    }
-
-    protected function create(string $file): int
-    {
-        try {
-            $this->hookService->create($file);
-            $this->output->writeln('<info>Created "' . $file . '" hook</info>');
-            return Command::SUCCESS;
-        } catch (IOException $e) {
-            $this->output->writeln('<warning>Failed to create "' . $file . '" hook:' . $e->getMessage() . '</warning>');
-            return Command::FAILURE;
-        }
     }
 }

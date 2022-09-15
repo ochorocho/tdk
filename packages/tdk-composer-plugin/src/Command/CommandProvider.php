@@ -12,7 +12,7 @@ final class CommandProvider
     public function getCommands(): array
     {
         return [
-            new TdkCommand(),
+            new GitCommand(),
             new HookCommand(),
         ];
     }

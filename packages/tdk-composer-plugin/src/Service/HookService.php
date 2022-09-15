@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ochorocho\TdkComposer\Service;
 
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 class HookService extends BaseService

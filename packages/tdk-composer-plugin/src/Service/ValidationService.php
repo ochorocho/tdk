@@ -4,16 +4,23 @@ declare(strict_types=1);
 
 namespace Ochorocho\TdkComposer\Service;
 
+use Composer\Composer;
 use Composer\Downloader\TransportException;
-use Composer\Script\Event;
+use Composer\IO\IOInterface;
 use Composer\Util\HttpDownloader;
 
 class ValidationService
 {
-    /**
-     * @return \Closure
-     */
-    public static function projectName(): \Closure
+    protected IOInterface $io;
+    protected Composer $composer;
+
+    public function __construct(IOInterface $io, Composer $composer)
+    {
+        $this->io = $io;
+        $this->composer = $composer;
+    }
+
+    public function projectName(): \Closure
     {
         return function ($value) {
             if (!preg_match('/^[a-zA-Z0-9_-]*$/', trim($value))) {
@@ -27,7 +34,7 @@ class ValidationService
     /**
      * @return \Closure
      */
-    public static function filePath(): \Closure
+    public function filePath(): \Closure
     {
         return function ($value) {
             if (!is_file($value)) {
@@ -38,36 +45,24 @@ class ValidationService
         };
     }
 
-    /**
-     * @param Event $event
-     * @return \Closure
-     */
-    public static function username(Event $event): \Closure
+    public function user(): \Closure
     {
-        return function ($value) use ($event) {
+        return function ($username) {
             try {
-                $userData = self::getGerritUserData($event, $value);
+                $request = new HttpDownloader($this->io, $this->composer->getConfig());
+                $json = $request->get('https://review.typo3.org/accounts/' . urlencode($username ?? '') . '/?pp=0');
+
+                // Gerrit does not return valid JSON using their JSON API
+                // therefore we need to chop off the first line
+                // Sounds weird? See why https://gerrit-review.googlesource.com/Documentation/rest-api.html#output
+                $validJson = str_replace(')]}\'', '', $json->getBody());
+
+                $userData = json_decode($validJson, true, 512, JSON_THROW_ON_ERROR);
             } catch (TransportException $exception) {
-                throw new \UnexpectedValueException('Username "' . $value . '" not found in TYPO3 Gerrit.');
+                throw new \UnexpectedValueException('Username "' . $username . '" not found in TYPO3 Gerrit.');
             }
 
             return $userData;
         };
-    }
-
-    /**
-     * @throws \JsonException
-     */
-    private static function getGerritUserData(Event $event, string $username): array
-    {
-        $request = new HttpDownloader($event->getIO(), $event->getComposer()->getConfig());
-        $json = $request->get('https://review.typo3.org/accounts/' . urlencode($username) . '/?pp=0');
-
-        // Gerrit does not return valid JSON using their JSON API
-        // therefore we need to chop off the first line
-        // Sounds weird? See why https://gerrit-review.googlesource.com/Documentation/rest-api.html#output
-        $validJson = str_replace(')]}\'', '', $json->getBody());
-
-        return json_decode($validJson, true, 512, JSON_THROW_ON_ERROR);
     }
 }
