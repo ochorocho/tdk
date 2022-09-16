@@ -42,4 +42,25 @@ EOF;
     {
         return '<info>🎉 Happy days ... TYPO3 Composer CoreDev Setup done!</info>';
     }
+
+    public static function getPhpVersion(string $jsonPath = ''): string
+    {
+        if ($version = getenv('TDK_PHP_VERSION')) {
+            return $version;
+        }
+
+        // @todo: check after patch applied, because a patch may change the version
+        if ($jsonPath === '') {
+            $jsonPath = self::CORE_DEV_FOLDER . '/composer.json';
+        }
+
+        if ($fileContent = file_get_contents($jsonPath)) {
+            $json = json_decode($fileContent, true, 512, JSON_THROW_ON_ERROR);
+            preg_match_all('/[0-9].[0-9]/', $json['require']['php'], $versions);
+
+            return trim($versions[0][0]);
+        }
+
+        return '8.2';
+    }
 }

@@ -15,6 +15,7 @@ final class CommandProvider
             new GitCommand(),
             new HookCommand(),
             new DoctorCommand(),
+            new CleanupCommand(),
         ];
     }
 }
