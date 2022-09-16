@@ -20,7 +20,7 @@ final class DoctorCommand extends BaseCommand
     protected function configure()
     {
         $this
-            ->setName('tdk-plugin:doctor')
+            ->setName('tdk:doctor')
             ->setDescription('Test TYPO3 Development Kit setup')
             ->setHelp(<<<EOT
 Test for files and folders required by the TYPO3 Development Kit 

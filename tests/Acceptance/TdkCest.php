@@ -24,7 +24,7 @@ class TdkCest
         $I->seeInShellOutput('Cloning TYPO3 repository. This may take a while depending on your internet connection!');
         $I->seeInShellOutput('Cloning into');
 
-        $I->runShellCommand('composer tdk:clone');
+        $I->runShellCommand('composer tdk:git clone');
         $I->seeResultCodeIs(0);
         $I->seeInShellOutput('Repository exists! Therefore no download required.');
     }
@@ -42,7 +42,7 @@ class TdkCest
      */
     public function gitConfig(AcceptanceTester $I): void
     {
-        $I->runShellCommand('composer tdk:set-git-config -- --username=ochorocho');
+        $I->runShellCommand('composer tdk:git config --username=ochorocho');
         $I->amGoingTo('See expected response text of command');
         $I->seeInShellOutput('Set "remote.origin.pushurl" to "ssh://ochorocho@review.typo3.org:29418/Packages/TYPO3.CMS.git"');
         $I->seeInShellOutput('Set "user.email" to "rothjochen@gmail.com"');
@@ -66,7 +66,7 @@ class TdkCest
      */
     public function commitTemplate(AcceptanceTester $I): void
     {
-        $I->runShellCommand('composer tdk:set-commit-template -- --file=./.gitmessage.txt');
+        $I->runShellCommand('composer tdk:git template --file=./.gitmessage.txt');
         $I->seeInShellOutput('Set "commit.template" to ');
 
         $I->runShellCommand('git -C ' . self::$coreDevFolder . ' config --get commit.template');
@@ -81,7 +81,7 @@ class TdkCest
         $hooksFolder = self::$testFolder . self::$coreDevFolder . '.git/hooks/';
 
         $I->amGoingTo('Enable the hooks');
-        $I->runShellCommand('composer tdk-plugin:hooks create --force');
+        $I->runShellCommand('composer tdk:hooks create --force');
 
         $I->seeResultCodeIs(0);
         $I->seeFileFound('commit-msg', $hooksFolder);
@@ -96,7 +96,7 @@ class TdkCest
     public function applyPatch(AcceptanceTester $I): void
     {
         // @todo: Create a dedicated patch to test against, currently this breaks as soon as the patch gets merged
-        $I->runShellCommand('composer tdk:apply-patch -- --ref=refs/changes/60/69360/6');
+        $I->runShellCommand('composer tdk:git apply --ref=refs/changes/60/69360/6');
         $I->seeInShellOutput('Apply patch refs/changes/60/69360/6');
 
         $I->runShellCommand('git -C ' . self::$coreDevFolder . ' log -1 --oneline');
@@ -109,17 +109,17 @@ class TdkCest
     public function ddevConfig(AcceptanceTester $I): void
     {
         $I->amGoingTo('use a invalid project name');
-        $I->runShellCommand('composer tdk:ddev-config -- --project-name="typo3 invalid"');
+        $I->runShellCommand('composer tdk:ddev --project-name="typo3 invalid"');
         $I->seeInShellOutput('Invalid ddev project name');
         $I->dontSeeFileFound('.ddev', 'test-acceptance-tdk/');
 
         $I->amGoingTo('abort configuration');
-        $I->runShellCommand('composer tdk:ddev-config -- --no');
+        $I->runShellCommand('composer tdk:ddev --no');
         $I->seeInShellOutput('Aborted! No ddev config created');
         $I->dontSeeFileFound('.ddev', 'test-acceptance-tdk/');
 
         $I->amGoingTo('create a ddev config');
-        $I->runShellCommand('composer tdk:ddev-config -- --project-name="typo3-dev-tdk"');
+        $I->runShellCommand('composer tdk:ddev --project-name="typo3-dev-tdk"');
         $I->seeFileFound('config.yaml', 'test-acceptance-tdk/.ddev/');
         $I->seeResultCodeIs(0);
     }
@@ -129,7 +129,7 @@ class TdkCest
      */
     public function checkoutBranch(AcceptanceTester $I): void
     {
-        $I->runShellCommand('composer tdk:checkout -- --branch=main');
+        $I->runShellCommand('composer tdk:git checkout --branch=main');
         $I->seeInShellOutput('Checking out branch "main"!');
 
         $I->runShellCommand('git -C ' . self::$coreDevFolder . ' branch --show-current');
@@ -166,7 +166,7 @@ class TdkCest
         $hooksFolder = self::$testFolder . self::$coreDevFolder . '.git/hooks/';
 
         $I->amGoingTo('Delete the hooks');
-        $I->runShellCommand('composer tdk-plugin:hooks delete --force');
+        $I->runShellCommand('composer tdk:hooks delete --force');
 
         $I->seeResultCodeIs(0);
         $I->dontSeeFileFound('commit-msg', $hooksFolder);
@@ -178,7 +178,7 @@ class TdkCest
      */
     public function clear(AcceptanceTester $I): void
     {
-        $I->runShellCommand('composer tdk:clear -- --force');
+        $I->runShellCommand('composer tdk:cleanup --force');
         $I->seeResultCodeIs(0);
 
         // Foreach is needed here, as we don't want to

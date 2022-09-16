@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ochorocho\TdkComposer\Command;
 
 use Composer\Command\BaseCommand;
+use Ochorocho\TdkComposer\Service\BaseService;
 use Ochorocho\TdkComposer\Service\HookService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -22,7 +23,7 @@ final class HookCommand extends BaseCommand
     protected function configure()
     {
         $this
-            ->setName('tdk-plugin:hooks')
+            ->setName('tdk:hooks')
             ->setDescription('Enable hooks')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force to overwrite hooks')
             ->addArgument('action', InputArgument::OPTIONAL, 'Create/delete hooks')
@@ -107,15 +108,15 @@ EOT
         $code = Command::SUCCESS;
         foreach ($hooks as $file) {
             if ($this->hookService->exists($file)) {
-                $this->output->writeln('<info>✅  Hook "' . $file . '" exists</info>');
+                $this->output->writeln('<info>' . BaseService::ICON_SUCCESS . 'Hook "' . $file . '" exists</info>');
             } else {
-                $this->output->writeln('❌  Hook "' . $file . '" does not exist');
+                $this->output->writeln(BaseService::ICON_FAILED . 'Hook "' . $file . '" does not exist');
                 $code = Command::FAILURE;
             }
         }
 
         if ($code !== Command::SUCCESS) {
-            $this->output->writeln('You may run "composer tdk-plugin:hooks create"');
+            $this->output->writeln('You may run "composer tdk:hooks create"');
         }
 
         return $code;

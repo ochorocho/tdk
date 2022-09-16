@@ -16,6 +16,7 @@ final class CommandProvider
             new HookCommand(),
             new DoctorCommand(),
             new CleanupCommand(),
+            new DdevConfigCommand(),
         ];
     }
 }

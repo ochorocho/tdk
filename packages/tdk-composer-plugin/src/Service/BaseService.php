@@ -54,13 +54,15 @@ EOF;
             $jsonPath = self::CORE_DEV_FOLDER . '/composer.json';
         }
 
-        if ($fileContent = file_get_contents($jsonPath)) {
+        try {
+            $fileContent = file_get_contents($jsonPath);
             $json = json_decode($fileContent, true, 512, JSON_THROW_ON_ERROR);
             preg_match_all('/[0-9].[0-9]/', $json['require']['php'], $versions);
 
             return trim($versions[0][0]);
-        }
 
-        return '8.2';
+        } catch (\Exception $exception) {
+            return '8.1';
+        }
     }
 }

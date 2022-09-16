@@ -22,7 +22,7 @@ final class CleanupCommand extends BaseCommand
     protected function configure()
     {
         $this
-            ->setName('tdk-plugin:cleanup')
+            ->setName('tdk:cleanup')
             ->setDescription('Delete TYPO3 installation in this TDK (files and folders only)')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force to run delete without confirmation')
             ->setHelp(<<<EOT

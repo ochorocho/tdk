@@ -32,7 +32,7 @@ final class GitCommand extends BaseCommand
     protected function configure()
     {
         $this
-            ->setName('tdk-plugin:git')
+            ->setName('tdk:git')
             ->setDescription('Do some git operations')
             ->addArgument('action', InputArgument::OPTIONAL, 'Manage git related files.')
             ->addOption('username', 'u', InputOption::VALUE_OPTIONAL, 'Gerrit/TYPO3 account username')
