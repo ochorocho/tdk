@@ -97,6 +97,7 @@ class CommonScript extends BaseScript
             return $version;
         }
 
+        // @todo: check after patch applied, because a patch may change the version
         if ($jsonPath === '') {
             $jsonPath = self::$coreDevFolder . '/composer.json';
         }

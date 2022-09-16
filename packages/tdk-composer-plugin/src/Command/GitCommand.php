@@ -8,6 +8,8 @@ use Composer\Command\BaseCommand;
 use Ochorocho\TdkComposer\Service\GitService;
 use Ochorocho\TdkComposer\Service\ValidationService;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Completion\CompletionInput;
+use Symfony\Component\Console\Completion\CompletionSuggestions;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -154,6 +156,13 @@ EOT
         $this->getIO()->write('<info>Checking out branch "' . $branch . '"!</info>');
         if ($this->gitService->checkout($branch)) {
             $this->getIO()->write('<warning>Could not checkout branch ' . $branch . ' </warning>');
+        }
+    }
+
+    public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
+    {
+        if ($input->mustSuggestOptionValuesFor('action')) {
+            $suggestions->suggestValues(['config', 'template', 'apply', 'clone', 'checkout']);
         }
     }
 }

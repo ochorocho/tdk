@@ -31,9 +31,6 @@ class ValidationService
         };
     }
 
-    /**
-     * @return \Closure
-     */
     public function filePath(): \Closure
     {
         return function ($value) {
