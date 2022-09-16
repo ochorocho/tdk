@@ -14,6 +14,7 @@ final class CommandProvider
         return [
             new GitCommand(),
             new HookCommand(),
+            new DoctorCommand(),
         ];
     }
 }

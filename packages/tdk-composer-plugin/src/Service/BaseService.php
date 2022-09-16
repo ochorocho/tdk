@@ -8,8 +8,11 @@ use Symfony\Component\Filesystem\Filesystem;
 
 abstract class BaseService
 {
+    public const CORE_DEV_FOLDER = 'typo3-core';
+    public const ICON_SUCCESS = '<fg=green;options=bold>✔</> ';
+    public const ICON_FAILED = '<fg=red;options=bold>✘</> ';
+
     protected Filesystem $filesystem;
-    protected string $coreDevFolder = 'typo3-core';
 
     public function __construct()
     {
@@ -18,7 +21,7 @@ abstract class BaseService
 
     public function summary(): string
     {
-        $coreFolder = $this->coreDevFolder;
+        $coreFolder = self::CORE_DEV_FOLDER;
         return <<<EOF
 
 💡For more Details read the docs:

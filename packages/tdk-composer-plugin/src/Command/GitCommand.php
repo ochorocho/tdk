@@ -75,7 +75,7 @@ EOT
     protected function setConfig() {
         $username = $this->input->getOption('username') ?? getenv('TDK_USERNAME') ?? false;
         if ($username === 'none') {
-            return 0;
+            return Command::SUCCESS;
         }
 
         if ($username) {

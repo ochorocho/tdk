@@ -11,7 +11,7 @@ class HookService extends BaseService
     public function delete(array $files): void
     {
         $filePaths = array_map(function ($value) {
-            return $this->coreDevFolder . '/.git/hooks/' . $value;
+            return BaseService::CORE_DEV_FOLDER . '/.git/hooks/' . $value;
         }, $files);
 
         $this->filesystem->remove($filePaths);
@@ -20,8 +20,8 @@ class HookService extends BaseService
     public function create(string $fileName): void
     {
         $finder = new Finder();
-        $hookTarget = $this->coreDevFolder . '/.git/hooks/' . $fileName;
-        $files = $finder->name($fileName)->in($this->coreDevFolder . '/Build/git-hooks/')->files();
+        $hookTarget = BaseService::CORE_DEV_FOLDER . '/.git/hooks/' . $fileName;
+        $files = $finder->name($fileName)->in(BaseService::CORE_DEV_FOLDER . '/Build/git-hooks/')->files();
         foreach ($files as $file) {
             $this->filesystem->copy($file->getPath() . '/' . $file->getFilename(), $hookTarget);
         }
@@ -33,7 +33,7 @@ class HookService extends BaseService
 
     public function exists($hook): bool
     {
-        $hookTarget = $this->coreDevFolder . '/.git/hooks/' . $hook;
+        $hookTarget = BaseService::CORE_DEV_FOLDER . '/.git/hooks/' . $hook;
         return $this->filesystem->exists($hookTarget);
     }
 }
