@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         # Do a clone here to make sure the repository exists on install
         # to avoid missing repository error in composer.
-        run: composer tdk:clone && composer install --no-progress
+        run: composer install --no-progress
 
       - name: phpstan
         run:  ./vendor/bin/phpstan analyse -c .phpstan.neon --no-progress

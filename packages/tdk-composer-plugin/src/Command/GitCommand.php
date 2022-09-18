@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 final class GitCommand extends BaseCommand
 {
@@ -39,7 +40,8 @@ final class GitCommand extends BaseCommand
             ->addOption('file', 'f', InputOption::VALUE_OPTIONAL, 'Relative path to your git commit template.')
             ->addOption('ref', null, InputOption::VALUE_OPTIONAL, 'Relative path to your git commit template.')
             ->addOption('branch', null, InputOption::VALUE_OPTIONAL, 'Checkout a certain git branch.')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Run some git commands
 EOT
             );
@@ -72,7 +74,8 @@ EOT
         return Command::SUCCESS;
     }
 
-    protected function setConfig() {
+    protected function setConfig()
+    {
         $username = $this->input->getOption('username') ?? getenv('TDK_USERNAME') ?? false;
         if ($username === 'none') {
             return Command::SUCCESS;
@@ -84,9 +87,27 @@ EOT
             $userData = $this->getIO()->askAndValidate('What is your TYPO3/Gerrit Account Username? ', $this->validationService->user(), 3);
         }
 
-        $this->gitService->setConfig($userData);
+        $pushUrl = 'ssh://' . $userData['username'] . '@review.typo3.org:29418/Packages/TYPO3.CMS.git';
 
-        return Command::SUCCESS;
+        $gitConfigValues = [
+            'remote.origin.pushurl' => $pushUrl,
+            'user.name' => $userData['display_name'] ?? $userData['name'] ?? $userData['username'],
+            'user.email' => $userData['email'],
+        ];
+
+        $code = Command::SUCCESS;
+
+        foreach ($gitConfigValues as $key => $value) {
+            try {
+                $this->gitService->setGitConfigValue($key, $value);
+                $this->getIO()->write('<info>Set "' . $key . '" to "' . $value . '"</info>');
+            } catch (IOException $exception) {
+                $this->getIO()->writeError('<error>' .$exception->getMessage() . '"</error>');
+                $code = Command::FAILURE;
+            }
+        }
+
+        return $code;
     }
 
     protected function setCommitTemplate(): int
@@ -112,7 +133,8 @@ EOT
         return Command::SUCCESS;
     }
 
-    public function applyPatch() {
+    public function applyPatch()
+    {
         $ref = $this->input->getOption('ref') ?? getenv('TDK_PATCH_REF') ?? false;
         if (empty($ref)) {
             $this->getIO()->write('<warning>No patch ref given</warning>');
@@ -126,6 +148,10 @@ EOT
 
         if ($this->gitService->applyPatch($ref)) {
             $this->getIO()->write('<warning>Could not apply patch ' . $ref . ' </warning>');
+            return Command::FAILURE;
+        } else {
+            $this->getIO()->write('<info>Apply patch ' . $ref . '</info>');
+            return Command::SUCCESS;
         }
     }
 
@@ -133,10 +159,10 @@ EOT
     {
         if ($this->gitService->repositoryExists()) {
             $this->getIO()->writeError('Repository exists! Therefore no download required.');
-            return Command::FAILURE;
+            return Command::SUCCESS;
         }
 
-        $this->getIO()->write('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
+        $this->getIO()->overwrite('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
 
         $gitRemoteUrl = 'https://github.com/TYPO3/typo3.git';
         if ($this->gitService->cloneRepository($gitRemoteUrl)) {
@@ -147,7 +173,8 @@ EOT
         return Command::SUCCESS;
     }
 
-    public function checkout() {
+    public function checkout()
+    {
         $branch = $this->input->getOption('branch') ?? getenv('TDK_BRANCH') ?? false;
         if (empty($branch)) {
             $branch = 'main';

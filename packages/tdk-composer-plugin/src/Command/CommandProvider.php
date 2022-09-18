@@ -6,8 +6,7 @@ namespace Ochorocho\TdkComposer\Command;
 
 use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
 
-final class CommandProvider
-    implements CommandProviderCapability
+final class CommandProvider implements CommandProviderCapability
 {
     public function getCommands(): array
     {

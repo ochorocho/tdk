@@ -24,7 +24,8 @@ final class DdevConfigCommand extends BaseCommand
             ->setDescription('Delete TYPO3 installation in this TDK (files and folders only)')
             ->addOption('project-name', null, InputOption::VALUE_OPTIONAL, 'Set project name')
             ->addOption('no', null, InputOption::VALUE_NONE, 'Set all to no')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Deletes all files and folders created/downloaded by "composer tdk:*" commands. 
 EOT
             );
@@ -68,9 +69,9 @@ EOT
             }
 
             $phpVersion = BaseService::getPhpVersion();
-            $ddevCommand = 'ddev config --docroot public --project-name ' . $ddevProjectName . ' --web-environment-add TYPO3_CONTEXT=Development --project-type typo3 --php-version ' . $phpVersion . ' --create-docroot 1> /dev/null';
-
-            return (new ProcessExecutor())->execute($ddevCommand, $output);
+            $ddevCommand = 'ddev config --docroot public --database mariadb:10.3 --project-name ' . $ddevProjectName . ' --web-environment-add TYPO3_CONTEXT=Development --project-type typo3 --php-version ' . $phpVersion . ' --create-docroot';
+            $this->getIO()->write($ddevCommand);
+            return (new ProcessExecutor())->executeTty($ddevCommand);
         }
 
         $this->getIO()->write('No ddev binary found.');

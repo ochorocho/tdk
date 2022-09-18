@@ -10,16 +10,6 @@ use Symfony\Component\Filesystem\Exception\IOException;
 
 class GitService extends BaseService
 {
-    public function setConfig(array $userData)
-    {
-        $pushUrl = 'ssh://' . $userData['username'] . '@review.typo3.org:29418/Packages/TYPO3.CMS.git';
-        $this->setGitConfigValue('remote.origin.pushurl', $pushUrl);
-        $this->setGitConfigValue('user.name', $userData['display_name'] ?? $userData['name'] ?? $userData['username']);
-        $this->setGitConfigValue('user.email', $userData['email']);
-
-        return Command::SUCCESS;
-    }
-
     public function setCommitTemplate(string $filePath): int
     {
         $process = new ProcessExecutor();
@@ -27,7 +17,7 @@ class GitService extends BaseService
         return $process->execute('git config commit.template ' . $template, $output, BaseService::CORE_DEV_FOLDER);
     }
 
-    private function setGitConfigValue(string $config, string $value): void
+    public function setGitConfigValue(string $config, string $value): void
     {
         $process = new ProcessExecutor();
         $command = 'git config ' . $config . ' "' . $value . '"';

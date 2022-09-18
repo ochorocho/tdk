@@ -10,44 +10,23 @@
         }
     ],
     "scripts": {
-        "pre-install-cmd": "@tdk:clone",
         "post-root-package-install": "@tdk:setup",
         "post-create-project-cmd": [
             "@tdk:help",
             "Ochorocho\\Tdk\\Scripts\\MessageScript::done"
         ],
         "tdk:setup": [
-            "@tdk:clone",
-            "@tdk:set-git-config",
-            "@tdk:enable-hooks",
-            "@tdk:ddev-config",
-            "@tdk:set-commit-template"
-        ],
-        "tdk:clone": "Ochorocho\\Tdk\\Scripts\\GitScript::cloneRepository",
-        "tdk:clear": "Ochorocho\\Tdk\\Scripts\\CommonScript::removeFilesAndFolders",
-        "tdk:doctor": "Ochorocho\\Tdk\\Scripts\\CommonScript::doctor",
-        "tdk:remove-hooks": "Ochorocho\\Tdk\\Scripts\\HookScript::remove",
-        "tdk:enable-hooks": "Ochorocho\\Tdk\\Scripts\\HookScript::enable",
-        "tdk:ddev-config": "Ochorocho\\Tdk\\Scripts\\CommonScript::createDdevConfig",
-        "tdk:help": "Ochorocho\\Tdk\\Scripts\\MessageScript::summary",
-        "tdk:set-commit-template": "Ochorocho\\Tdk\\Scripts\\GitScript::setCommitTemplate",
-        "tdk:set-git-config": "Ochorocho\\Tdk\\Scripts\\GitScript::setGitConfig",
-        "tdk:apply-patch": "Ochorocho\\Tdk\\Scripts\\GitScript::applyPatch",
-        "tdk:checkout": "Ochorocho\\Tdk\\Scripts\\GitScript::checkoutBranch"
+            "composer tdk:git clone",
+            "composer tdk:git config",
+            "composer tdk:hooks create",
+            "composer tdk:ddev-config",
+            "composer tdk:git template"
+        ]
     },
     "repositories": {
-        "typo3-core-packages": {
-            "type": "path",
-            "url": "typo3-core/typo3/sysext/*"
-        },
         "local-packages": {
             "type": "path",
             "url": "packages/*"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Ochorocho\\Tdk\\Scripts\\": "Scripts/"
         }
     },
     "require": {

@@ -27,7 +27,8 @@ final class HookCommand extends BaseCommand
             ->setDescription('Enable hooks')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force to overwrite hooks')
             ->addArgument('action', InputArgument::OPTIONAL, 'Create/delete hooks')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 The package command creates an archive file (tar) and json file for Gitlab Packages.
 EOT
             );

@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Ochorocho\TdkComposer\Command;
 
 use Composer\Command\BaseCommand;
-use Composer\Script\Event;
-use Composer\Util\ProcessExecutor;
 use Ochorocho\TdkComposer\Service\BaseService;
-use Ochorocho\TdkComposer\Service\GitService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -25,7 +22,8 @@ final class CleanupCommand extends BaseCommand
             ->setName('tdk:cleanup')
             ->setDescription('Delete TYPO3 installation in this TDK (files and folders only)')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force to run delete without confirmation')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Deletes all files and folders created/downloaded by "composer tdk:*" commands. 
 EOT
             );
@@ -39,6 +37,7 @@ EOT
             'public/typo3',
             BaseService::CORE_DEV_FOLDER,
             'var',
+            'vendor',
         ];
 
         $force = $input->getOption('force');

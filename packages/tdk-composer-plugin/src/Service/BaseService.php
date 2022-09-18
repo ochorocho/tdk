@@ -60,7 +60,6 @@ EOF;
             preg_match_all('/[0-9].[0-9]/', $json['require']['php'], $versions);
 
             return trim($versions[0][0]);
-
         } catch (\Exception $exception) {
             return '8.1';
         }
