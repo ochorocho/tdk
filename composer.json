@@ -11,15 +11,11 @@
     ],
     "scripts": {
         "post-root-package-install": "@tdk:setup",
-        "post-create-project-cmd": [
-            "@tdk:help",
-            "Ochorocho\\Tdk\\Scripts\\MessageScript::done"
-        ],
         "tdk:setup": [
             "composer tdk:git clone",
             "composer tdk:git config",
             "composer tdk:hooks create",
-            "composer tdk:ddev-config",
+            "composer tdk:ddev",
             "composer tdk:git template"
         ]
     },
