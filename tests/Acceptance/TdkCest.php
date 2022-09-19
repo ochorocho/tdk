@@ -22,21 +22,21 @@ class TdkCest
         $I->runShellCommand('composer install');
         $I->seeFileFound('config', self::$testFolder . self::$coreDevFolder . '.git/');
 
-        // @todo: Check why this is not working, no output ?!
-        //        $I->seeInShellOutput('Cloning TYPO3 repository. This may take a while depending on your internet connection!');
-        //        $I->seeInShellOutput('Cloning into');
+        $I->seeInShellOutput('Cloning TYPO3 repository. This may take a while depending on your internet connection!');
+        $I->seeInShellOutput('Cloning into');
 
         $I->runShellCommand('composer tdk:git clone');
-        // $I->canSeeInShellOutput('Repository exists! Therefore no download required.');
+        $I->seeInShellOutput('Repository exists! Therefore no download required.');
     }
 
-//    public function help(AcceptanceTester $I): void
-//    {
-//        $I->runShellCommand('composer tdk:help');
-//
-//        $I->seeResultCodeIs(0);
-//        $I->seeInShellOutput('For more Details read the docs:', 'To be able to push to Gerrit, you need to add your public key');
-//    }
+    public function help(AcceptanceTester $I): void
+    {
+        $I->runShellCommand('composer tdk:help summary');
+        $I->seeInShellOutput('For more Details read the docs:', 'To be able to push to Gerrit, you need to add your public key');
+
+        $I->runShellCommand('composer tdk:help done');
+        $I->seeInShellOutput('TYPO3 Composer CoreDev Setup done');
+    }
 
     /**
      * @param AcceptanceTester $I
@@ -89,7 +89,7 @@ class TdkCest
     }
 
     /**
-     * @todo: Find a more generic way to test the tdk:apply-patch command
+     * @todo: Find a more generic way to test the tdk:git apply command
      *
      * @param AcceptanceTester $I
      */

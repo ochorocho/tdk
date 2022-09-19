@@ -30,16 +30,14 @@ composer based TYPO3 CoreDev environment.
 `composer <command>`
 
 * `tdk:setup`: Setup everything to run a Composer based CoreDev Setup
-* `tdk:clear`: Delete all files and folder
-* `tdk:remove-hooks`: Delete created hooks in `.git/hooks`
-* `tdk:enable-hooks`: Create hooks copied from the TYPO3 repository
-* `tdk:set-commit-template`: Configure TYPO3 repository to use `.gitmessage.txt` as commit message template
+* `tdk:cleanup`: Delete all files and folder
+* `tdk:hooks <create|delete>`: Create/delete created hooks in `.git/hooks`
+* `tdk:git template`: Configure TYPO3 repository to use `.gitmessage.txt` as commit message template
 * `tdk:set-push-url`: Set Gerrit as remote to push patches to
-* `tdk:ddev-config`: Create a basic ddev configuration
+* `tdk:ddev`: Create a basic ddev configuration
 * `tdk:help`: Show summary with links to the TYPO3 Contribution Guide
 * `tdk:doctor`: Show potential issues
-* `typo3`: Shortcut to run TYPO3 Commands
-* `tdk:apply-patch`: Apply Gerrit patch e.g. `composer tdk:apply-patch -- --ref=refs/changes/75/72275/17` 
+* `tdk:git apply`: Apply Gerrit patch e.g. `composer tdk:git apply --ref=refs/changes/60/69360/6` 
 
 ## Demo run
 

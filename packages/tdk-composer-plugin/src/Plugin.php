@@ -68,12 +68,13 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
         $gitService = new GitService();
 
         if ($gitService->repositoryExists()) {
-            $this->io->writeError('Repository exists! Therefore no download required.');
+            $this->io->write('Repository exists! Therefore no download required.', true, IOInterface::VERBOSE);
             return Command::SUCCESS;
         }
 
-        echo "'<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>'";
-        $event->getIO()->debug('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
+        $this->io->writeError('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
+        $this->io->write('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
+        $this->io->writeRaw('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
         $gitRemoteUrl = 'https://github.com/TYPO3/typo3.git';
         if ($gitService->cloneRepository($gitRemoteUrl)) {
             $event->getIO()->write('<warning>Could not download git repository ' . $gitRemoteUrl . ' </warning>');

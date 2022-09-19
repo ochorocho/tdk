@@ -158,7 +158,7 @@ EOT
     public function cloneRepository(): int
     {
         if ($this->gitService->repositoryExists()) {
-            $this->getIO()->writeError('Repository exists! Therefore no download required.');
+            $this->getIO()->write('Repository exists! Therefore no download required.');
             return Command::SUCCESS;
         }
 
