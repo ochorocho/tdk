@@ -15,9 +15,8 @@ tasks:
       cp -Rp .gitpod/phpstorm .idea
       tdk php "$(php .gitpod/php/version.php)" --no-reload
       gp open .gitpod/info.md
-      composer tdk:git clone
-      composer tdk:git checkout
       composer install
+      composer tdk:git checkout
       composer tdk:git config
       composer tdk:hooks create --force
       composer tdk:git template --file=./.gitmessage.txt
