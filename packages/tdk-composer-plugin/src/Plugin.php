@@ -5,22 +5,16 @@ declare(strict_types=1);
 namespace Ochorocho\TdkComposer;
 
 use Composer\Composer;
-use Composer\DependencyResolver\Operation\InstallOperation;
+use Composer\Console\Application;
 use Composer\EventDispatcher\EventSubscriberInterface;
-use Composer\Installer\PackageEvent;
-use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
 use Composer\Plugin\Capable as CapableInterface;
-use Composer\Plugin\PluginEvents;
 use Composer\Plugin\PluginInterface;
-use Composer\Plugin\PreFileDownloadEvent;
 use Composer\Script\Event;
-use Composer\Script\ScriptEvents;
 use Ochorocho\TdkComposer\Command\CommandProvider;
-use Ochorocho\TdkComposer\Command\GitCommand;
-use Ochorocho\TdkComposer\Service\GitService;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 
 final class Plugin implements PluginInterface, CapableInterface, EventSubscriberInterface
 {
@@ -29,19 +23,36 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
      */
     protected $io;
 
+    /**
+     * @var Application $application
+     */
+    protected $application;
+
     public function activate(Composer $composer, IOInterface $io)
     {
         $this->io = $io;
+        $this->application = new Application();
+        $this->application->setAutoExit(false);
     }
 
     public static function getSubscribedEvents()
     {
         return [
-//            'post-root-package-install' => [
-//                ['cloneRepository', 0]
-//            ],
             'post-install-cmd' => [
                 ['cloneRepository', 0]
+            ],
+//            'post-root-package-install' => [
+//                ['gitConfig', 0],
+//                ['createHooks', 0],
+//                ['ddevConfig', 0],
+//                ['commitTemplate', 0]
+//            ],
+            'post-create-project-cmd' => [
+                ['gitConfig', 0],
+                ['createHooks', 0],
+                ['ddevConfig', 0],
+                ['commitTemplate', 0],
+                ['showInformation', 0]
             ],
         ];
     }
@@ -65,23 +76,52 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
 
     public function cloneRepository(Event $event): int
     {
-        $gitService = new GitService();
-
-        if ($gitService->repositoryExists()) {
-            $this->io->write('Repository exists! Therefore no download required.', true, IOInterface::VERBOSE);
-            return Command::SUCCESS;
-        }
-
-        $this->io->writeError('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
-        $this->io->write('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
-        $this->io->writeRaw('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
-        $gitRemoteUrl = 'https://github.com/TYPO3/typo3.git';
-        if ($gitService->cloneRepository($gitRemoteUrl)) {
-            $event->getIO()->write('<warning>Could not download git repository ' . $gitRemoteUrl . ' </warning>');
-            return Command::FAILURE;
-        }
-
+        $input = new ArrayInput(array('command' => 'tdk:git', 'action' => 'clone'));
+        $this->application->run($input);
         $event->getComposer()->getRepositoryManager()->createRepository('path', ['url' => 'typo3-core/typo3/sysext/*'], 'typo3-core-packages');
+
+        return Command::SUCCESS;
+    }
+
+    public function gitConfig(Event $event): int
+    {
+        $input = new ArrayInput(array('command' => 'tdk:git', 'action' => 'config'));
+        $this->application->run($input);
+
+        return Command::SUCCESS;
+    }
+
+    public function createHooks(Event $event): int
+    {
+        $input = new ArrayInput(array('command' => 'tdk:hooks', 'action' => 'create'));
+        $this->application->run($input);
+
+        return Command::SUCCESS;
+    }
+
+    public function ddevConfig(Event $event): int
+    {
+        $input = new ArrayInput(array('command' => 'tdk:ddev'));
+        $this->application->run($input);
+
+        return Command::SUCCESS;
+    }
+
+    public function commitTemplate(Event $event): int
+    {
+        $input = new ArrayInput(array('command' => 'tdk:git', 'action' => 'template'));
+        $this->application->run($input);
+
+        return Command::SUCCESS;
+    }
+
+    public function showInformation(Event $event): int
+    {
+        $input = new ArrayInput(array('command' => 'tdk:help', 'type' => 'summary'));
+        $this->application->run($input);
+
+        $input = new ArrayInput(array('command' => 'tdk:help', 'type' => 'done'));
+        $this->application->run($input);
 
         return Command::SUCCESS;
     }

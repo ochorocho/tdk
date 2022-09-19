@@ -9,20 +9,6 @@
             "email": "jochen.roth@b13.com"
         }
     ],
-    "scripts": {
-        "post-root-package-install": "@tdk:setup",
-        "post-create-project-cmd": [
-            "composer tdk:help summary",
-            "composer tdk:help done"
-        ],
-        "tdk:setup": [
-            "composer tdk:git clone",
-            "composer tdk:git config",
-            "composer tdk:hooks create",
-            "composer tdk:ddev",
-            "composer tdk:git template"
-        ]
-    },
     "repositories": {
         "local-packages": {
             "type": "path",
