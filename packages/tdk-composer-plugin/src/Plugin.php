@@ -7,6 +7,7 @@ namespace Ochorocho\TdkComposer;
 use Composer\Composer;
 use Composer\Console\Application;
 use Composer\EventDispatcher\EventSubscriberInterface;
+use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
 use Composer\Plugin\Capable as CapableInterface;
@@ -38,11 +39,9 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
     public static function getSubscribedEvents()
     {
         return [
-            // GitPod: Ensure the typo3-core folder exists
-            'post-install-cmd' => [
-                ['cloneRepository', 0]
+            'pre-autoload-dump' => [
+                ['cloneRepository', 1000]
             ],
-            // TDK initialization: Clone and configure local TYPO3 Core environment
             'post-create-project-cmd' => [
                 ['cloneRepository', 0],
                 ['gitConfig', 0],
@@ -50,7 +49,7 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
                 ['ddevConfig', 0],
                 ['commitTemplate', 0],
                 ['showInformation', 0]
-            ],
+            ]
         ];
     }
 

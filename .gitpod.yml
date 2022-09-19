@@ -16,6 +16,7 @@ tasks:
       tdk php "$(php .gitpod/php/version.php)" --no-reload
       gp open .gitpod/info.md
       composer install
+      composer tdk:git clone
       composer tdk:git checkout
       composer tdk:git config
       composer tdk:hooks create --force
@@ -35,6 +36,7 @@ tasks:
       sleep 5
       tdk db create
       composer tdk:help summary
+      composer tdk:help done
       tdk preview fe
 
 vscode:
