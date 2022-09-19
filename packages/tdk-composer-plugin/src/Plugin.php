@@ -38,10 +38,13 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
     public static function getSubscribedEvents()
     {
         return [
+            // GitPod: Ensure the typo3-core folder exists
             'post-install-cmd' => [
                 ['cloneRepository', 0]
             ],
+            // TDK initialization: Clone and configure local TYPO3 Core environment
             'post-create-project-cmd' => [
+                ['cloneRepository', 0],
                 ['gitConfig', 0],
                 ['createHooks', 0],
                 ['ddevConfig', 0],
