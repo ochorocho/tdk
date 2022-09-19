@@ -41,12 +41,6 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
             'post-install-cmd' => [
                 ['cloneRepository', 0]
             ],
-//            'post-root-package-install' => [
-//                ['gitConfig', 0],
-//                ['createHooks', 0],
-//                ['ddevConfig', 0],
-//                ['commitTemplate', 0]
-//            ],
             'post-create-project-cmd' => [
                 ['gitConfig', 0],
                 ['createHooks', 0],
