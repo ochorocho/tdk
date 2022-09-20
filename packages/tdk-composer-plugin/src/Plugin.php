@@ -42,7 +42,6 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
                 ['cloneRepository', 0]
             ],
             ScriptEvents::POST_CREATE_PROJECT_CMD => [
-                ['cloneRepository', 0],
                 ['gitConfig', 0],
                 ['createHooks', 0],
                 ['ddevConfig', 0],
