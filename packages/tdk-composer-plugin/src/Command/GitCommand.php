@@ -42,7 +42,7 @@ final class GitCommand extends BaseCommand
             ->addOption('branch', null, InputOption::VALUE_OPTIONAL, 'Checkout a certain git branch.')
             ->setHelp(
                 <<<EOT
-Run some git commands
+Run TYPO3 specific git tasks
 EOT
             );
     }

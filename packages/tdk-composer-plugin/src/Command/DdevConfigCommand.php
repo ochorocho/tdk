@@ -26,7 +26,7 @@ final class DdevConfigCommand extends BaseCommand
             ->addOption('no', null, InputOption::VALUE_NONE, 'Set all to no')
             ->setHelp(
                 <<<EOT
-Deletes all files and folders created/downloaded by "composer tdk:*" commands. 
+Create a ddev config to get easily started. 
 EOT
             );
     }

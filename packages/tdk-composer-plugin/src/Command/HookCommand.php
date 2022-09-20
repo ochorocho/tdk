@@ -29,7 +29,7 @@ final class HookCommand extends BaseCommand
             ->addArgument('action', InputArgument::OPTIONAL, 'Create/delete hooks')
             ->setHelp(
                 <<<EOT
-The package command creates an archive file (tar) and json file for Gitlab Packages.
+Creates or deletes git hooks recommended for TYPO3 development.
 EOT
             );
     }
