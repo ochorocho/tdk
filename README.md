@@ -25,19 +25,21 @@ composer based TYPO3 CoreDev environment.
 └── typo3-core      # TYPO3 repository (master branch) git@github.com:TYPO3/typo3.git  
 ```
 
-## Additional Composer commands/scripts
+## Additional Composer commands
 
 `composer <command>`
 
-* `tdk:setup`: Setup everything to run a Composer based CoreDev Setup
 * `tdk:cleanup`: Delete all files and folder
 * `tdk:hooks <create|delete>`: Create/delete created hooks in `.git/hooks`
-* `tdk:git template`: Configure TYPO3 repository to use `.gitmessage.txt` as commit message template
+* `tdk:git <action>`
+  * `config`: Set git name, email and pushurl
+  * `template`: Configure TYPO3 repository to use `.gitmessage.txt` as commit message template
+  * `apply`: Apply Gerrit patch e.g. `composer tdk:git apply --ref=refs/changes/60/69360/6`
+  * `clone`: Download and store the repository in `./typo3-core`
 * `tdk:set-push-url`: Set Gerrit as remote to push patches to
 * `tdk:ddev`: Create a basic ddev configuration
-* `tdk:help`: Show summary with links to the TYPO3 Contribution Guide
-* `tdk:doctor`: Show potential issues
-* `tdk:git apply`: Apply Gerrit patch e.g. `composer tdk:git apply --ref=refs/changes/60/69360/6` 
+* `tdk:help <summary|done>`: Show informational text
+* `tdk:doctor`: Show potential issues 
 
 ## Demo run
 
