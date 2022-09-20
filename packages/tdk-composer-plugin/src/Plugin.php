@@ -6,23 +6,23 @@ namespace Ochorocho\TdkComposer;
 
 use Composer\Composer;
 use Composer\Console\Application;
+use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Installer\PackageEvent;
+use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
 use Composer\Plugin\Capable as CapableInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
+use Composer\Script\ScriptEvents;
 use Ochorocho\TdkComposer\Command\CommandProvider;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 
 final class Plugin implements PluginInterface, CapableInterface, EventSubscriberInterface
 {
-    /**
-     * @var IOInterface $io
-     */
-    protected $io;
+    private const PACKAGE_NAME = 'ochorocho/tdk-composer-plugin';
 
     /**
      * @var Application $application
@@ -31,7 +31,6 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
 
     public function activate(Composer $composer, IOInterface $io)
     {
-        $this->io = $io;
         $this->application = new Application();
         $this->application->setAutoExit(false);
     }
@@ -39,10 +38,10 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
     public static function getSubscribedEvents()
     {
         return [
-            'pre-autoload-dump' => [
-                ['cloneRepository', 1000]
+            PackageEvents::POST_PACKAGE_INSTALL => [
+                ['cloneRepository', 0]
             ],
-            'post-create-project-cmd' => [
+            ScriptEvents::POST_CREATE_PROJECT_CMD => [
                 ['cloneRepository', 0],
                 ['gitConfig', 0],
                 ['createHooks', 0],
@@ -70,11 +69,18 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
         // TODO: Implement uninstall() method.
     }
 
-    public function cloneRepository(Event $event): int
+    public function cloneRepository(PackageEvent $event): int
     {
-        $input = new ArrayInput(array('command' => 'tdk:git', 'action' => 'clone'));
-        $this->application->run($input);
-        $event->getComposer()->getRepositoryManager()->createRepository('path', ['url' => 'typo3-core/typo3/sysext/*'], 'typo3-core-packages');
+        $operation = $event->getOperation();
+        if ($operation instanceof InstallOperation) {
+            $package = $operation->getPackage()->getName();
+
+            if ($package === self::PACKAGE_NAME) {
+                $input = new ArrayInput(array('command' => 'tdk:git', 'action' => 'clone'));
+                $this->application->run($input);
+                $event->getComposer()->getRepositoryManager()->createRepository('path', ['url' => 'typo3-core/typo3/sysext/*'], 'typo3-core-packages');
+            }
+        }
 
         return Command::SUCCESS;
     }
