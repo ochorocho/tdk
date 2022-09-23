@@ -14,6 +14,7 @@
   },
   "extra": {
     "class": "Ochorocho\\TdkComposer\\Plugin",
+    "plugin-modifies-install-path": true,
     "plugin-modifies-downloads": true
   }
 }

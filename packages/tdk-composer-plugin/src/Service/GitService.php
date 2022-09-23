@@ -52,7 +52,7 @@ class GitService extends BaseService
 
     public function repositoryExists(): bool
     {
-        return $this->filesystem->exists(BaseService::CORE_DEV_FOLDER);
+        return $this->filesystem->exists(BaseService::CORE_DEV_FOLDER . '/.git');
     }
 
     public function latestCommit(): string

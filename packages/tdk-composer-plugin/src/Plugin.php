@@ -19,6 +19,7 @@ use Composer\Script\ScriptEvents;
 use Ochorocho\TdkComposer\Command\CommandProvider;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Filesystem\Filesystem;
 
 final class Plugin implements PluginInterface, CapableInterface, EventSubscriberInterface
 {
@@ -75,9 +76,34 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
             $package = $operation->getPackage()->getName();
 
             if ($package === self::PACKAGE_NAME) {
+                $filsesystem = new Filesystem();
+                $filsesystem->remove('typo3-core');
+
                 $input = new ArrayInput(array('command' => 'tdk:git', 'action' => 'clone'));
                 $this->application->run($input);
-                $event->getComposer()->getRepositoryManager()->createRepository('path', ['url' => 'typo3-core/typo3/sysext/*'], 'typo3-core-packages');
+
+//                $repository = $event->getComposer()->getRepositoryManager()->createRepository('path', ['url' => 'typo3-core/typo3/sysext/*'], 'typo3-core-packages');
+//                $event->getComposer()->getRepositoryManager()->prependRepository($repository);
+
+                $coreExtensionPackages = [];
+                $coreExtensions = [
+                    'typo3/cms-core:@dev',
+                    'typo3/cms-backend:@dev',
+                    'typo3/cms-frontend:@dev',
+                    'typo3/cms-install:@dev',
+                ];
+
+                $input = new ArrayInput(array('command' => 'require', 'packages' => $coreExtensions));
+                $this->application->run($input);
+
+//                $localRepository = $event->getComposer()->getRepositoryManager()->getLocalRepository();
+//                foreach($coreExtensions as $c) {
+//                    $coreExtensionPackages[] = $event->getComposer()->getRepositoryManager()->getLocalRepository()->findPackage($c, '@dev');
+//                    //$coreExtensionPackages[] = $event->getComposer()->getRepositoryManager()->findPackages($c, '@dev');
+//                }
+//                foreach($coreExtensionPackages as $corePackage) {
+//                    $event->getComposer()->getInstallationManager()->install($localRepository, new InstallOperation($corePackage));
+//                }
             }
         }
 
