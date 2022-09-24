@@ -13,6 +13,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 final class DoctorCommand extends BaseCommand
 {
@@ -71,8 +72,13 @@ EOT
 
     protected function testCoreExtensionSymlinked(): void
     {
-        // @todo: Test only extensions located in public/typo3/sysext
-        $coreExtensionFolders = $this->composerService->getCoreExtensionsFolder();
+        try {
+            $coreExtensionFolders = $this->composerService->getCoreExtensionsFolder();
+        } catch (DirectoryNotFoundException $exception) {
+            $this->getIO()->write($exception->getMessage());
+            return;
+        }
+
         $extensionTest = [];
         foreach ($coreExtensionFolders as $folder) {
             $path = 'public/typo3/sysext/' . $folder->getFileName();
@@ -81,6 +87,7 @@ EOT
 
             if ($symlink === null) {
                 $extensionTest['failed'][] = $folder->getFileName();
+                $this->code = Command::FAILURE;
             } else {
                 $extensionTest['success'][] = $folder->getFileName();
             }

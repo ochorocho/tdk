@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Acceptance;
 
-use AcceptanceTester as AcceptanceTester;
+use AcceptanceTester;
+use Codeception\Example;
+use Symfony\Component\Filesystem\Filesystem;
 
 class TdkCest
 {
     private static string $coreDevFolder = 'typo3-core/';
+    private static string $extensionFolder = 'public/typo3/sysext/';
     private static string $testFolder = __DIR__ . '/../../test-acceptance-tdk/';
 
-    public function _before(AcceptanceTester $I)
+    public function _before(AcceptanceTester $I): void
     {
         chdir(self::$testFolder);
     }
@@ -27,6 +30,19 @@ class TdkCest
 
         $I->runShellCommand('composer tdk:git clone');
         $I->seeInShellOutput('Repository exists! Therefore no download required.');
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     * @param Example $testData
+     * @return void
+     * @dataProvider extensionsDataProvider
+     */
+    public function extensionIsSymlink(AcceptanceTester $I, Example $testData): void
+    {
+        $filesystem = new Filesystem();
+        $symlink = $filesystem->readlink(static::$extensionFolder . $testData['ext'], true);
+        $I->assertNotNull($symlink);
     }
 
     public function help(AcceptanceTester $I): void
@@ -197,6 +213,46 @@ class TdkCest
             'public/typo3',
             'typo3-core',
             'var',
+        ];
+    }
+
+    protected function extensionsDataProvider(): array
+    {
+        return [
+            ['ext' => 'adminpanel'],
+            ['ext' => 'backend'],
+            ['ext' => 'belog'],
+            ['ext' => 'beuser'],
+            ['ext' => 'core'],
+            ['ext' => 'dashboard'],
+            ['ext' => 'extbase'],
+            ['ext' => 'extensionmanager'],
+            ['ext' => 'felogin'],
+            ['ext' => 'filelist'],
+            ['ext' => 'filemetadata'],
+            ['ext' => 'fluid'],
+            ['ext' => 'fluid_styled_content'],
+            ['ext' => 'form'],
+            ['ext' => 'frontend'],
+            ['ext' => 'impexp'],
+            ['ext' => 'indexed_search'],
+            ['ext' => 'info'],
+            ['ext' => 'install'],
+            ['ext' => 'linkvalidator'],
+            ['ext' => 'lowlevel'],
+            ['ext' => 'opendocs'],
+            ['ext' => 'recycler'],
+            ['ext' => 'redirects'],
+            ['ext' => 'reports'],
+            ['ext' => 'rte_ckeditor'],
+            ['ext' => 'scheduler'],
+            ['ext' => 'seo'],
+            ['ext' => 'setup'],
+            ['ext' => 'sys_note'],
+            ['ext' => 't3editor'],
+            ['ext' => 'tstemplate'],
+            ['ext' => 'viewpage'],
+            ['ext' => 'workspaces']
         ];
     }
 }
