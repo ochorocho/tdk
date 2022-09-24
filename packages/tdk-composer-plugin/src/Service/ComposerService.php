@@ -4,17 +4,64 @@ declare(strict_types=1);
 
 namespace Ochorocho\TdkComposer\Service;
 
-use Composer\Util\ProcessExecutor;
+use Composer\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Finder\Finder;
 
 class ComposerService extends BaseService
 {
-    public function addRepository(): string
-    {
-        $process = new ProcessExecutor();
-        $command = 'composer config repositories.typo3-core-packages path "typo3-core/typo3/sysext/*"';
-        $process->execute($command, $output);
+    protected Application $application;
+    protected Finder $finder;
 
-        return $output;
+    public function __construct()
+    {
+        $this->application = new Application();
+        $this->finder = new Finder();
+
+        parent::__construct();
+    }
+
+    public function getCoreExtensions(): array
+    {
+        $files = $this->finder->name('composer.json')->in(BaseService::CORE_DEV_FOLDER . '/typo3/sysext/')->depth(1)->files();
+
+        $coreExtensions = [];
+        foreach ($files as $file) {
+            $json = json_decode($file->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            $coreExtensions[] = $json['name'];
+        }
+
+        return $coreExtensions;
+    }
+
+    public function requireAllCoreExtensions(): int
+    {
+        $coreExtensions = $this->getCoreExtensions();
+        foreach ($coreExtensions as $key => $extension) {
+            $coreExtensions[$key] = $extension . ':@dev';
+        }
+
+        if (count($coreExtensions)) {
+            $input = new ArrayInput(array('command' => 'require', 'packages' => $coreExtensions));
+            return $this->application->run($input);
+        }
+
+        return 0;
+    }
+
+    public function removeAllCoreExtensions(): int
+    {
+        $coreExtensions = $this->getCoreExtensions();
+        if (count($coreExtensions)) {
+            $input = new ArrayInput(array('command' => 'remove', 'packages' => $coreExtensions));
+            return $this->application->run($input);
+        }
+
+        return 0;
+    }
+
+    public function getCoreExtensionsFolder(): Finder
+    {
+        return $this->finder->in(BaseService::CORE_DEV_FOLDER . '/typo3/sysext/')->depth(0)->directories();
     }
 }

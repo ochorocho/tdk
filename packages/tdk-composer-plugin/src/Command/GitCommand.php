@@ -164,8 +164,8 @@ EOT
 
         $this->getIO()->overwrite('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
 
-        // $gitRemoteUrl = 'https://github.com/TYPO3/typo3.git';
-        $gitRemoteUrl = '/Users/jochen/Development/typo3-dev';
+        $gitRemoteUrl = 'https://github.com/TYPO3/typo3.git';
+        // $gitRemoteUrl = '/Users/jochen/Development/typo3-dev';
         if ($this->gitService->cloneRepository($gitRemoteUrl)) {
             $this->getIO()->write('<warning>Could not download git repository ' . $gitRemoteUrl . ' </warning>');
             return Command::FAILURE;

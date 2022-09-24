@@ -9,7 +9,9 @@
             "email": "jochen.roth@b13.com"
         }
     ],
-    "minimum-stability": "dev",
+    "scripts": {
+        "command": "[ -d typo3-core/typo3/sysext ] || mkdir -p typo3-core/typo3/sysext"
+    },
     "repositories": {
         "typo3-core-packages": {
             "type": "path",

@@ -7,6 +7,7 @@ namespace Ochorocho\TdkComposer\Command;
 use Composer\Command\BaseCommand;
 use Composer\Util\ProcessExecutor;
 use Ochorocho\TdkComposer\Service\BaseService;
+use Ochorocho\TdkComposer\Service\ComposerService;
 use Ochorocho\TdkComposer\Service\GitService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,6 +17,20 @@ use Symfony\Component\Filesystem\Filesystem;
 final class DoctorCommand extends BaseCommand
 {
     protected OutputInterface $output;
+    protected Filesystem $filesystem;
+    protected int $code;
+    protected ComposerService $composerService;
+    protected ProcessExecutor $process;
+
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $this->filesystem = new Filesystem();
+        $this->code = Command::SUCCESS;
+        $this->composerService = new ComposerService();
+        $this->process = new ProcessExecutor();
+
+        parent::initialize($input, $output);
+    }
 
     protected function configure()
     {
@@ -31,65 +46,110 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $code = Command::SUCCESS;
-        $filesystem = new Filesystem();
-        $coreDevFolder = BaseService::CORE_DEV_FOLDER;
-        $iconSuccess = BaseService::ICON_SUCCESS;
-        $iconFailed = BaseService::ICON_FAILED;
+        $this->testGitRepository();
+        $this->testHooks();
+        $this->testGitPushUrl();
+        $this->testCommitTemplate();
+        $this->testCoreExtensionSymlinked();
+        $this->testVendor();
 
-        // Test for existing repository
-        if ($filesystem->exists($coreDevFolder . '/.git')) {
-            $gitService = new GitService();
-            $commit = $gitService->latestCommit();
-            $this->getIO()->write($iconSuccess . 'Repository exists on commit ' . $commit);
+        return $this->code;
+    }
+
+    /**
+     * @return void
+     */
+    protected function testVendor(): void
+    {
+        if ($this->filesystem->exists('vendor')) {
+            $this->getIO()->write(BaseService::ICON_SUCCESS . 'Vendor folder exists.');
         } else {
-            $this->getIO()->write($iconFailed . 'Repository not in place, please run "composer tdk:git clone"');
-            $code = Command::FAILURE;
+            $this->getIO()->write(BaseService::ICON_FAILED . 'Vendor folder is missing, please run "composer install"');
+            $this->code = Command::FAILURE;
+        }
+    }
+
+    protected function testCoreExtensionSymlinked(): void
+    {
+        // @todo: Test only extensions located in public/typo3/sysext
+        $coreExtensionFolders = $this->composerService->getCoreExtensionsFolder();
+        $extensionTest = [];
+        foreach ($coreExtensionFolders as $folder) {
+            $path = 'public/typo3/sysext/' . $folder->getFileName();
+
+            $symlink = $this->filesystem->readlink($path, true);
+
+            if ($symlink === null) {
+                $extensionTest['failed'][] = $folder->getFileName();
+            } else {
+                $extensionTest['success'][] = $folder->getFileName();
+            }
         }
 
-        // Test if hooks are set up
-        if ($filesystem->exists([
-            $coreDevFolder . '/.git/hooks/pre-commit',
-            $coreDevFolder . '/.git/hooks/commit-msg',
-        ])) {
-            $this->getIO()->write($iconSuccess . 'All hooks are in place.');
-        } else {
-            $this->getIO()->write($iconFailed . 'Hooks are missing please run "composer tdk:hooks create".');
-            $code = Command::FAILURE;
+        if ($extensionTest['failed'] ?? false) {
+            $this->getIO()->write(BaseService::ICON_FAILED . 'Following extensions are not symlinked: ' . implode(
+                ', ',
+                $extensionTest['failed']
+            ));
         }
 
-        // Test git push url
-        $process = new ProcessExecutor();
+        if ($extensionTest['success'] ?? false) {
+            $this->getIO()->write(BaseService::ICON_SUCCESS . 'Following extensions are symlinked: ' . implode(
+                ', ',
+                $extensionTest['success']
+            ));
+        }
+    }
+
+    protected function testCommitTemplate(): void
+    {
+        $commandTemplate = 'git config --get commit.template';
+        $this->process->execute($commandTemplate, $outputTemplate, BaseService::CORE_DEV_FOLDER);
+
+        if (!empty($outputTemplate) && $this->filesystem->exists(trim($outputTemplate))) {
+            $this->getIO()->write(BaseService::ICON_SUCCESS . 'Git "commit.template" is set to ' . trim($outputTemplate) . '.');
+        } else {
+            $this->getIO()->write(BaseService::ICON_FAILED . 'Git "commit.template" not set or file does not exist, please run "composer tdk:git template"');
+            $this->code = Command::FAILURE;
+        }
+    }
+
+    protected function testGitPushUrl(): void
+    {
         $command = 'git config --get remote.origin.pushurl';
-        $process->execute($command, $commandOutput, $coreDevFolder);
+        $this->process->execute($command, $commandOutput, BaseService::CORE_DEV_FOLDER);
 
         preg_match('/^ssh:\/\/(.*)@review\.typo3\.org/', (string)$commandOutput, $matches);
         if (!empty($matches)) {
-            $this->getIO()->write($iconSuccess . 'Git "remote.origin.pushurl" seems correct.');
+            $this->getIO()->write(BaseService::ICON_SUCCESS . 'Git "remote.origin.pushurl" seems correct.');
         } else {
-            $this->getIO()->write($iconFailed . 'Git "remote.origin.pushurl" not set correctly, please run "composer tdk:git config".');
-            $code = Command::FAILURE;
+            $this->getIO()->write(BaseService::ICON_FAILED . 'Git "remote.origin.pushurl" not set correctly, please run "composer tdk:git config".');
+            $this->code = Command::FAILURE;
         }
+    }
 
-        // Test commit template
-        $commandTemplate = 'git config --get commit.template';
-        $process->execute($commandTemplate, $outputTemplate, $coreDevFolder);
-
-        if (!empty($outputTemplate) && $filesystem->exists(trim($outputTemplate))) {
-            $this->getIO()->write($iconSuccess . 'Git "commit.template" is set to ' . trim($outputTemplate) . '.');
+    protected function testHooks(): void
+    {
+        if ($this->filesystem->exists([
+            BaseService::CORE_DEV_FOLDER . '/.git/hooks/pre-commit',
+            BaseService::CORE_DEV_FOLDER . '/.git/hooks/commit-msg',
+        ])) {
+            $this->getIO()->write(BaseService::ICON_SUCCESS . 'All hooks are in place.');
         } else {
-            $this->getIO()->write($iconFailed . 'Git "commit.template" not set or file does not exist, please run "composer tdk:git template"');
-            $code = Command::FAILURE;
+            $this->getIO()->write(BaseService::ICON_FAILED . 'Hooks are missing please run "composer tdk:hooks create".');
+            $this->code = Command::FAILURE;
         }
+    }
 
-        // Test vendor folder
-        if ($filesystem->exists('vendor')) {
-            $this->getIO()->write($iconSuccess . 'Vendor folder exists.');
+    protected function testGitRepository(): void
+    {
+        if ($this->filesystem->exists(BaseService::CORE_DEV_FOLDER . '/.git')) {
+            $gitService = new GitService();
+            $commit = $gitService->latestCommit();
+            $this->getIO()->write(BaseService::ICON_SUCCESS . 'Repository exists on commit ' . $commit);
         } else {
-            $this->getIO()->write($iconFailed . 'Vendor folder is missing, please run "composer install"');
-            $code = Command::FAILURE;
+            $this->getIO()->write(BaseService::ICON_FAILED . 'Repository not in place, please run "composer tdk:git clone"');
+            $this->code = Command::FAILURE;
         }
-
-        return $code;
     }
 }
