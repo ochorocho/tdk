@@ -21,9 +21,9 @@ class ComposerService extends BaseService
         parent::__construct();
     }
 
-    public function getCoreExtensions(): array
+    public function getCoreExtensions(string $path = BaseService::CORE_DEV_FOLDER . '/typo3/sysext/'): array
     {
-        $files = $this->finder->name('composer.json')->in(BaseService::CORE_DEV_FOLDER . '/typo3/sysext/')->depth(1)->files();
+        $files = $this->finder->name('composer.json')->in($path)->depth(1)->files();
 
         $coreExtensions = [];
         foreach ($files as $file) {
@@ -60,8 +60,8 @@ class ComposerService extends BaseService
         return 0;
     }
 
-    public function getCoreExtensionsFolder(): Finder
+    public function getCoreExtensionsFolder(string $path = 'public/typo3/sysext'): Finder
     {
-        return $this->finder->in(BaseService::CORE_DEV_FOLDER . '/typo3/sysext/')->depth(0)->directories();
+        return $this->finder->in($path)->depth(0)->directories();
     }
 }
