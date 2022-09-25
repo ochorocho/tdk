@@ -91,6 +91,8 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
                 $input = new ArrayInput(array('command' => 'tdk:git', 'action' => 'clone'));
                 $this->application->run($input);
 
+                $event->getComposer()->getEventDispatcher()->dispatchScript(ScriptEvents::POST_CREATE_PROJECT_CMD, $installDevPackages);
+
                 // $this->composerService->requireAllCoreExtensions();
             }
         }
