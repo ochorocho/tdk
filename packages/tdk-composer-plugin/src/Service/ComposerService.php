@@ -31,7 +31,7 @@ class ComposerService extends BaseService
 
         if (count($coreExtensions)) {
             $input = new ArrayInput(array('command' => 'require', 'packages' => $coreExtensions));
-            return $this->application->run($input);
+            $this->application->run($input);
         }
 
         return Command::SUCCESS;
