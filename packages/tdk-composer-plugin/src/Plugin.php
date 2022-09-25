@@ -42,6 +42,11 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
         return [
             PackageEvents::POST_PACKAGE_INSTALL => [
                 ['cloneRepository', 0]
+                //            "composer tdk:git clone",
+                //            "composer tdk:git config",
+                //            "composer tdk:hooks create",
+                //            "composer tdk:ddev",
+                //            "composer tdk:set-commit-template"
             ],
             ScriptEvents::POST_ROOT_PACKAGE_INSTALL => [
                 ['ensureRepoExists', 0],
@@ -86,7 +91,7 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
                 $input = new ArrayInput(array('command' => 'tdk:git', 'action' => 'clone'));
                 $this->application->run($input);
 
-                $this->composerService->requireAllCoreExtensions();
+                // $this->composerService->requireAllCoreExtensions();
             }
         }
 
