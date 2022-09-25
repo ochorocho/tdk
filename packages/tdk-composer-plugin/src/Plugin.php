@@ -48,8 +48,8 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
                 //            "composer tdk:ddev",
                 //            "composer tdk:set-commit-template"
             ],
-            ScriptEvents::POST_ROOT_PACKAGE_INSTALL => [
-            ],
+//            ScriptEvents::POST_ROOT_PACKAGE_INSTALL => [
+//            ],
             ScriptEvents::POST_CREATE_PROJECT_CMD => [
                 ['ensureRepoExists', 0],
                 ['gitConfig', 0],
