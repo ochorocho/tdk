@@ -88,10 +88,10 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
                 $filesystem = new Filesystem();
                 $filesystem->remove([BaseService::CORE_DEV_FOLDER]);
 
-                $input = new ArrayInput(array('command' => 'tdk:git', 'action' => 'clone'));
-                $this->application->run($input);
+//                $input = new ArrayInput(array('command' => 'tdk:git', 'action' => 'clone'));
+//                $this->application->run($input);
 
-                // $this->composerService->requireAllCoreExtensions();
+//                $this->composerService->requireAllCoreExtensions();
             }
         }
 

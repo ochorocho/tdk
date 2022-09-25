@@ -10,8 +10,7 @@
         }
     ],
     "scripts": {
-        "command": "[ -d typo3-core/typo3/sysext ] || mkdir -p typo3-core/typo3/sysext",
-        "post-root-package-install": "[ -d typo3-core/typo3/sysext ] || mkdir -p typo3-core/typo3/sysext"
+        "command": "[ -d typo3-core/typo3/sysext ] || mkdir -p typo3-core/typo3/sysext"
     },
     "repositories": {
         "typo3-core-packages": {
