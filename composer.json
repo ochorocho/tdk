@@ -11,18 +11,18 @@
     ],
     "scripts": {
         "command": "[ -d typo3-core/typo3/sysext ] || mkdir -p typo3-core/typo3/sysext",
-        "pre-install-cmd": "@tdk:git clone",
+        "pre-install-cmd": "composer tdk:git clone",
         "post-root-package-install": "@tdk:setup",
         "post-create-project-cmd": [
-            "@tdk:help summary",
-            "@tdk:help done"
+            "composer tdk:help summary",
+            "composer tdk:help done"
         ],
         "tdk:setup": [
-            "@tdk:git clone",
-            "@tdk:git config",
-            "@tdk:hooks create",
-            "@tdk:ddev",
-            "@tdk:set-commit-template"
+            "composer tdk:git clone",
+            "composer tdk:git config",
+            "composer tdk:hooks create",
+            "composer tdk:ddev",
+            "composer tdk:set-commit-template"
         ]
     },
     "repositories": {
