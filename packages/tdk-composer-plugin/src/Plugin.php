@@ -43,11 +43,14 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
             PackageEvents::POST_PACKAGE_INSTALL => [
                 ['cloneRepository', 0]
             ],
-            ScriptEvents::POST_CREATE_PROJECT_CMD => [
+            ScriptEvents::POST_ROOT_PACKAGE_INSTALL => [
+                ['ensureRepoExists', 0],
                 ['gitConfig', 0],
                 ['createHooks', 0],
                 ['ddevConfig', 0],
                 ['commitTemplate', 0],
+            ],
+            ScriptEvents::POST_CREATE_PROJECT_CMD => [
                 ['showInformation', 0]
             ]
         ];
@@ -132,4 +135,13 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
 
         return Command::SUCCESS;
     }
+
+    public function ensureRepoExists(Event $event): int
+    {
+        //        $filesystem = new Filesystem();
+        //        $filesystem->mkdir('typo3-core/typo3/sysext');
+        exec('[ -d typo3-core/typo3/sysext ] || mkdir -p typo3-core/typo3/sysext');
+        return Command::SUCCESS;
+    }
+
 }
