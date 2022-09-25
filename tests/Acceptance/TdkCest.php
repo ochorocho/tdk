@@ -45,6 +45,25 @@ class TdkCest
         $I->assertNotNull($symlink);
     }
 
+    public function composerCommand(AcceptanceTester $I): void
+    {
+        $I->amGoingTo('Remove all core extensions');
+        $I->runShellCommand('composer tdk:composer remove');
+        $composerJson = $I->loadRootComposerJsonToArray();
+        $exampleJsonRemove = $I->loadExampleComposerJsonToArray('composer-without-core-packages.json');
+        $I->assertEquals($exampleJsonRemove['require'], $composerJson['require']);
+
+        $I->amGoingTo('Require all core extensions');
+        $I->runShellCommand('composer tdk:composer require');
+        $composerJson = $I->loadRootComposerJsonToArray();
+        $exampleJsonRequire = $I->loadExampleComposerJsonToArray('composer-core-packages.json');
+        $I->assertEquals($exampleJsonRequire['require'], $composerJson['require']);
+
+        $I->amGoingTo('See expected scripts are in place to create the initial repository folder');
+        $composerJson = $I->loadRootComposerJsonToArray();
+        $I->assertEquals($composerJson['scripts'], ['command' => '[ -d typo3-core/typo3/sysext ] || mkdir -p typo3-core/typo3/sysext']);
+    }
+
     public function help(AcceptanceTester $I): void
     {
         $I->runShellCommand('composer tdk:help summary');
@@ -138,7 +157,6 @@ class TdkCest
         $I->amGoingTo('create a ddev config');
         $I->runShellCommand('composer tdk:ddev --project-name="typo3-dev-tdk"');
         $I->seeFileFound('config.yaml', 'test-acceptance-tdk/.ddev/');
-        $I->seeResultCodeIs(0);
     }
 
     /**

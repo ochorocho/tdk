@@ -42,7 +42,12 @@ final class GitCommand extends BaseCommand
             ->addOption('branch', null, InputOption::VALUE_OPTIONAL, 'Checkout a certain git branch.')
             ->setHelp(
                 <<<EOT
-Run TYPO3 specific git tasks
+Run TYPO3 specific git command:
+ * config - set git push url and user information for typo3-core
+ * template - set git commit template path
+ * apply --ref <ref> - Apply patch to core from Gerrit
+ * clone - clone TYPO3 Core repository
+ * checkout --branch <branch> -  Checkout branch 
 EOT
             );
     }
@@ -69,6 +74,8 @@ EOT
             case 'checkout':
                 $this->checkout();
                 break;
+            default:
+                $this->getIO()->write($this->getHelp());
         }
 
         return Command::SUCCESS;

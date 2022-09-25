@@ -1,0 +1,47 @@
+{
+    "name": "ochorocho/tdk",
+    "description": "TYPO3 Composer Development Kit",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Jochen Roth",
+            "email": "jochen.roth@b13.com"
+        }
+    ],
+    "scripts": {
+        "command": "[ -d typo3-core/typo3/sysext ] || mkdir -p typo3-core/typo3/sysext"
+    },
+    "repositories": {
+        "typo3-core-packages": {
+            "type": "path",
+            "url": "typo3-core/typo3/sysext/*"
+        },
+        "local-packages": {
+            "type": "path",
+            "url": "packages/*"
+        }
+    },
+    "require": {
+        "ext-json": "*",
+        "typo3/cms-composer-installers": "^3",
+        "ochorocho/tdk-composer-plugin": "@dev"
+    },
+    "require-dev": {
+        "codeception/codeception": "*",
+        "codeception/module-cli": "*",
+        "codeception/module-webdriver": "*",
+        "phpstan/phpstan": "*",
+        "composer/composer": "*",
+        "friendsofphp/php-cs-fixer": "*",
+        "codeception/module-asserts": "*",
+        "codeception/module-filesystem": "*"
+    },
+    "config": {
+        "allow-plugins": {
+            "typo3/class-alias-loader": true,
+            "typo3/cms-composer-installers": true,
+            "ochorocho/tdk-composer-plugin": true
+        }
+    }
+}

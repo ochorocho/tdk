@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ochorocho\TdkComposer\Service;
 
 use Composer\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Finder\Finder;
 
@@ -21,19 +22,6 @@ class ComposerService extends BaseService
         parent::__construct();
     }
 
-    public function getCoreExtensions(string $path = BaseService::CORE_DEV_FOLDER . '/typo3/sysext/'): array
-    {
-        $files = $this->finder->name('composer.json')->in($path)->depth(1)->files();
-
-        $coreExtensions = [];
-        foreach ($files as $file) {
-            $json = json_decode($file->getContents(), true, 512, JSON_THROW_ON_ERROR);
-            $coreExtensions[] = $json['name'];
-        }
-
-        return $coreExtensions;
-    }
-
     public function requireAllCoreExtensions(): int
     {
         $coreExtensions = $this->getCoreExtensions();
@@ -46,7 +34,7 @@ class ComposerService extends BaseService
             return $this->application->run($input);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     public function removeAllCoreExtensions(): int
@@ -57,11 +45,24 @@ class ComposerService extends BaseService
             return $this->application->run($input);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     public function getCoreExtensionsFolder(string $path = 'public/typo3/sysext'): Finder
     {
         return $this->finder->in($path)->depth(0)->directories();
+    }
+
+    private function getCoreExtensions(string $path = BaseService::CORE_DEV_FOLDER . '/typo3/sysext/'): array
+    {
+        $files = $this->finder->name('composer.json')->in($path)->depth(1)->files();
+
+        $coreExtensions = [];
+        foreach ($files as $file) {
+            $json = json_decode($file->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            $coreExtensions[] = $json['name'];
+        }
+
+        return $coreExtensions;
     }
 }

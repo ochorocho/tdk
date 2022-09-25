@@ -16,7 +16,8 @@ final class CommandProvider implements CommandProviderCapability
             new DoctorCommand(),
             new CleanupCommand(),
             new DdevConfigCommand(),
-            new HelpCommand()
+            new HelpCommand(),
+            new ComposerCommand()
         ];
     }
 }

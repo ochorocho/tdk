@@ -29,7 +29,7 @@ composer based TYPO3 CoreDev environment.
 
 `composer <command>`
 
-* `tdk:cleanup`: Delete all files and folder
+* `tdk:cleanup`: Delete all files and folder including the `typo3-core` repository
 * `tdk:hooks <create|delete>`: Create/delete created hooks in `.git/hooks`
 * `tdk:git <action>`
   * `config`: Set git name, email and pushurl
@@ -38,6 +38,7 @@ composer based TYPO3 CoreDev environment.
   * `clone`: Download and store the repository in `./typo3-core`
 * `tdk:set-push-url`: Set Gerrit as remote to push patches to
 * `tdk:ddev`: Create a basic ddev configuration
+* `tdk:composer <require|remove>`: Require or remove all TYPO3 Core extensions
 * `tdk:help <summary|done>`: Show informational text
 * `tdk:doctor`: Show potential issues 
 
