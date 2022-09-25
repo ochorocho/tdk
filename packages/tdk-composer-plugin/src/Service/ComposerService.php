@@ -53,7 +53,7 @@ class ComposerService extends BaseService
         return $this->finder->in($path)->depth(0)->directories();
     }
 
-    private function getCoreExtensions(string $path = BaseService::CORE_DEV_FOLDER . '/typo3/sysext/'): array
+    public function getCoreExtensions(string $path = BaseService::CORE_DEV_FOLDER . '/typo3/sysext/'): array
     {
         $files = $this->finder->name('composer.json')->in($path)->depth(1)->files();
 

@@ -92,7 +92,11 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
                 $this->application->run($input);
                 $event->getComposer()->getEventDispatcher()->dispatchScript('typo3-clone-done', true);
 
-                $this->composerService->requireAllCoreExtensions();
+                // $this->composerService->requireAllCoreExtensions();
+                $coreExtensions = $this->composerService->getCoreExtensions();
+                $input = new ArrayInput(array('command' => 'remove', 'packages' => $coreExtensions));
+                $this->application->run($input);
+
                 $event->getComposer()->getEventDispatcher()->dispatchScript('typo3-require-done', true);
             }
         }
