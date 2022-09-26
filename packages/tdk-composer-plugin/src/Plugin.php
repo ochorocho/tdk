@@ -90,7 +90,7 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
 
                 $input = new ArrayInput(array('command' => 'tdk:git', 'action' => 'clone'));
                 $this->application->run($input);
-                $event->getComposer()->getEventDispatcher()->dispatchScript('typo3-clone-done', true);
+                // $event->getComposer()->getEventDispatcher()->dispatchScript('typo3-clone-done', true);
 
                 // $this->composerService->requireAllCoreExtensions();
                 $coreExtensions = $this->composerService->getCoreExtensions();
