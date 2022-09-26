@@ -94,7 +94,7 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
 
                 // $this->composerService->requireAllCoreExtensions();
                 $coreExtensions = $this->composerService->getCoreExtensions();
-                $input = new ArrayInput(array('command' => 'remove', 'packages' => $coreExtensions));
+                $input = new ArrayInput(array('command' => 'require', 'packages' => $coreExtensions));
                 $this->application->run($input);
 
                 $event->getComposer()->getEventDispatcher()->dispatchScript('typo3-require-done', true);
