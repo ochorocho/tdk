@@ -6,6 +6,7 @@ namespace Ochorocho\TdkComposer;
 
 use Composer\Composer;
 use Composer\Console\Application;
+use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
 use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
@@ -37,9 +38,9 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
     public static function getSubscribedEvents()
     {
         return [
-//            PluginEvents::PRE_COMMAND_RUN => [
-//                ['cloneRepository', 0]
-//            ],
+            ScriptEvents::POST_ROOT_PACKAGE_INSTALL => [
+                ['cloneRepository', 0]
+            ],
             ScriptEvents::POST_CREATE_PROJECT_CMD => [
                 ['gitConfig', 0],
                 ['createHooks', 0],
@@ -67,31 +68,29 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
         // TODO: Implement uninstall() method.
     }
 
-//    public function cloneRepository(PackageEvent $event): int
-//    {
-//        $operation = $event->getOperation();
-//        if ($operation instanceof InstallOperation) {
-//            $package = $operation->getPackage()->getName();
-//
-//            if ($package === self::PACKAGE_NAME) {
-//                $filesystem = new Filesystem();
-//                $filesystem->remove([BaseService::CORE_DEV_FOLDER]);
-//
-//                $input = new ArrayInput(array('command' => 'tdk:git', 'action' => 'clone'));
-//                $this->application->run($input);
-//                // $event->getComposer()->getEventDispatcher()->dispatchScript('typo3-clone-done', true);
-//
-//                // $this->composerService->requireAllCoreExtensions();
-//                $coreExtensions = $this->composerService->getCoreExtensions();
-//                $input = new ArrayInput(array('command' => 'require', 'packages' => $coreExtensions));
-//                $this->application->run($input);
-//
-//                $event->getComposer()->getEventDispatcher()->dispatchScript('typo3-require-done', true);
-//            }
-//        }
-//
-//        return Command::SUCCESS;
-//    }
+    public function cloneRepository(PackageEvent $event): int
+    {
+        $operation = $event->getOperation();
+        if ($operation instanceof InstallOperation) {
+            $package = $operation->getPackage()->getName();
+
+            if ($package === self::PACKAGE_NAME) {
+
+                $input = new ArrayInput(array('command' => 'tdk:git', 'action' => 'clone'));
+                $this->application->run($input);
+                // $event->getComposer()->getEventDispatcher()->dispatchScript('typo3-clone-done', true);
+
+                // $this->composerService->requireAllCoreExtensions();
+                //                $coreExtensions = $this->composerService->getCoreExtensions();
+                //                $input = new ArrayInput(array('command' => 'require', 'packages' => $coreExtensions));
+                //                $this->application->run($input);
+
+                $event->getComposer()->getEventDispatcher()->dispatchScript('typo3-require-done', true);
+            }
+        }
+
+        return Command::SUCCESS;
+    }
 
     public function gitConfig(Event $event): int
     {
