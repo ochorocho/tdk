@@ -10,8 +10,7 @@
         }
     ],
     "scripts": {
-        "command": "[ -d typo3-core/typo3/sysext ] || git clone https://github.com/TYPO3/typo3.git typo3-core",
-        "post-create-project-cmd": "[ -d typo3-core/typo3/sysext ] || git clone https://github.com/TYPO3/typo3.git typo3-core"
+        "pre-command-run": "[ -d typo3-core/typo3/sysext ] || git clone https://github.com/TYPO3/typo3.git typo3-core"
     },
     "repositories": {
         "typo3-core-packages": {
