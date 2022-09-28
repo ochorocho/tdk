@@ -10,10 +10,12 @@
         }
     ],
     "scripts": {
-        "pre-command-run": "[ -d typo3-core/typo3/sysext ] || git clone https://github.com/TYPO3/typo3.git typo3-core"
+        "pre-command-run": "[ -d typo3-core/typo3/sysext ] || git clone https://github.com/TYPO3/typo3.git typo3-core",
+        "pre-install-cmd": "[ -d typo3-core/typo3/sysext ] || git clone https://github.com/TYPO3/typo3.git typo3-core",
+        "post-root-package-install": "[ -d typo3-core/typo3/sysext ] || git clone https://github.com/TYPO3/typo3.git typo3-core"
     },
     "repositories": {
-        "pre-update-cmd": {
+        "typo3-core-packages": {
             "type": "path",
             "url": "typo3-core/typo3/sysext/*"
         },
