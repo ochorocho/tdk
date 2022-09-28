@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Ochorocho\TdkComposer\Command;
 
 use Composer\Command\BaseCommand;
+use Composer\Installer;
+use Composer\Plugin\CommandEvent;
+use Composer\Plugin\PluginEvents;
+use Composer\Semver\Constraint\Constraint;
 use Ochorocho\TdkComposer\Service\GitService;
 use Ochorocho\TdkComposer\Service\ValidationService;
 use Symfony\Component\Console\Command\Command;
