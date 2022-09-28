@@ -12,3 +12,4 @@ test-acceptance-tdk/
 /tests/_support/_generated
 /.vscode
 /.php-cs-fixer.cache
+/typo3-core
