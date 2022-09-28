@@ -38,9 +38,9 @@ final class Plugin implements PluginInterface, CapableInterface, EventSubscriber
     public static function getSubscribedEvents()
     {
         return [
-            ScriptEvents::POST_ROOT_PACKAGE_INSTALL => [
-                ['cloneRepository', 0]
-            ],
+//            ScriptEvents::POST_ROOT_PACKAGE_INSTALL => [
+//                ['cloneRepository', 0]
+//            ],
             ScriptEvents::POST_CREATE_PROJECT_CMD => [
                 ['gitConfig', 0],
                 ['createHooks', 0],
