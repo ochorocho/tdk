@@ -26,6 +26,7 @@ tasks:
       mkdir -p public/typo3conf
       touch public/FIRST_INSTALL
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
+      cp -Rp .gitpod/typo3/AdditionalConfiguration.php config/system/additional.php
     command: |
       tdk ssh-add
       tdk php "$(php .gitpod/php/version.php)"
