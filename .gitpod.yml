@@ -24,6 +24,7 @@ tasks:
       composer tdk:apply-patch
       composer install
       mkdir -p public/typo3conf
+      mkdir -p config/system/
       touch public/FIRST_INSTALL
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php config/system/additional.php
