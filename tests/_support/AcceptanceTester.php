@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 /**
  * Inherited Methods
  * @method void wantToTest($text)
@@ -24,4 +23,13 @@ class AcceptanceTester extends \Codeception\Actor
     /**
      * Define custom actions here
      */
+    public function loadRootComposerJsonToArray(): array
+    {
+        return json_decode(file_get_contents('composer.json'), true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    public function loadExampleComposerJsonToArray(string $path)
+    {
+        return json_decode(file_get_contents(codecept_data_dir($path)), true, 512, JSON_THROW_ON_ERROR);
+    }
 }

@@ -3,11 +3,13 @@ var/
 public/
 composer.lock
 .idea
-typo3-core
 packages/*
 !packages/.gitkeep
+!packages/tdk-composer-plugin
 .ddev/
 /config/
 test-acceptance-tdk/
 /tests/_support/_generated
 /.vscode
+/.php-cs-fixer.cache
+/typo3-core

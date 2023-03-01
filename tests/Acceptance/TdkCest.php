@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Acceptance;
 
-use AcceptanceTester as AcceptanceTester;
+use AcceptanceTester;
+use Codeception\Example;
+use Symfony\Component\Filesystem\Filesystem;
 
 class TdkCest
 {
     private static string $coreDevFolder = 'typo3-core/';
+    private static string $extensionFolder = 'public/typo3/sysext/';
     private static string $testFolder = __DIR__ . '/../../test-acceptance-tdk/';
 
-    public function _before(AcceptanceTester $I)
+    public function _before(AcceptanceTester $I): void
     {
         chdir(self::$testFolder);
     }
@@ -20,21 +23,54 @@ class TdkCest
     {
         // Use "composer install" because it triggers tdk:clone
         $I->runShellCommand('composer install');
-        $I->seeResultCodeIs(0);
+        $I->seeFileFound('config', self::$testFolder . self::$coreDevFolder . '.git/');
+
         $I->seeInShellOutput('Cloning TYPO3 repository. This may take a while depending on your internet connection!');
         $I->seeInShellOutput('Cloning into');
 
-        $I->runShellCommand('composer tdk:clone');
-        $I->seeResultCodeIs(0);
+        $I->runShellCommand('composer tdk:git clone');
         $I->seeInShellOutput('Repository exists! Therefore no download required.');
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     * @param Example $testData
+     * @return void
+     * @dataProvider extensionsDataProvider
+     */
+    public function extensionIsSymlink(AcceptanceTester $I, Example $testData): void
+    {
+        $filesystem = new Filesystem();
+        $symlink = $filesystem->readlink(static::$extensionFolder . $testData['ext'], true);
+        $I->assertNotNull($symlink);
+    }
+
+    public function composerCommand(AcceptanceTester $I): void
+    {
+        $I->amGoingTo('Remove all core extensions');
+        $I->runShellCommand('composer tdk:composer remove');
+        $composerJson = $I->loadRootComposerJsonToArray();
+        $exampleJsonRemove = $I->loadExampleComposerJsonToArray('composer-without-core-packages.json');
+        $I->assertEquals($exampleJsonRemove['require'], $composerJson['require']);
+
+        $I->amGoingTo('Require all core extensions');
+        $I->runShellCommand('composer tdk:composer require');
+        $composerJson = $I->loadRootComposerJsonToArray();
+        $exampleJsonRequire = $I->loadExampleComposerJsonToArray('composer-core-packages.json');
+        $I->assertEquals($exampleJsonRequire['require'], $composerJson['require']);
+
+        $I->amGoingTo('See expected scripts are in place to create the initial repository folder');
+        $composerJson = $I->loadRootComposerJsonToArray();
+        $I->assertEquals($composerJson['scripts'], ['command' => '[ -d typo3-core/typo3/sysext ] || mkdir -p typo3-core/typo3/sysext']);
     }
 
     public function help(AcceptanceTester $I): void
     {
-        $I->runShellCommand('composer tdk:help');
-
-        $I->seeResultCodeIs(0);
+        $I->runShellCommand('composer tdk:help summary');
         $I->seeInShellOutput('For more Details read the docs:', 'To be able to push to Gerrit, you need to add your public key');
+
+        $I->runShellCommand('composer tdk:help done');
+        $I->seeInShellOutput('TYPO3 Composer CoreDev Setup done');
     }
 
     /**
@@ -42,7 +78,7 @@ class TdkCest
      */
     public function gitConfig(AcceptanceTester $I): void
     {
-        $I->runShellCommand('composer tdk:set-git-config -- --username=ochorocho');
+        $I->runShellCommand('composer tdk:git config --username=ochorocho');
         $I->amGoingTo('See expected response text of command');
         $I->seeInShellOutput('Set "remote.origin.pushurl" to "ssh://ochorocho@review.typo3.org:29418/Packages/TYPO3.CMS.git"');
         $I->seeInShellOutput('Set "user.email" to "rothjochen@gmail.com"');
@@ -66,7 +102,7 @@ class TdkCest
      */
     public function commitTemplate(AcceptanceTester $I): void
     {
-        $I->runShellCommand('composer tdk:set-commit-template -- --file=./.gitmessage.txt');
+        $I->runShellCommand('composer tdk:git template --file=./.gitmessage.txt');
         $I->seeInShellOutput('Set "commit.template" to ');
 
         $I->runShellCommand('git -C ' . self::$coreDevFolder . ' config --get commit.template');
@@ -81,22 +117,21 @@ class TdkCest
         $hooksFolder = self::$testFolder . self::$coreDevFolder . '.git/hooks/';
 
         $I->amGoingTo('Enable the hooks');
-        $I->runShellCommand('composer tdk:enable-hooks -- --force');
+        $I->runShellCommand('composer tdk:hooks create --force');
 
-        $I->seeResultCodeIs(0);
         $I->seeFileFound('commit-msg', $hooksFolder);
         $I->seeFileFound('pre-commit', $hooksFolder);
     }
 
     /**
-     * @todo: Find a more generic way to test the tdk:apply-patch command
+     * @todo: Find a more generic way to test the tdk:git apply command
      *
      * @param AcceptanceTester $I
      */
     public function applyPatch(AcceptanceTester $I): void
     {
         // @todo: Create a dedicated patch to test against, currently this breaks as soon as the patch gets merged
-        $I->runShellCommand('composer tdk:apply-patch -- --ref=refs/changes/60/69360/6');
+        $I->runShellCommand('composer tdk:git apply --ref=refs/changes/60/69360/6');
         $I->seeInShellOutput('Apply patch refs/changes/60/69360/6');
 
         $I->runShellCommand('git -C ' . self::$coreDevFolder . ' log -1 --oneline');
@@ -109,19 +144,19 @@ class TdkCest
     public function ddevConfig(AcceptanceTester $I): void
     {
         $I->amGoingTo('use a invalid project name');
-        $I->runShellCommand('composer tdk:ddev-config -- --project-name="typo3 invalid"');
-        $I->seeInShellOutput('Invalid ddev project name');
+        $I->runShellCommand('composer tdk:ddev --project-name="typo3 invalid"', false);
+        $I->seeInShellOutput('Invalid ddev project name "typo3 invalid"');
         $I->dontSeeFileFound('.ddev', 'test-acceptance-tdk/');
+        $I->seeResultCodeIs(1);
 
         $I->amGoingTo('abort configuration');
-        $I->runShellCommand('composer tdk:ddev-config -- --no');
+        $I->runShellCommand('composer tdk:ddev --no');
         $I->seeInShellOutput('Aborted! No ddev config created');
         $I->dontSeeFileFound('.ddev', 'test-acceptance-tdk/');
 
         $I->amGoingTo('create a ddev config');
-        $I->runShellCommand('composer tdk:ddev-config -- --project-name="typo3-dev-tdk"');
+        $I->runShellCommand('composer tdk:ddev --project-name="typo3-dev-tdk"');
         $I->seeFileFound('config.yaml', 'test-acceptance-tdk/.ddev/');
-        $I->seeResultCodeIs(0);
     }
 
     /**
@@ -129,7 +164,7 @@ class TdkCest
      */
     public function checkoutBranch(AcceptanceTester $I): void
     {
-        $I->runShellCommand('composer tdk:checkout -- --branch=main');
+        $I->runShellCommand('composer tdk:git checkout --branch=main');
         $I->seeInShellOutput('Checking out branch "main"!');
 
         $I->runShellCommand('git -C ' . self::$coreDevFolder . ' branch --show-current');
@@ -166,7 +201,7 @@ class TdkCest
         $hooksFolder = self::$testFolder . self::$coreDevFolder . '.git/hooks/';
 
         $I->amGoingTo('Delete the hooks');
-        $I->runShellCommand('composer tdk:remove-hooks');
+        $I->runShellCommand('composer tdk:hooks delete --force');
 
         $I->seeResultCodeIs(0);
         $I->dontSeeFileFound('commit-msg', $hooksFolder);
@@ -178,7 +213,7 @@ class TdkCest
      */
     public function clear(AcceptanceTester $I): void
     {
-        $I->runShellCommand('composer tdk:clear -- --force');
+        $I->runShellCommand('composer tdk:cleanup --force');
         $I->seeResultCodeIs(0);
 
         // Foreach is needed here, as we don't want to
@@ -196,6 +231,46 @@ class TdkCest
             'public/typo3',
             'typo3-core',
             'var',
+        ];
+    }
+
+    protected function extensionsDataProvider(): array
+    {
+        return [
+            ['ext' => 'adminpanel'],
+            ['ext' => 'backend'],
+            ['ext' => 'belog'],
+            ['ext' => 'beuser'],
+            ['ext' => 'core'],
+            ['ext' => 'dashboard'],
+            ['ext' => 'extbase'],
+            ['ext' => 'extensionmanager'],
+            ['ext' => 'felogin'],
+            ['ext' => 'filelist'],
+            ['ext' => 'filemetadata'],
+            ['ext' => 'fluid'],
+            ['ext' => 'fluid_styled_content'],
+            ['ext' => 'form'],
+            ['ext' => 'frontend'],
+            ['ext' => 'impexp'],
+            ['ext' => 'indexed_search'],
+            ['ext' => 'info'],
+            ['ext' => 'install'],
+            ['ext' => 'linkvalidator'],
+            ['ext' => 'lowlevel'],
+            ['ext' => 'opendocs'],
+            ['ext' => 'recycler'],
+            ['ext' => 'redirects'],
+            ['ext' => 'reports'],
+            ['ext' => 'rte_ckeditor'],
+            ['ext' => 'scheduler'],
+            ['ext' => 'seo'],
+            ['ext' => 'setup'],
+            ['ext' => 'sys_note'],
+            ['ext' => 't3editor'],
+            ['ext' => 'tstemplate'],
+            ['ext' => 'viewpage'],
+            ['ext' => 'workspaces']
         ];
     }
 }

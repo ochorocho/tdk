@@ -4,6 +4,7 @@
 # 8.0 https://gitpod.io/#TDK_PHP_VERSION=8.0,TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/main
 # Detect php: https://gitpod.io/#TDK_BRANCH=11.5,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/main
 # https://gitpod.io/#TDK_BRANCH=11.5,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/feature/add-ssh-command
+# Composer Plugin: https://gitpod.io/#TDK_BRANCH=main,TDK_PATCH_REF=refs%2Fchanges%2F43%2F70643%2F36,TDK_USERNAME=ochorocho,TDK_PATCH_ID=70643/https://github.com/ochorocho/tdk/tree/feature/scripts-to-composer-plugin
 
 image: ochorocho/gitpod-tdk:latest
 
@@ -14,14 +15,13 @@ tasks:
       cp -Rp .gitpod/phpstorm .idea
       tdk php "$(php .gitpod/php/version.php)" --no-reload
       gp open .gitpod/info.md
-      composer tdk:clone
-      composer tdk:checkout
       composer install
-      composer tdk:set-git-config
-      composer tdk:enable-hooks -- --force
-      composer tdk:set-commit-template -- --file=./.gitmessage.txt
+      composer tdk:git checkout
+      composer tdk:git config
+      composer tdk:hooks create --force
+      composer tdk:git template --file=./.gitmessage.txt
       tdk ssh-add
-      composer tdk:apply-patch
+      composer tdk:git apply
       composer install
       mkdir -p public/typo3conf
       mkdir -p config/system/
@@ -36,7 +36,8 @@ tasks:
       sudo service cron start
       sleep 5
       tdk db create
-      composer tdk:help
+      composer tdk:help summary
+      composer tdk:help done
       tdk preview fe
 
 vscode:
