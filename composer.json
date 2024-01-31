@@ -83,7 +83,6 @@
         "typo3/cms-seo": "@dev",
         "typo3/cms-setup": "@dev",
         "typo3/cms-sys-note": "@dev",
-        "typo3/cms-t3editor": "@dev",
         "typo3/cms-tstemplate": "@dev",
         "typo3/cms-viewpage": "@dev",
         "typo3/cms-workspaces": "@dev"
