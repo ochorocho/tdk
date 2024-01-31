@@ -1,4 +1,4 @@
 [BUGFIX|TASK|FEATURE]
 
 Resolves: #
-Releases: main, 11.5
+Releases: main, 12.4
