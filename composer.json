@@ -85,7 +85,8 @@
         "typo3/cms-sys-note": "@dev",
         "typo3/cms-tstemplate": "@dev",
         "typo3/cms-viewpage": "@dev",
-        "typo3/cms-workspaces": "@dev"
+        "typo3/cms-workspaces": "@dev",
+        "typo3/cms-styleguide": "@dev"
     },
     "require-dev": {
         "codeception/codeception": "*",
