@@ -38,4 +38,5 @@ jobs:
         run: |
           echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           docker buildx create --use --platform=linux/arm64,linux/amd64
-          ./.gitpod/docker/build.sh -v ${{ matrix.php-version }} -p
+          cd ./.gitpod/docker/
+          ./build.sh -v ${{ matrix.php-version }} -p
