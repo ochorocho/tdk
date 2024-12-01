@@ -3,6 +3,11 @@
 > See the terminal below for details.            
 > Once finished TYPO3 will open in a separate tab
 
+### Backend Login
+
+* **Username**: admin
+* **Password**: Password.1
+
 ### Local commands
 
 * `tdk preview <fe|be|install|mailhog>` - Open frontend, backend, installTool or mailcatcher (MailHog)

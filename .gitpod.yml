@@ -36,6 +36,7 @@ tasks:
       ./vendor/bin/typo3 extension:setup
       ./vendor/bin/typo3 styleguide:generate frontend --create
       composer tdk:help
+      echo -e "\n** Backend Login **\nUsername: admin\nPassword: Password.1\n"
       tdk preview fe
 
 vscode:

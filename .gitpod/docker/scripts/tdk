@@ -19,7 +19,8 @@ cronTask () {
 previewTask () {
     case $COMMAND in
         fe)
-            gp preview "$(gp url 8001)" --external
+            path=$(./vendor/bin/typo3 site:list  | grep -o ' /styleguide-demo-[0-9]\+/ ' | xargs)
+            gp preview "$(gp url 8001)$path" --external
             exit 0
             ;;
         be)
