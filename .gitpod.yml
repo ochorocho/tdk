@@ -30,7 +30,7 @@ tasks:
     command: |
       tdk ssh-add
       tdk php "$(php .gitpod/php/version.php)"
-      sudo service mailhog start
+      sudo service mailpit start
       sudo service mysql start
       sudo service cron start
       sleep 5

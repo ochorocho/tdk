@@ -24,6 +24,3 @@ COPY config/imagemagick-policy.xml /etc/ImageMagick-6/policy.xml
 RUN add-apt-repository --yes ppa:ondrej/php && \
     bash /config/install-php.sh
 
-
-# @todo Reset required?!
-export APACHE_SERVER_NAME=$(gp url 8001 | sed -e s/https:\\/\\/// | sed -e s/\\///)
