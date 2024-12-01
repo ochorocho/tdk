@@ -26,4 +26,4 @@ RUN add-apt-repository --yes ppa:ondrej/php && \
 
 
 # @todo Reset required?!
-# export APACHE_SERVER_NAME=$(gp url 8001 | sed -e s/https:\\/\\/// | sed -e s/\\///)
+export APACHE_SERVER_NAME=$(gp url 8001 | sed -e s/https:\\/\\/// | sed -e s/\\///)
