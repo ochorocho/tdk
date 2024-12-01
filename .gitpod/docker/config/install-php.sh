@@ -18,7 +18,7 @@ echo "#####################################"
 for version in "${PHP_VERSIONS[@]}"
 do
   if apt list php* 2>/dev/null | awk -F/ '$1 == "'"$version"'" {print $1}'; then
-       PHP_PACKAGES+="libapache2-mod-$version $version-curl $version-zip $version-gd $version-intl $version-mysql $version-mbstring $version-xdebug $version-common "
+       PHP_PACKAGES+="libapache2-mod-$version $version-curl $version-zip $version-gd $version-intl $version-mysql $version-mbstring $version-xdebug $version-common $version-dom $version-xml "
   fi
 done
 
@@ -26,7 +26,7 @@ apt-get install --no-install-recommends -y -o Dpkg::Options::="--force-confdef" 
 apt-get install --no-install-recommends -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
     gnupg ca-certificates lsb-release bash-completion cron imagemagick apache2 golang-go mysql-server ghostscript
 
-phpenmod zip curl gd intl mysqli pdo_mysql mbstring pdo xdebug
+phpenmod zip curl gd intl mysqli pdo_mysql mbstring pdo xdebug dom xml
 a2enmod alias authz_core autoindex deflate expires filter headers setenvif rewrite
 
 # Setup Docker CE

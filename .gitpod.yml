@@ -22,10 +22,7 @@ tasks:
       tdk ssh-add
       composer tdk:apply-patch
       composer install
-      mkdir -p public/typo3conf
       mkdir -p config/system/
-      touch public/FIRST_INSTALL
-      cp -Rp .gitpod/typo3/AdditionalConfiguration.php public/typo3conf/AdditionalConfiguration.php
       cp -Rp .gitpod/typo3/AdditionalConfiguration.php config/system/additional.php
     command: |
       tdk ssh-add
@@ -35,6 +32,9 @@ tasks:
       sudo service cron start
       sleep 5
       tdk db create
+      TYPO3_CONTEXT=Development TYPO3_DB_DRIVER=mysqli TYPO3_DB_USERNAME=db TYPO3_DB_PASSWORD=db TYPO3_DB_PORT=3306 TYPO3_DB_HOST=127.0.0.1 TYPO3_DB_DBNAME=db TYPO3_SETUP_ADMIN_EMAIL=typo3@example.com TYPO3_SETUP_ADMIN_USERNAME=admin TYPO3_SETUP_ADMIN_PASSWORD=Password.1 TYPO3_PROJECT_NAME=TYPO3-Dev ./vendor/bin/typo3 setup --server-type=apache --force -n
+      ./vendor/bin/typo3 extension:setup
+      ./vendor/bin/typo3 styleguide:generate frontend --create
       composer tdk:help
       tdk preview fe
 
