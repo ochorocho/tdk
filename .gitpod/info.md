@@ -2,6 +2,9 @@
 
 > See the terminal below for details.            
 > Once finished TYPO3 will open in a separate tab
+>
+> The frontend is disabled/hidden by default.
+> Please log in to the backend and use the preview button.
 
 ### Backend Login
 

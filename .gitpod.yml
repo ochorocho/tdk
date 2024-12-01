@@ -37,7 +37,7 @@ tasks:
       ./vendor/bin/typo3 styleguide:generate frontend --create
       composer tdk:help
       echo -e "\n** Backend Login **\nUsername: admin\nPassword: Password.1\n"
-      tdk preview fe
+      tdk preview be
 
 vscode:
   extensions:
@@ -58,10 +58,10 @@ ports:
     name: apache
     onOpen: ignore
   - port: 1025
-    name: mailhog catcher
+    name: mailpit catcher
     onOpen: ignore
   - port: 8025
-    name: mailhog
+    name: mailpit
     onOpen: ignore
   - port: 9003
     name: xdebug
