@@ -30,13 +30,13 @@ previewTask () {
             touch "$GITPOD_REPO_ROOTS/public/typo3conf/ENABLE_INSTALL_TOOL" && gp preview "$(gp url 8001)/typo3/install.php" --external
             exit 0
             ;;
-        mailhog)
+        mailpit)
             gp preview "$(gp url 8025)" --external
             exit 0
             ;;
         *)
             echo "Unknown preview command. Choose one of the following:"
-            echo "fe, be, install, mailhog"
+            echo "fe, be, install, mailpit"
             exit 1
             ;;
     esac

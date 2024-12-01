@@ -16,7 +16,7 @@ _tdk()
         2)
             case ${prev} in
                 preview)
-                    mapfile -t COMPREPLY < <(compgen -W "fe be install mailhog" -- "${cur}")
+                    mapfile -t COMPREPLY < <(compgen -W "fe be install mailpit" -- "${cur}")
                     ;;
                 db)
                     mapfile -t COMPREPLY < <(compgen -W "create delete" -- "${cur}")

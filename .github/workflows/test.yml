@@ -1,10 +1,11 @@
 name: tests
 
 on:
-  push:
   pull_request:
-  schedule:
-    - cron: "0 4 * * *"
+  push:
+    branches:
+      - '**'
+      - '!main'
 jobs:
   testsuite:
     name: Tests
@@ -92,11 +93,3 @@ jobs:
         run: |
           echo ${{ steps.get-tag.outputs.tag }}
           docker run --rm -v ${GITHUB_WORKSPACE}/.gitpod/docker/test.sh:/tmp/test.sh --entrypoint "bash" ochorocho/gitpod-tdk:${{ steps.get-tag.outputs.tag }} /tmp/test.sh
-      -
-        name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          context: .gitpod/docker/
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}

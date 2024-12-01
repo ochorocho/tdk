@@ -10,10 +10,10 @@
 ### END INIT INFO
 
 dir="/home/gitpod/"
-cmd="/home/gitpod/go/bin/MailHog"
+cmd="/usr/local/bin/mailpit"
 user="root"
 
-name="MailHog"
+name="MailPit"
 pid_file="/var/run/$name.pid"
 stdout_log="/var/log/$name.log"
 stderr_log="/var/log/$name.err"
