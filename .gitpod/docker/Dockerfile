@@ -1,6 +1,8 @@
 # Image on docker hub: https://hub.docker.com/r/ochorocho/gitpod-tdk/tags
 FROM gitpod/workspace-base:latest
 
+LABEL org.opencontainers.image.source=https://github.com/ochorocho/tdk
+
 USER root
 
 ARG php_version_and_up
