@@ -35,6 +35,7 @@ tasks:
       TYPO3_CONTEXT=Development TYPO3_DB_DRIVER=mysqli TYPO3_DB_USERNAME=db TYPO3_DB_PASSWORD=db TYPO3_DB_PORT=3306 TYPO3_DB_HOST=127.0.0.1 TYPO3_DB_DBNAME=db TYPO3_SETUP_ADMIN_EMAIL=typo3@example.com TYPO3_SETUP_ADMIN_USERNAME=admin TYPO3_SETUP_ADMIN_PASSWORD=Password.1 TYPO3_PROJECT_NAME=TYPO3-Dev ./vendor/bin/typo3 setup --server-type=apache --force -n
       ./vendor/bin/typo3 extension:setup
       ./vendor/bin/typo3 styleguide:generate frontend --create
+      mysql -udb -pdb db -e 'update pages SET hidden=0 where tx_styleguide_containsdemo = "tx_styleguide_frontend_root";'
       composer tdk:help
       echo -e "\n** Backend Login **\nUsername: admin\nPassword: Password.1\n"
       tdk preview be
