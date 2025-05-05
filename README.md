@@ -27,6 +27,9 @@ composer based TYPO3 CoreDev environment.
 
 ## Additional Composer commands/scripts
 
+> [!WARNING]  
+> Watch out! The following commands are highly experimental!
+
 `composer <command>`
 
 * `tdk:setup`: Setup everything to run a Composer based CoreDev Setup
