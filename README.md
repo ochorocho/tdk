@@ -32,7 +32,7 @@ composer based TYPO3 CoreDev environment.
 
 `composer <command>`
 
-* `tdk:setup`: Setup everything to run a Composer based CoreDev Setup
+* `tdk:setup`: Set everything up to run a Composer-based CoreDev Setup
 * `tdk:clear`: Delete all files and folder
 * `tdk:remove-hooks`: Delete created hooks in `.git/hooks`
 * `tdk:enable-hooks`: Create hooks copied from the TYPO3 repository

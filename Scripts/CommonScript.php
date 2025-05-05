@@ -46,8 +46,29 @@ class CommonScript extends BaseScript
                 }
             }
 
+            @mkdir('.ddev');
+            $envVars = <<<EOF
+TYPO3_CONTEXT=Development
+TYPO3_DB_DRIVER=mysqli
+TYPO3_DB_USERNAME=db
+TYPO3_DB_PORT=3306
+TYPO3_DB_HOST=db
+TYPO3_DB_DBNAME=db
+TYPO3_SETUP_ADMIN_EMAIL=typo3@example.com
+TYPO3_SETUP_ADMIN_USERNAME=admin
+TYPO3_SETUP_ADMIN_PASSWORD=Password.1
+TYPO3_PROJECT_NAME=TYPO3-Dev
+EOF;
+
+            @unlink('.ddev/.env');
+            file_put_contents('.ddev/.env', $envVars);
+
             $phpVersion = self::getPhpVersion();
-            $ddevCommand = 'ddev config --docroot public --project-name ' . $ddevProjectName . ' --web-environment-add TYPO3_CONTEXT=Development --project-type typo3 --php-version ' . $phpVersion . ' --create-docroot 1> /dev/null';
+            $ddevCommand = 'ddev config --docroot public --project-name ' . $ddevProjectName
+                . ' --webserver-type=nginx-fpm'
+                . ' --project-type typo3 --php-version ' . $phpVersion . ' 1> /dev/null'
+                . ' && ddev composer install && ddev typo3 setup --server-type=other --force -n';
+
             exec($ddevCommand, $output, $statusCode);
 
             return $statusCode;
@@ -134,6 +155,7 @@ class CommonScript extends BaseScript
         // Test git push url
         $process = new ProcessExecutor();
         $command = 'git config --get remote.origin.pushurl';
+        $output = '';
         $process->execute($command, $output, self::$coreDevFolder);
 
         preg_match('/^ssh:\/\/(.*)@review\.typo3\.org/', $output, $matches);
